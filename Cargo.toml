@@ -1,5 +1,5 @@
 [package]
-name = "sclient-ui"
+name = "snclient-ui"
 version = "0.0.0"
 edition = "2021"
 
