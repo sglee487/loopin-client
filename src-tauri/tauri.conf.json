@@ -1,44 +1,35 @@
 {
+  "productName": "snclient2",
+  "version": "0.0.0",
+  "identifier": "com.tauri.dev",
   "build": {
     "beforeDevCommand": "trunk serve",
+    "devUrl": "http://localhost:14200",
     "beforeBuildCommand": "trunk build",
-    "devPath": "http://localhost:32112",
-    "distDir": "../dist",
-    "withGlobalTauri": true
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "snclient",
-    "version": "0.0.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      }
-    },
+  "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
-        "title": "snclient",
+        "title": "snclient2",
         "width": 800,
         "height": 600
       }
     ],
     "security": {
       "csp": null
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.tauri.dev",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
     }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
   }
 }

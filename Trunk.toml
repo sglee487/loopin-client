@@ -6,5 +6,5 @@ ignore = ["./src-tauri"]
 
 [serve]
 address = "127.0.0.1"
-port = 32112
+port = 14200
 open = false

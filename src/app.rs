@@ -1,13 +1,12 @@
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
-use leptos::leptos_dom::logging::console_log;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
@@ -23,9 +22,6 @@ pub fn App() -> impl IntoView {
 
     let update_name = move |ev| {
         let v = event_target_value(&ev);
-        // print v
-        console_log(&v);
-
         set_name.set(v);
     };
 
