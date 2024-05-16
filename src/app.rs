@@ -40,6 +40,14 @@ pub fn App() -> impl IntoView {
         });
     };
 
+    let download_video = move || {
+        spawn_local(async move {
+            // null args
+            let args = JsValue::NULL;
+            invoke("download_video", args).await;
+        });
+    };
+
     view! {
         <main class="container">
             <div class="row">
@@ -53,25 +61,26 @@ pub fn App() -> impl IntoView {
 
             <p>"Click on the Tauri and Leptos logos to learn more."</p>
 
+            <button on:click=move |_| download_video()>"Download Video"</button>
+
             <p>
-                "Recommended IDE setup: "
-                <a href="https://code.visualstudio.com/" target="_blank">"VS Code"</a>
-                " + "
-                <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank">"Tauri"</a>
-                " + "
-                <a href="https://github.com/rust-lang/rust-analyzer" target="_blank">"rust-analyzer"</a>
+                "Recommended IDE setup: " <a href="https://code.visualstudio.com/" target="_blank">
+                    "VS Code"
+                </a> " + " <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank">
+                    "Tauri"
+                </a> " + " <a href="https://github.com/rust-lang/rust-analyzer" target="_blank">
+                    "rust-analyzer"
+                </a>
             </p>
 
             <form class="row" on:submit=greet>
-                <input
-                    id="greet-input"
-                    placeholder="Enter a name..."
-                    on:input=update_name
-                />
+                <input id="greet-input" placeholder="Enter a name..." on:input=update_name/>
                 <button type="submit">"Greet"</button>
             </form>
 
-            <p><b>{ move || greet_msg.get() }</b></p>
+            <p>
+                <b>{move || greet_msg.get()}</b>
+            </p>
         </main>
     }
 }
