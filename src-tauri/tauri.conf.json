@@ -3,14 +3,12 @@
   "version": "0.0.0",
   "identifier": "com.tauri.dev",
   "build": {
-    "beforeDevCommand": "trunk serve",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:14200",
-    "beforeBuildCommand": "trunk build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "app": {
-    "withGlobalTauri": true,
-    "windows": [
+  "app": {"windows": [
       {
         "title": "snclient2",
         "width": 800,
