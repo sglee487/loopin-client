@@ -26,7 +26,7 @@ const initPlayer = (
     fluid: true,
     sources: [
       {
-        src: "http://localhost:8080/video/1890-151167947_small/index.m3u8",
+        src: "http://localhost:8080/video/2aa52dbe-b433-4865-bcf6-6944e4e2d909/index.m3u8",
         type: "application/x-mpegURL",
       },
     ],
