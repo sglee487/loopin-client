@@ -22,7 +22,12 @@ const numberToTIme = (number) => {
 <template>
   <div>
     <div class="flex flex-wrap space-x-2">
-      <div v-for="video in videos" :key="video.id" class="h-64 w-80">
+      <router-link
+        :to="{ name: 'watch', params: { uuid: video.uuid } }"
+        v-for="video in videos"
+        :key="video.id"
+        class="h-64 w-80 cursor-pointer"
+      >
         <div class="relative w-80">
           <img
             class="h-44 w-80 rounded-xl object-fill"
@@ -36,7 +41,6 @@ const numberToTIme = (number) => {
           </div>
         </div>
         <div class="flex flex-col">
-          <BeakerIcon />
           <div class="text-right text-xs">
             <HandThumbUpIcon class="inline w-4" /> {{ video.like }} &nbsp;
             <EyeIcon class="inline w-4" /> {{ video.hit }}
@@ -45,7 +49,7 @@ const numberToTIme = (number) => {
           <div>{{ video.author }}</div>
           <timeago class="text-sm" :datetime="video.uploadedAt" />
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
