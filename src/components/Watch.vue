@@ -1,47 +1,57 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import videojs from "video.js";
+
+import axios from "axios";
 
 const route = useRoute();
 
+const videoInfo = ref({});
+const player = ref(null);
+
 onMounted(() => {
-  // initPlayer();
-  console.log(route);
-  console.log(route.params);
-  console.log(route.params.uuid);
+  axios
+    .get(`http://localhost:8080/video/${route.params.uuid}`)
+    .then((response) => {
+      videoInfo.value = response.data;
+    });
 });
 
-// const videoPlayer = ref(null);
+const handleEvent = (log) => {
+  console.log("Basic player event", log);
+};
 
-// const initPlayer = (
-//   options = {
-//     controls: true,
-//     autoplay: true,
-//     preload: "auto",
-//     fluid: true,
-//     sources: [
-//       {
-//         src: `http://localhost:8080/video/${route.params.uuid}/index.m3u8`,
-//         type: "application/x-mpegURL",
-//       },
-//     ],
-//   },
-// ) => {
-//   videoPlayer.value = videojs(videoPlayer.value, options, () => {
-//     console.log("onPlayerReady"); // Use console.log instead of this.player.log
-//   });
-// };
-
-// onBeforeUnmount(() => {
-//   console.log(videoPlayer.value);
-//   // if (videoPlayer.value) {
-//   //   videoPlayer.value.dispose();
-//   // }
-// });
+const handleMounted = (payload) => {
+  player.value = payload.player;
+};
 </script>
 
 <template>
-  <div>watch</div>
-  <!-- <video ref="videoPlayer" class="video-js"></video> -->
+  <video-player
+    class="video-player vjs-big-play-centered"
+    :src="`http://localhost:8080/video-hls/${route.params.uuid}/index.m3u8`"
+    :poster="
+      videoInfo.thumbnail !== undefined
+        ? `data:image/png;base64,${videoInfo.thumbnail}`
+        : ''
+    "
+    crossorigin="anonymous"
+    playsinline
+    controls
+    :volume="0.2"
+    :height="320"
+    :playback-rates="[0.7, 1.0, 1.5, 2.0]"
+    autoplay="true"
+    @mounted="handleMounted"
+    @ready="handleEvent($event)"
+    @play="handleEvent($event)"
+    @pause="handleEvent($event)"
+    @ended="handleEvent($event)"
+    @loadeddata="handleEvent($event)"
+    @waiting="handleEvent($event)"
+    @playing="handleEvent($event)"
+    @canplay="handleEvent($event)"
+    @canplaythrough="handleEvent($event)"
+    @timeupdate="handleEvent(player?.currentTime())"
+  />
 </template>

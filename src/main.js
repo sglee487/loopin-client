@@ -3,6 +3,10 @@ import "./styles.css";
 import App from "./App.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
+
+import VueVideoPlayer from "@videojs-player/vue";
+import "video.js/dist/video-js.css";
+
 import timeago from "vue-timeago3";
 import VideoListVue from "./components/VideoList.vue";
 import WatchVue from "./components/Watch.vue";
@@ -17,4 +21,4 @@ const router = createRouter({
   routes,
 });
 
-createApp(App).use(router).use(timeago).mount("#app");
+createApp(App).use(router).use(VueVideoPlayer).use(timeago).mount("#app");
