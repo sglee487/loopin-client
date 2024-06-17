@@ -1,5 +1,5 @@
 {
-  "productName": "snclient2",
+  "productName": "snclient",
   "version": "0.0.0",
   "identifier": "com.tauri.dev",
   "build": {
@@ -8,9 +8,10 @@
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "app": {"windows": [
+  "app": {
+    "windows": [
       {
-        "title": "snclient2",
+        "title": "snclient",
         "width": 800,
         "height": 600
       }

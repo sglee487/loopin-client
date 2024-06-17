@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { HandThumbUpIcon, EyeIcon } from "@heroicons/vue/16/solid";
