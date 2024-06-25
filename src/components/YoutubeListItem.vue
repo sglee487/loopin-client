@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, onBeforeUnmount } from "vue";
+import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import {
   ChevronDoubleLeftIcon,
@@ -10,7 +10,15 @@ import {
 import { usePlaysStore } from "../store/plays";
 import { PlayListItem } from "../types";
 
+import YoutubeVideoCard from "./YoutubeVideoCard.vue";
+
 import axios from "axios";
+
+enum PlayListType {
+  prev = "prev",
+  next = "next",
+}
+
 const route = useRoute();
 const playsStore = usePlaysStore();
 
@@ -18,6 +26,10 @@ const playerContainer = ref<HTMLElement | null>(null);
 let player: any = null;
 
 const playListId: string = route.params.playListId as string;
+
+const reversedPrevList = computed(() =>
+  playsStore.playLists[playListId]?.prev.slice().reverse(),
+);
 
 const onYouTubeIframeAPIReady = (videoId: string, startSeconds: number) => {
   // parse to int
@@ -48,6 +60,7 @@ const onPlayerStateChange = (event: any) => {
   }
   if (event.data === -1) {
     if (event.target.playerInfo.videoData.errorCode !== null) {
+      console.log(playsStore.currentPlays[playListId].item);
       console.log("Error:", event.target.playerInfo.videoData.errorCode);
       // 다음 동영상 재생
       playsStore.playLists[playListId].prev.push(
@@ -266,6 +279,47 @@ const resetPlayList = async () => {
   );
 };
 
+const playSelectVideo = (item: PlayListItem, type: PlayListType) => {
+  if (
+    playsStore.currentPlays[playListId].item === null ||
+    playsStore.currentPlays[playListId].item === undefined
+  ) {
+    return;
+  }
+  if (type == PlayListType.prev) {
+    playsStore.playLists[playListId].prev.push(
+      playsStore.currentPlays[playListId].item,
+    );
+    playsStore.currentPlays[playListId].item = item;
+    // remove it in prev
+    playsStore.playLists[playListId].prev = playsStore.playLists[
+      playListId
+    ].prev.filter(
+      (prevItem) => prevItem.resource.videoId !== item.resource.videoId,
+    );
+    playsStore.currentPlays[playListId].startSeconds = 0;
+    player.loadVideoById({
+      videoId: item.resource.videoId,
+    });
+  }
+  if (type == PlayListType.next) {
+    playsStore.playLists[playListId].prev.push(
+      playsStore.currentPlays[playListId].item,
+    );
+    playsStore.currentPlays[playListId].item = item;
+    // remove it in next
+    playsStore.playLists[playListId].next = playsStore.playLists[
+      playListId
+    ].next.filter(
+      (nextItem) => nextItem.resource.videoId !== item.resource.videoId,
+    );
+    playsStore.currentPlays[playListId].startSeconds = 0;
+    player.loadVideoById({
+      videoId: item.resource.videoId,
+    });
+  }
+};
+
 // save startSeconds in every 5 seconds
 setInterval(() => {
   if (player) {
@@ -296,16 +350,38 @@ setInterval(() => {
       />
     </div>
     <div class="flex w-[1200px]">
-      <div v-if="playsStore.playLists[playListId]">
-        <p>이전</p>
-        <div>
-          {{ playsStore.playLists[playListId].prev }}
+      <div
+        class="w-[320px] rounded-md border"
+        v-if="
+          playsStore.currentPlays[playListId] &&
+          playsStore.playLists[playListId]
+        "
+      >
+        <p class="text-sm">이전</p>
+        <div class="bg-slate-100 p-2">
+          <p class="font-bold">
+            {{ playsStore.currentPlays[playListId].title }}
+          </p>
+          <p class="text-xs text-gray-500">
+            {{ playsStore.playLists[playListId]?.prev.length ?? 0 }} /
+            {{
+              playsStore.currentPlays[playListId]?.contentDetails?.itemCount ??
+              0
+            }}
+          </p>
         </div>
-        <div
-          v-if="playsStore.playLists[playListId].prev"
-          v-for="item in playsStore.playLists[playListId].prev"
-        >
-          <p>{{ item }}</p>
+        <div class="h-[460px] overflow-scroll">
+          <div
+            class="py-0.5"
+            v-if="playsStore.playLists[playListId].prev"
+            v-for="(item, i) in reversedPrevList"
+          >
+            <YoutubeVideoCard
+              :index="i"
+              :playListItem="item"
+              @click="playSelectVideo(item, PlayListType.prev)"
+            />
+          </div>
         </div>
       </div>
       <div
@@ -347,22 +423,11 @@ setInterval(() => {
             class="py-0.5"
             v-for="(item, i) in playsStore.playLists[playListId].next"
           >
-            <div class="flex">
-              <div class="w-10 flex-none self-center text-center">
-                {{ i }}
-              </div>
-              <img
-                class="h-[56.25px] w-[100px] flex-none p-0.5"
-                :src="item.thumbnail"
-                :alt="item.title"
-              />
-              <div class="flex shrink flex-col">
-                <p class="line-clamp-2">{{ item.title }}</p>
-                <p class="text-xs text-gray-500">
-                  {{ item.videoOwnerChannelTitle }}
-                </p>
-              </div>
-            </div>
+            <YoutubeVideoCard
+              :index="i"
+              :playListItem="item"
+              @click="playSelectVideo(item, PlayListType.next)"
+            />
           </div>
         </div>
       </div>
