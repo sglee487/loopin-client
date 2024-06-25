@@ -14,7 +14,7 @@ import axios from "axios";
 const route = useRoute();
 const playsStore = usePlaysStore();
 
-const playerContainer = ref(null);
+const playerContainer = ref<HTMLElement | null>(null);
 let player: any = null;
 
 const playListId: string = route.params.playListId as string;
@@ -23,7 +23,7 @@ const onYouTubeIframeAPIReady = (videoId: string, startSeconds: number) => {
   // parse to int
   startSeconds = parseInt(startSeconds.toString());
 
-  player = new YT.Player(playerContainer.value, {
+  player = new YT.Player(playerContainer.value!, {
     height: "390",
     width: "640",
     videoId: videoId,
