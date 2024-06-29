@@ -20,7 +20,9 @@ const goHome = () => {
 
 <template>
   <div class="container">
-    <div class="cursor-pointer text-red-500" @click="goHome">snservice</div>
+    <div class="w-fit cursor-pointer text-red-500" @click="goHome">
+      snservice
+    </div>
     <div>
       <ChevronLeftIcon
         class="inline-block h-6 w-6 cursor-pointer"

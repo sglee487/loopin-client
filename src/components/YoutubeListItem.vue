@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { invoke } from "@tauri-apps/api/core";
+
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import {
   ChevronDoubleLeftIcon,
+  PlayPauseIcon,
   ChevronDoubleRightIcon,
+  ArrowTopRightOnSquareIcon,
   ArrowDownTrayIcon,
   ArrowPathIcon,
 } from "@heroicons/vue/16/solid";
@@ -36,8 +40,8 @@ const onYouTubeIframeAPIReady = (videoId: string, startSeconds: number) => {
   startSeconds = parseInt(startSeconds.toString());
 
   player = new YT.Player(playerContainer.value!, {
-    height: "390",
-    width: "640",
+    height: "240",
+    width: "240",
     videoId: videoId,
     playerVars: {
       autoplay: 1,
@@ -320,6 +324,13 @@ const playSelectVideo = (item: PlayListItem, type: PlayListType) => {
   }
 };
 
+const goToExternal = () => {
+  playsStore.currentPlays[playListId].item!;
+
+  const url = `https://www.youtube.com/watch?v=${playsStore.currentPlays[playListId].item!.resource.videoId}`;
+  invoke("open_in_default_browser", { url });
+};
+
 // save startSeconds in every 5 seconds
 setInterval(() => {
   if (player) {
@@ -334,20 +345,57 @@ setInterval(() => {
       playsStore.playLists[playListId] && playsStore.currentPlays[playListId]
     "
   >
-    <div ref="playerContainer"></div>
-    <div class="flex space-x-1">
-      <ChevronDoubleLeftIcon
-        class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
-        @click="prevVideo"
-      />
-      <ChevronDoubleRightIcon
-        class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
-        @click="nextVideo"
-      />
-      <ArrowPathIcon
-        class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
-        @click="resetPlayList"
-      />
+    <div
+      v-if="
+        playsStore.currentPlays[playListId] !== null &&
+        playsStore.currentPlays[playListId] !== undefined &&
+        playsStore.currentPlays[playListId].item !== null &&
+        playsStore.currentPlays[playListId].item !== undefined
+      "
+      class="flex"
+    >
+      <div class="rounded-md bg-purple-200 p-2">
+        <div ref="playerContainer"></div>
+      </div>
+      <div class="flex flex-col justify-end p-2">
+        <ArrowTopRightOnSquareIcon
+          class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+          @click="goToExternal"
+        />
+        <div class="line-clamp-2 text-3xl font-extralight">
+          {{ playsStore.currentPlays[playListId].item!.title }}
+        </div>
+        <div class="font-bold">
+          {{ playsStore.currentPlays[playListId].item!.videoOwnerChannelTitle }}
+        </div>
+        <div class="my-1 border-b border-transparent"></div>
+        <div class="line-clamp-2">
+          {{ playsStore.currentPlays[playListId].item!.description }}
+        </div>
+        <div class="flex space-x-1">
+          <ChevronDoubleLeftIcon
+            class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+            @click="prevVideo"
+          />
+          <PlayPauseIcon
+            class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+            @click="
+              player.getPlayerState() === 1
+                ? player.pauseVideo()
+                : player.playVideo()
+            "
+          ></PlayPauseIcon>
+          <ChevronDoubleRightIcon
+            class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+            @click="nextVideo"
+          />
+          <div class="grow"></div>
+          <ArrowPathIcon
+            class="inline-block h-10 w-10 cursor-pointer place-self-end p-2 hover:bg-slate-200"
+            @click="resetPlayList"
+          />
+        </div>
+      </div>
     </div>
     <div class="flex w-[1200px]">
       <div
