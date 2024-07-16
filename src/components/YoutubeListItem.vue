@@ -11,7 +11,7 @@ import {
   ArrowDownTrayIcon,
   ArrowPathIcon,
 } from "@heroicons/vue/16/solid";
-import { usePlaysStore } from "../store/plays";
+import { usePlaysStore } from "../stores/plays";
 import { PlayListItem } from "../types";
 
 import YoutubeVideoCard from "./YoutubeVideoCard.vue";
@@ -26,6 +26,9 @@ enum PlayListType {
 const route = useRoute();
 const playsStore = usePlaysStore();
 
+console.log(playsStore.playLists);
+console.log(playsStore.currentPlays);
+
 const playerContainer = ref<HTMLElement | null>(null);
 let player: any = null;
 
@@ -35,9 +38,18 @@ const reversedPrevList = computed(() =>
   playsStore.playLists[playListId]?.prev.slice().reverse(),
 );
 
-const onYouTubeIframeAPIReady = (videoId: string, startSeconds: number) => {
+const onYouTubeIframeAPIReady = async (
+  videoId: string,
+  startSeconds: number,
+) => {
   // parse to int
   startSeconds = parseInt(startSeconds.toString());
+
+  // wait until YT is not undefined
+  while (typeof YT === "undefined" || typeof YT.Player === "undefined") {
+    console.log("YT is undefined");
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   player = new YT.Player(playerContainer.value!, {
     height: "240",
