@@ -15,14 +15,14 @@ interface PlayListItem {
 }
 
 // 플레이리스트의 구조 정의
-interface PlayList {
+interface PlayListQueues {
   prev: PlayListItem[];
   next: PlayListItem[];
 }
 
 // 전체 플레이리스트 객체의 타입 정의
 interface PlayLists {
-  [key: string]: PlayList;
+  [key: string]: PlayListQueues;
 }
 
 interface CurrentPlay {
@@ -49,4 +49,4 @@ interface CurrentPlays {
   [key: string]: CurrentPlay;
 }
 
-export type { PlayListItem, PlayList, PlayLists, CurrentPlay, CurrentPlays };
+export type { PlayListItem, PlayListQueues, PlayLists, CurrentPlay, CurrentPlays };

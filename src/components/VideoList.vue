@@ -11,9 +11,11 @@ const videos = ref([]);
 const youtubeLists = ref<any>([]);
 
 onMounted(async () => {
-  const response = await axios.get("http://localhost:8080/videos");
+  const response = await axios.get("http://localhost:8080/api/v1/video/videos");
   videos.value = response.data.content;
-  const youtubeResponse = await axios.get("http://localhost:8080/lists");
+  const youtubeResponse = await axios.get(
+    "http://localhost:8080/api/v1/list/lists",
+  );
   youtubeLists.value = youtubeResponse.data.content;
 });
 

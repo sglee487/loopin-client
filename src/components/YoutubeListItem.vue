@@ -10,7 +10,10 @@ import {
   ArrowTopRightOnSquareIcon,
   ArrowDownTrayIcon,
   ArrowPathIcon,
+  ArrowUpTrayIcon,
 } from "@heroicons/vue/16/solid";
+import { useKeycloak } from "@josempgon/vue-keycloak";
+
 import { usePlaysStore } from "../stores/plays";
 import { PlayListItem } from "../types";
 
@@ -154,7 +157,7 @@ interface ResponseData {
 
 const loadPlaylist = async (refresh: boolean = false) => {
   const response = await axios.get(
-    `http://localhost:8080/listitems?playlistId=${playListId}`,
+    `http://localhost:8080/api/v1/list/listitems?playlistId=${playListId}`,
   );
 
   const data: ResponseData = response.data;
@@ -278,6 +281,11 @@ const nextVideo = () => {
       startSeconds: playsStore.currentPlays[playListId].startSeconds,
     });
   }
+};
+
+const uploadUserPlays = async () => {
+  // usePlaysStore.uploadUserPlays(playListId);
+  playsStore.uploadUserPlays(playListId);
 };
 
 const redownload = () => {
@@ -472,6 +480,10 @@ setInterval(() => {
                 @click="shuffleNext"
               />
             </div>
+            <ArrowUpTrayIcon
+              class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+              @click="uploadUserPlays"
+            />
             <ArrowDownTrayIcon
               class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
               @click="redownload"
