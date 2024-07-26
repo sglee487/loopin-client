@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 
+import { getCurrentInstance } from "vue";
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import {
@@ -12,9 +13,8 @@ import {
   ArrowPathIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/vue/16/solid";
-import { useKeycloak } from "@josempgon/vue-keycloak";
 
-import { usePlaysStore } from "../stores/plays";
+import { usePlaysStore } from "../stores/playsStore";
 import { PlayListItem } from "../types";
 
 import YoutubeVideoCard from "./YoutubeVideoCard.vue";
@@ -25,6 +25,9 @@ enum PlayListType {
   prev = "prev",
   next = "next",
 }
+
+const instance = getCurrentInstance();
+const authStore = instance?.appContext.config.globalProperties.$store;
 
 const route = useRoute();
 const playsStore = usePlaysStore();
@@ -285,7 +288,7 @@ const nextVideo = () => {
 
 const uploadUserPlays = async () => {
   // usePlaysStore.uploadUserPlays(playListId);
-  playsStore.uploadUserPlays(playListId);
+  playsStore.uploadUserPlays(playListId, authStore.user.token);
 };
 
 const redownload = () => {

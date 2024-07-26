@@ -1,72 +1,108 @@
-// import Keycloak from 'keycloak-js';
+import Keycloak from "keycloak-js";
 
-// const options = {
-//   url: 'http://localhost:8989',
-//   clientId: 'snservice',
-//   realm: 'snclient'
-// }
+import axios from "axios";
+import qs from "qs";
 
-// const keycloak = new Keycloak(options);
-// let authenticated = false;
-// let store = null;
+const options = {
+  url: import.meta.env.VITE_OAUTH_URL,
+  realm: import.meta.env.VITE_OAUTH_REALM,
+  clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
+};
 
-// /**
-//  * Initializes Keycloak, then run callback. This will prompt you to login.
-//  *
-//  * @param onAuthenticatedCallback
-//  */
-// async function init(onInitCallback: any) {
-//   try {
-//     authenticated = await keycloak.init({ onLoad: "login-required" })
-//     onInitCallback()
-//   } catch (error) {
-//     console.error("Keycloak init failed")
-//     console.error(error)
-//   }
-// };
+const keycloak = new Keycloak(options);
+let store: any = null;
 
-// /**
-//  * Initializes store with Keycloak user data
-//  *
-//  */
-// async function initStore(storeInstance) {
-//   try {
-//     store = storeInstance
-//     store.initOauth(keycloak)
+// https://medium.com/@erinlim555/keycloak-authentication-with-vue3-pinia-cebae814b9db
+/**
+ * Initializes Keycloak, then run callback. This will prompt you to login.
+ *
+ * @param onAuthenticatedCallback
+ */
+async function init() {
+  try {
+    keycloak
+      .init({
+        onLoad: "check-sso",
+      })
+      .then((authenticated) => {
+        if (authenticated) {
+          store.saveOauth(keycloak);
+        }
+      });
+  } catch (error) {
+    console.error("Keycloak init failed");
+    console.error(error);
+  }
+}
 
-//     // Show alert if user is not authenticated
-//     if (!authenticated) { alert("not authenticated") }
-//   } catch (error) {
-//     console.error("Keycloak init failed")
-//     console.error(error)
-//   }
-// };
+/**
+ * Initializes store with Keycloak user data
+ *
+ */
+async function initStore(storeInstance: any) {
+  try {
+    store = storeInstance;
+  } catch (error) {
+    console.error("Keycloak init failed");
+    console.error(error);
+  }
+}
 
-// /**
-//  * Logout user
-//  */
-// function logout(url) {
-//   keycloak.logout({ redirectUri: url });
-// }
+/**
+ * Logout user
+ */
+function logout(url: string) {
+  keycloak.logout({ redirectUri: url });
+}
 
-// /**
-//  * Refreshes token
-//  */
-// async function refreshToken() {
-//   try {
-//     await keycloak.updateToken(480);
-//     return keycloak;
-//   } catch (error) {
-//     console.error('Failed to refresh token');
-//     console.error(error);
-//   }
-// }
+/**
+ * Refreshes token
+ */
+async function refreshToken() {
+  try {
+    await keycloak.updateToken(480);
+    return keycloak;
+  } catch (error) {
+    console.error("Failed to refresh token");
+    console.error(error);
+  }
+}
 
-// const KeycloakService = {
-//   CallInit: init,
-//   CallInitStore: initStore,
-//   CallLogout: logout,
-//   CallTokenRefresh: refreshToken
-// };
+async function refreshTokenWithEndpoint(refToken: string) {
+  try {
+    let data = qs.stringify({
+      grant_type: "refresh_token",
+      client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URL,
+      refresh_token: refToken,
+    });
 
-// export default KeycloakService;
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${import.meta.env.VITE_OAUTH_URL}/realms/${import.meta.env.VITE_OAUTH_REALM}/protocol/openid-connect/token`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: data,
+    };
+
+    const response = await axios.request(config);
+    return response.data["access_token"];
+  } catch (error) {
+    console.error("Failed to refresh token");
+    console.error(error);
+    throw error;
+  }
+}
+
+const KeycloakService = {
+  CallInit: init,
+  CallInitStore: initStore,
+  CallLogin: keycloak.login,
+  CallLogout: logout,
+  CallTokenRefresh: refreshToken,
+  refreshUserTokenWithEndpoint: refreshTokenWithEndpoint,
+};
+
+export default KeycloakService;
