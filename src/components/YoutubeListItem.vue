@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 
-import { getCurrentInstance } from "vue";
-import { ref, onMounted, computed, onBeforeUnmount } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  onBeforeUnmount,
+  getCurrentInstance,
+  watch,
+  onUnmounted,
+} from "vue";
 import { useRoute } from "vue-router";
 import {
   ChevronDoubleLeftIcon,
@@ -15,6 +22,7 @@ import {
 } from "@heroicons/vue/16/solid";
 
 import { usePlaysStore } from "../stores/playsStore";
+import { AuthStoreType } from "../stores/authStore";
 import { PlayListItem } from "../types";
 
 import YoutubeVideoCard from "./YoutubeVideoCard.vue";
@@ -27,7 +35,8 @@ enum PlayListType {
 }
 
 const instance = getCurrentInstance();
-const authStore = instance?.appContext.config.globalProperties.$store;
+const authStore: AuthStoreType =
+  instance?.appContext.config.globalProperties.$store;
 
 const route = useRoute();
 const playsStore = usePlaysStore();
@@ -42,6 +51,19 @@ const playListId: string = route.params.playListId as string;
 
 const reversedPrevList = computed(() =>
   playsStore.playLists[playListId]?.prev.slice().reverse(),
+);
+
+watch(
+  () => authStore.authenticated,
+  async (authenticated) => {
+    if (authenticated) {
+      await playsStore.downloadUserCurrentPlays(authStore.user.token);
+      await playsStore.downloadUserPlayListQueues(
+        playListId,
+        authStore.user.token,
+      );
+    }
+  },
 );
 
 const onYouTubeIframeAPIReady = async (
@@ -95,6 +117,11 @@ const onPlayerStateChange = (event: any) => {
           videoId: playsStore.currentPlays[playListId].item.resource.videoId,
         });
       }
+
+      if (authStore.authenticated) {
+        playsStore.currentPlays[playListId].startSeconds = 0;
+        playsStore.uploadUserPlays(playListId, authStore.user.token);
+      }
     }
   }
   if (event.data === 0) {
@@ -113,12 +140,18 @@ const onPlayerStateChange = (event: any) => {
 };
 
 onMounted(async () => {
+  if (authStore.authenticated) {
+    await playsStore.downloadUserPlayListQueues(
+      playListId,
+      authStore.user.token,
+    );
+  }
+
   if (!Object.keys(playsStore.playLists).includes(playListId)) {
     // playsStore.playLists[playListId] = {
     //   prev: [],
     //   next: [],
     // };
-
     await loadPlaylist();
   }
 
@@ -160,7 +193,7 @@ interface ResponseData {
 
 const loadPlaylist = async (refresh: boolean = false) => {
   const response = await axios.get(
-    `http://localhost:8080/api/v1/list/listitems?playlistId=${playListId}`,
+    `${import.meta.env.VITE_SERVICE_URL}/api/v1/list/listitems?playlistId=${playListId}`,
   );
 
   const data: ResponseData = response.data;
@@ -355,11 +388,34 @@ const goToExternal = () => {
 };
 
 // save startSeconds in every 5 seconds
+// and in every 30 seconds, upload user plays
+// in one interval
+let uploadCounter = 0;
+
 setInterval(() => {
   if (player) {
     playsStore.currentPlays[playListId].startSeconds = player.getCurrentTime();
   }
+
+  if (uploadCounter >= 6) {
+    // 5초 * 6 = 30초
+    if (authStore.authenticated) {
+      playsStore.uploadUserPlays(playListId, authStore.user.token);
+    }
+    uploadCounter = 0; // Reset the counter
+  }
+
+  uploadCounter++;
 }, 5000);
+
+onUnmounted(() => {
+  if (player) {
+    playsStore.currentPlays[playListId].startSeconds = player.getCurrentTime();
+    if (authStore.authenticated) {
+      playsStore.uploadUserPlays(playListId, authStore.user.token);
+    }
+  }
+});
 </script>
 
 <template>

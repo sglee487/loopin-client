@@ -1,17 +1,18 @@
 interface PlayListItem {
-  publishedAt: string;
   channelId: string;
+  channelTitle: string;
   title: string;
   description: string;
   thumbnail: string;
   playListId: string;
   position: number;
+  publishedAt: string;
   resource: {
     kind: string;
     videoId: string;
   };
-  videoOwnerChannelTitle: string;
   videoOwnerChannelId: string;
+  videoOwnerChannelTitle: string;
 }
 
 // 플레이리스트의 구조 정의
@@ -49,4 +50,10 @@ interface CurrentPlays {
   [key: string]: CurrentPlay;
 }
 
-export type { PlayListItem, PlayListQueues, PlayLists, CurrentPlay, CurrentPlays };
+export type {
+  PlayListItem,
+  PlayListQueues,
+  PlayLists,
+  CurrentPlay,
+  CurrentPlays,
+};

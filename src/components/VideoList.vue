@@ -11,10 +11,12 @@ const videos = ref([]);
 const youtubeLists = ref<any>([]);
 
 onMounted(async () => {
-  const response = await axios.get("http://localhost:8080/api/v1/video/videos");
+  const response = await axios.get(
+    `${import.meta.env.VITE_SERVICE_URL}/api/v1/video/videos`,
+  );
   videos.value = response.data.content;
   const youtubeResponse = await axios.get(
-    "http://localhost:8080/api/v1/list/lists",
+    `${import.meta.env.VITE_SERVICE_URL}/api/v1/list/lists`,
   );
   youtubeLists.value = youtubeResponse.data.content;
 });
@@ -31,7 +33,7 @@ const numberToTIme = (number: number) => {
 <template>
   <div>
     <div class="flex flex-wrap space-x-2">
-      <router-link
+      <!-- <router-link
         :to="{ name: 'watch', params: { uuid: video.uuid } }"
         v-for="video in videos"
         :key="video.id"
@@ -58,7 +60,7 @@ const numberToTIme = (number: number) => {
           <div>{{ video.author }}</div>
           <timeago class="text-sm" :datetime="video.uploadedAt" />
         </div>
-      </router-link>
+      </router-link> -->
     </div>
     <div class="py-2 text-lg font-extrabold text-red-500">youtube</div>
     <div class="flex flex-wrap space-x-2">

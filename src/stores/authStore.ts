@@ -41,7 +41,9 @@ export const useAuthStore = defineStore({
       this.authenticated = keycloak.authenticated || false;
       this.user.username = keycloak.idTokenParsed?.preferred_username;
       this.user.token = keycloak.token;
+      this.user.tokenExp = keycloak.tokenParsed?.exp;
       this.user.refToken = keycloak.refreshToken;
+      this.user.refTokenExp = keycloak.refreshTokenParsed?.exp;
     },
 
     async login() {
@@ -109,6 +111,8 @@ export const useAuthStore = defineStore({
         }
       } catch (error) {
         console.error(error);
+        // keycloakService.CallLogout(import.meta.env.VITE_APP_URL);
+        this.clearUserData();
       }
     },
     // Clear user's store data
@@ -118,3 +122,6 @@ export const useAuthStore = defineStore({
     },
   },
 });
+
+// Export the store type
+export type AuthStoreType = ReturnType<typeof useAuthStore>;

@@ -1,13 +1,27 @@
 <script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/16/solid";
 
-import { getCurrentInstance } from "vue";
+import { getCurrentInstance, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
+
+import { usePlaysStore } from "./stores/playsStore";
+import { AuthStoreType } from "./stores/authStore";
 
 const router = useRouter();
 
 const instance = getCurrentInstance();
-const authStore = instance?.appContext.config.globalProperties.$store;
+const authStore: AuthStoreType =
+  instance?.appContext.config.globalProperties.$store;
+const playsStore = usePlaysStore();
+
+watch(
+  () => authStore.authenticated,
+  async (authenticated) => {
+    if (authenticated) {
+      await playsStore.downloadUserCurrentPlays(authStore.user.token);
+    }
+  },
+);
 
 const keycloakView = async () => {
   console.log(authStore.user);
@@ -28,18 +42,30 @@ const goHome = () => {
 
 // refresh access token every 5 minutes
 // if access token - 5 minutes < current time, refresh token
-setInterval(
-  () => {
-    if (authStore.authenticated) {
-      const currentTime = new Date().getTime();
-      const tokenExpireTime = authStore.user.tokenParsed.exp * 1000;
-      if (tokenExpireTime - 5 * 60 * 1000 < currentTime) {
-        authStore.refreshUserTokenWithEndpoint();
-      }
+
+const refreshUserToken = async () => {
+  if (authStore.authenticated && authStore.user.tokenExp) {
+    const currentTime = new Date().getTime();
+    const tokenExpireTime = authStore.user.tokenExp * 1000;
+    if (tokenExpireTime - 5 * 60 * 1000 < currentTime) {
+      await authStore.refreshUserTokenWithEndpoint();
     }
+  }
+};
+
+setInterval(
+  async () => {
+    await refreshUserToken();
   },
   5 * 60 * 1000,
 );
+
+onMounted(async () => {
+  await refreshUserToken();
+  if (authStore.authenticated) {
+    playsStore.downloadUserCurrentPlays(authStore.user.token);
+  }
+});
 </script>
 
 <template>

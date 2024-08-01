@@ -11,7 +11,7 @@ const player = ref(null);
 
 onMounted(() => {
   axios
-    .get(`http://localhost:8080/video/${route.params.uuid}`)
+    .get(`${import.meta.env.VITE_SERVICE_URL}/video/${route.params.uuid}`)
     .then((response) => {
       videoInfo.value = response.data;
     });

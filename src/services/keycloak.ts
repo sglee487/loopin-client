@@ -20,15 +20,13 @@ let store: any = null;
  */
 async function init() {
   try {
-    keycloak
-      .init({
-        onLoad: "check-sso",
-      })
-      .then((authenticated) => {
-        if (authenticated) {
-          store.saveOauth(keycloak);
-        }
-      });
+    const result = await keycloak.init({
+      onLoad: "check-sso",
+    });
+
+    if (result) {
+      await store.saveOauth(keycloak);
+    }
   } catch (error) {
     console.error("Keycloak init failed");
     console.error(error);
@@ -51,8 +49,9 @@ async function initStore(storeInstance: any) {
 /**
  * Logout user
  */
-function logout(url: string) {
-  keycloak.logout({ redirectUri: url });
+function logout(redirectUri: string) {
+  // keycloak.logout({ redirectUri: redirectUri });
+  keycloak.logout();
 }
 
 /**
