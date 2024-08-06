@@ -14,8 +14,16 @@ import timeago from "vue-timeago3";
 import VideoListVue from "./components/VideoList.vue";
 import WatchVue from "./components/Watch.vue";
 import YoutubeListItem from "./components/YoutubeListItem.vue";
-import AuthStorePlugin from "./plugins/authStore";
-import keycloakService from "./services/keycloak";
+
+import Keycloak from "keycloak-js";
+
+const options = {
+  url: import.meta.env.VITE_OAUTH_URL,
+  realm: import.meta.env.VITE_OAUTH_REALM,
+  clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
+};
+
+const keycloak = new Keycloak(options);
 
 const routes: Array<RouteRecordRaw> = [
   { path: "/", name: "home", component: VideoListVue },
@@ -35,15 +43,22 @@ const router = createRouter({
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
-const renderApp = async () => {
-  createApp(App)
-    .use(pinia)
-    .use(router)
-    .use(VueVideoPlayer)
-    .use(AuthStorePlugin, { pinia })
-    .use(timeago)
-    .mount("#app");
-  await keycloakService.CallInit();
-};
+const app = createApp(App);
 
-renderApp();
+app.provide("$keycloak", keycloak);
+
+// Store keycloak user data into store
+keycloak
+  .init({
+    onLoad: "check-sso",
+    redirectUri: window.location.origin + "/",
+  })
+  .then((e) => {
+    console.log("Keycloak initialized");
+  })
+  .catch((e) => {
+    console.error(e);
+  })
+  .finally(() => {
+    app.use(pinia).use(router).use(VueVideoPlayer).use(timeago).mount("#app");
+  });

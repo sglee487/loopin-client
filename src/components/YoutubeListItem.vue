@@ -1,15 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 
-import {
-  ref,
-  onMounted,
-  computed,
-  onBeforeUnmount,
-  getCurrentInstance,
-  watch,
-  onUnmounted,
-} from "vue";
+import { ref, onMounted, computed, onUnmounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import {
   ChevronDoubleLeftIcon,
@@ -22,11 +14,11 @@ import {
 } from "@heroicons/vue/16/solid";
 
 import { usePlaysStore } from "../stores/playsStore";
-import { AuthStoreType } from "../stores/authStore";
 import { PlayListItem } from "../types";
 
 import YoutubeVideoCard from "./YoutubeVideoCard.vue";
 
+import Keycloak from "keycloak-js";
 import axios from "axios";
 
 enum PlayListType {
@@ -34,9 +26,7 @@ enum PlayListType {
   next = "next",
 }
 
-const instance = getCurrentInstance();
-const authStore: AuthStoreType =
-  instance?.appContext.config.globalProperties.$store;
+const keycloak = inject("$keycloak") as Keycloak;
 
 const route = useRoute();
 const playsStore = usePlaysStore();
@@ -51,19 +41,6 @@ const playListId: string = route.params.playListId as string;
 
 const reversedPrevList = computed(() =>
   playsStore.playLists[playListId]?.prev.slice().reverse(),
-);
-
-watch(
-  () => authStore.authenticated,
-  async (authenticated) => {
-    if (authenticated) {
-      await playsStore.downloadUserCurrentPlays(authStore.user.token);
-      await playsStore.downloadUserPlayListQueues(
-        playListId,
-        authStore.user.token,
-      );
-    }
-  },
 );
 
 const onYouTubeIframeAPIReady = async (
@@ -118,9 +95,8 @@ const onPlayerStateChange = (event: any) => {
         });
       }
 
-      if (authStore.authenticated) {
-        playsStore.currentPlays[playListId].startSeconds = 0;
-        playsStore.uploadUserPlays(playListId, authStore.user.token);
+      if (keycloak.authenticated) {
+        uploadUserPlays({ startSeconds: 0 });
       }
     }
   }
@@ -140,18 +116,15 @@ const onPlayerStateChange = (event: any) => {
 };
 
 onMounted(async () => {
-  if (authStore.authenticated) {
-    await playsStore.downloadUserPlayListQueues(
-      playListId,
-      authStore.user.token,
-    );
+  if (keycloak.authenticated) {
+    await playsStore.downloadUserPlayListQueues(playListId, keycloak.token);
   }
 
   if (!Object.keys(playsStore.playLists).includes(playListId)) {
-    // playsStore.playLists[playListId] = {
-    //   prev: [],
-    //   next: [],
-    // };
+    playsStore.playLists[playListId] = {
+      prev: [],
+      next: [],
+    };
     await loadPlaylist();
   }
 
@@ -164,12 +137,6 @@ onMounted(async () => {
     playsStore.currentPlays[playListId]?.item?.resource.videoId ?? "",
     playsStore.currentPlays[playListId].startSeconds,
   );
-});
-
-onBeforeUnmount(() => {
-  playsStore.currentPlays[playListId].startSeconds = player.getCurrentTime();
-
-  player.destroy();
 });
 
 interface ResponseData {
@@ -294,6 +261,10 @@ const prevVideo = () => {
       videoId: playsStore.currentPlays[playListId].item.resource.videoId,
       startSeconds: playsStore.currentPlays[playListId].startSeconds,
     });
+
+    if (keycloak.authenticated) {
+      uploadUserPlays({ startSeconds: 0 });
+    }
   }
 };
 
@@ -316,12 +287,25 @@ const nextVideo = () => {
       videoId: playsStore.currentPlays[playListId]?.item?.resource.videoId,
       startSeconds: playsStore.currentPlays[playListId].startSeconds,
     });
+
+    if (keycloak.authenticated) {
+      uploadUserPlays({ startSeconds: 0 });
+    }
   }
 };
 
-const uploadUserPlays = async () => {
-  // usePlaysStore.uploadUserPlays(playListId);
-  playsStore.uploadUserPlays(playListId, authStore.user.token);
+const uploadUserPlays = async ({
+  startSeconds = null,
+}: {
+  startSeconds?: number | null;
+}) => {
+  if (startSeconds !== null) {
+    playsStore.currentPlays[playListId].startSeconds = startSeconds;
+  }
+
+  if (keycloak.authenticated) {
+    playsStore.uploadUserPlays(playListId, keycloak.token);
+  }
 };
 
 const redownload = () => {
@@ -399,22 +383,23 @@ setInterval(() => {
 
   if (uploadCounter >= 6) {
     // 5초 * 6 = 30초
-    if (authStore.authenticated) {
-      playsStore.uploadUserPlays(playListId, authStore.user.token);
+    if (keycloak.authenticated && player.state === 1) {
+      uploadUserPlays({ startSeconds: player.getCurrentTime() });
     }
     uploadCounter = 0; // Reset the counter
   }
 
   uploadCounter++;
-}, 5000);
+}, 5 * 1000);
 
 onUnmounted(() => {
   if (player) {
     playsStore.currentPlays[playListId].startSeconds = player.getCurrentTime();
-    if (authStore.authenticated) {
-      playsStore.uploadUserPlays(playListId, authStore.user.token);
+    if (keycloak.authenticated) {
+      uploadUserPlays({ startSeconds: player.getCurrentTime() });
     }
   }
+  player.destroy();
 });
 </script>
 
@@ -541,7 +526,9 @@ onUnmounted(() => {
             </div>
             <ArrowUpTrayIcon
               class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
-              @click="uploadUserPlays"
+              @click="
+                uploadUserPlays({ startSeconds: player.getCurrentTime() })
+              "
             />
             <ArrowDownTrayIcon
               class="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"

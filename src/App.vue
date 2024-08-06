@@ -1,31 +1,19 @@
 <script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/16/solid";
 
-import { getCurrentInstance, watch, onMounted } from "vue";
+import { inject } from "vue";
 import { useRouter } from "vue-router";
 
 import { usePlaysStore } from "./stores/playsStore";
-import { AuthStoreType } from "./stores/authStore";
+import Keycloak from "keycloak-js";
 
 const router = useRouter();
-
-const instance = getCurrentInstance();
-const authStore: AuthStoreType =
-  instance?.appContext.config.globalProperties.$store;
+const keycloak = inject("$keycloak") as Keycloak;
 const playsStore = usePlaysStore();
 
-watch(
-  () => authStore.authenticated,
-  async (authenticated) => {
-    if (authenticated) {
-      await playsStore.downloadUserCurrentPlays(authStore.user.token);
-    }
-  },
-);
-
 const keycloakView = async () => {
-  console.log(authStore.user);
-  console.log(authStore.user.token);
+  console.log(keycloak);
+  console.log(keycloak.authenticated);
 };
 
 const goBack = () => {
@@ -42,13 +30,12 @@ const goHome = () => {
 
 // refresh access token every 5 minutes
 // if access token - 5 minutes < current time, refresh token
-
 const refreshUserToken = async () => {
-  if (authStore.authenticated && authStore.user.tokenExp) {
+  if (keycloak.authenticated && keycloak.token && keycloak.tokenParsed?.exp) {
     const currentTime = new Date().getTime();
-    const tokenExpireTime = authStore.user.tokenExp * 1000;
+    const tokenExpireTime = keycloak.tokenParsed?.exp * 1000;
     if (tokenExpireTime - 5 * 60 * 1000 < currentTime) {
-      await authStore.refreshUserTokenWithEndpoint();
+      await keycloak.updateToken();
     }
   }
 };
@@ -59,13 +46,6 @@ setInterval(
   },
   5 * 60 * 1000,
 );
-
-onMounted(async () => {
-  await refreshUserToken();
-  if (authStore.authenticated) {
-    playsStore.downloadUserCurrentPlays(authStore.user.token);
-  }
-});
 </script>
 
 <template>
@@ -73,14 +53,14 @@ onMounted(async () => {
     <div class="w-fit cursor-pointer text-red-500" @click="goHome">
       snservice
     </div>
+    {{ keycloak.tokenParsed?.email }}
     <div @click="keycloakView">keycloakview</div>
-    <div v-if="authStore.authenticated">
-      <div>{{ authStore.user }}</div>
-      <div @click="authStore.logout()">keycloakLogout</div>
-      <div @click="authStore.refreshUserTokenWithEndpoint()">refresh token</div>
+    <div v-if="keycloak.authenticated">
+      <div @click="keycloak.logout()">keycloakLogout</div>
+      <div @click="keycloak.updateToken()">refresh token</div>
     </div>
     <div v-else>
-      <div @click="authStore.login()">keycloakLogin</div>
+      <div @click="keycloak.login()">keycloakLogin</div>
     </div>
     <div>
       <ChevronLeftIcon
