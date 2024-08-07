@@ -4,12 +4,12 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/16/solid";
 import { inject } from "vue";
 import { useRouter } from "vue-router";
 
-import { usePlaysStore } from "./stores/playsStore";
+// import { usePlaysStore } from "./stores/playsStore";
 import Keycloak from "keycloak-js";
 
 const router = useRouter();
 const keycloak = inject("$keycloak") as Keycloak;
-const playsStore = usePlaysStore();
+// const playsStore = usePlaysStore();
 
 const keycloakView = async () => {
   console.log(keycloak);

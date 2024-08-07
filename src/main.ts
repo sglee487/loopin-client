@@ -53,10 +53,11 @@ keycloak
     onLoad: "check-sso",
     redirectUri: window.location.origin + "/",
   })
-  .then((e) => {
+  .then((e: any) => {
     console.log("Keycloak initialized");
+    console.error(e);
   })
-  .catch((e) => {
+  .catch((e: any) => {
     console.error(e);
   })
   .finally(() => {

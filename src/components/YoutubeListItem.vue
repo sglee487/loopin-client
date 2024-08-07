@@ -159,6 +159,7 @@ interface ResponseData {
 }
 
 const loadPlaylist = async (refresh: boolean = false) => {
+  console.log(refresh);
   const response = await axios.get(
     `${import.meta.env.VITE_SERVICE_URL}/api/v1/list/listitems?playlistId=${playListId}`,
   );

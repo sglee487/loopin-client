@@ -1,7 +1,7 @@
 {
   "productName": "snclient",
   "version": "0.0.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "xyz.snservice.prod",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:14200",

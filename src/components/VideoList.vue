@@ -21,13 +21,13 @@ onMounted(async () => {
   youtubeLists.value = youtubeResponse.data.content;
 });
 
-const numberToTIme = (number: number) => {
-  const hours = Math.floor(number / 3600);
-  const minutes = Math.floor((number % 3600) / 60);
-  const seconds = Math.floor(number % 60);
+// const numberToTime = (number: number) => {
+//   const hours = Math.floor(number / 3600);
+//   const minutes = Math.floor((number % 3600) / 60);
+//   const seconds = Math.floor(number % 60);
 
-  return `${hours ? `${hours}:` : ""}${minutes}:${seconds}`;
-};
+//   return `${hours ? `${hours}:` : ""}${minutes}:${seconds}`;
+// };
 </script>
 
 <template>

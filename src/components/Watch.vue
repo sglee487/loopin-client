@@ -7,7 +7,7 @@ import axios from "axios";
 const route = useRoute();
 
 const videoInfo = ref({});
-const player = ref(null);
+// const player = ref(null);
 
 onMounted(() => {
   axios
@@ -17,17 +17,17 @@ onMounted(() => {
     });
 });
 
-const handleEvent = (log) => {
-  console.log("Basic player event", log);
-};
+// const handleEvent = (log: any) => {
+//   console.log("Basic player event", log);
+// };
 
-const handleMounted = (payload) => {
-  player.value = payload.player;
-};
+// const handleMounted = (payload: any) => {
+//   player.value = payload.player;
+// };
 </script>
 
 <template>
-  <video-player
+  <!-- <video-player
     class="video-player vjs-big-play-centered"
     :src="`http://localhost:8080/video-hls/${route.params.uuid}/index.m3u8`"
     :poster="
@@ -53,5 +53,5 @@ const handleMounted = (payload) => {
     @canplay="handleEvent($event)"
     @canplaythrough="handleEvent($event)"
     @timeupdate="handleEvent(player?.currentTime())"
-  />
+  /> -->
 </template>
