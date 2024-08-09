@@ -118,7 +118,8 @@ const onPlayerStateChange = (event: any) => {
 
 onMounted(async () => {
   if (keycloak.authenticated) {
-    await playsStore.downloadUserPlayListQueues(playListId, keycloak.token);
+    await playsStore.downloadUserCurrentPlays();
+    await playsStore.downloadUserPlayListQueues(playListId);
   }
 
   if (!Object.keys(playsStore.playLists).includes(playListId)) {
@@ -306,7 +307,7 @@ const uploadUserPlays = async ({
   }
 
   if (keycloak.authenticated) {
-    playsStore.uploadUserPlays(playListId, keycloak.token);
+    playsStore.uploadUserPlays(playListId);
   }
 };
 

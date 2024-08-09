@@ -2,23 +2,26 @@ import { defineStore } from "pinia";
 import { ref, inject } from "vue";
 import { PlayLists, CurrentPlays, PlayListItem } from "../types";
 
-import axios from "axios";
+import Keycloak from "keycloak-js";
 
+import axios from "axios";
 export const usePlaysStore = defineStore(
   "plays",
   () => {
-    const serviceURL = inject("$serviceURL");
+    const keycloak = inject("$keycloak") as Keycloak;
+    const serviceURL = inject("$serviceURL") as string;
 
     // State
     const playLists = ref<PlayLists>({});
     const currentPlays = ref<CurrentPlays>({});
 
     // Actions
-    async function uploadUserPlays(
-      playListId: string,
-      token: string | null | undefined,
-    ) {
-      if (token === undefined || token === null) {
+    async function uploadUserPlays(playListId: string) {
+      if (
+        !keycloak.authenticated ||
+        keycloak.token === undefined ||
+        keycloak.token === null
+      ) {
         console.log("token is null");
         return;
       }
@@ -37,7 +40,7 @@ export const usePlaysStore = defineStore(
         url: `${serviceURL}/api/v1/user_plays`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${keycloak.token}`,
         },
         data: data,
       };
@@ -50,8 +53,12 @@ export const usePlaysStore = defineStore(
       }
     }
 
-    async function downloadUserCurrentPlays(token: string | null | undefined) {
-      if (token === undefined || token === null) {
+    async function downloadUserCurrentPlays() {
+      if (
+        !keycloak.authenticated ||
+        keycloak.token === undefined ||
+        keycloak.token === null
+      ) {
         console.log("token is null");
         return;
       }
@@ -62,7 +69,7 @@ export const usePlaysStore = defineStore(
         url: `${serviceURL}/api/v1/user_plays/current-plays`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${keycloak.token}`,
         },
       };
 
@@ -96,16 +103,15 @@ export const usePlaysStore = defineStore(
       }
     }
 
-    async function downloadUserPlayListQueues(
-      playListId: string,
-      token: string | null | undefined,
-    ) {
-      if (token === undefined || token === null) {
+    async function downloadUserPlayListQueues(playListId: string) {
+      if (
+        !keycloak.authenticated ||
+        keycloak.token === undefined ||
+        keycloak.token === null
+      ) {
         console.log("token is null");
         return;
       }
-
-      console.log(serviceURL);
 
       const config = {
         method: "get",
@@ -113,7 +119,7 @@ export const usePlaysStore = defineStore(
         url: `${serviceURL}/api/v1/user_plays/playlist-queues/${playListId}`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${keycloak.token}`,
         },
       };
 
