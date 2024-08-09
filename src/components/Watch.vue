@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 
 import axios from "axios";
@@ -8,13 +8,12 @@ const route = useRoute();
 
 const videoInfo = ref({});
 // const player = ref(null);
+const serviceURL = inject("$serviceURL") as string;
 
 onMounted(() => {
-  axios
-    .get(`${import.meta.env.VITE_SERVICE_URL}/video/${route.params.uuid}`)
-    .then((response) => {
-      videoInfo.value = response.data;
-    });
+  axios.get(`${serviceURL}/video/${route.params.uuid}`).then((response) => {
+    videoInfo.value = response.data;
+  });
 });
 
 // const handleEvent = (log: any) => {

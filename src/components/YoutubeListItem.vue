@@ -27,6 +27,7 @@ enum PlayListType {
 }
 
 const keycloak = inject("$keycloak") as Keycloak;
+const serviceURL = inject("$serviceURL") as string;
 
 const route = useRoute();
 const playsStore = usePlaysStore();
@@ -161,7 +162,7 @@ interface ResponseData {
 const loadPlaylist = async (refresh: boolean = false) => {
   console.log(refresh);
   const response = await axios.get(
-    `${import.meta.env.VITE_SERVICE_URL}/api/v1/list/listitems?playlistId=${playListId}`,
+    `${serviceURL}/api/v1/list/listitems?playlistId=${playListId}`,
   );
 
   const data: ResponseData = response.data;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import axios from "axios";
 import {
   HandThumbUpIcon,
@@ -10,14 +10,12 @@ import {
 const videos = ref([]);
 const youtubeLists = ref<any>([]);
 
+const serviceURL = inject("$serviceURL") as string;
+
 onMounted(async () => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_SERVICE_URL}/api/v1/video/videos`,
-  );
+  const response = await axios.get(`${serviceURL}/api/v1/video/videos`);
   videos.value = response.data.content;
-  const youtubeResponse = await axios.get(
-    `${import.meta.env.VITE_SERVICE_URL}/api/v1/list/lists`,
-  );
+  const youtubeResponse = await axios.get(`${serviceURL}/api/v1/list/lists`);
   youtubeLists.value = youtubeResponse.data.content;
 });
 

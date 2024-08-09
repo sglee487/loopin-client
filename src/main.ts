@@ -1,3 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
+
 import { createApp } from "vue";
 import "./styles.css";
 import App from "./App.vue";
@@ -17,49 +19,77 @@ import YoutubeListItem from "./components/YoutubeListItem.vue";
 
 import Keycloak from "keycloak-js";
 
-const options = {
-  url: import.meta.env.VITE_OAUTH_URL,
-  realm: import.meta.env.VITE_OAUTH_REALM,
-  clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
+const getFromRust = async (name: string) => {
+  try {
+    return await invoke("get_env", { name });
+  } catch (e) {
+    console.error("getFromRust", e);
+  }
+
+  return "";
 };
 
-const keycloak = new Keycloak(options);
+const main = async () => {
+  const oauthURL = (await getFromRust("TAURI_OAUTH_URL")) as string;
+  const oauthRealm = (await getFromRust("TAURI_OAUTH_REALM")) as string;
+  const oauthClientId = (await getFromRust("TAURI_OAUTH_CLIENT_ID")) as string;
 
-const routes: Array<RouteRecordRaw> = [
-  { path: "/", name: "home", component: VideoListVue },
-  { path: "/watch/:uuid", name: "watch", component: WatchVue },
-  {
-    path: "/playlist/:playListId",
-    name: "youtubeListItem",
-    component: YoutubeListItem,
-  },
-];
+  const serviceURL = (await getFromRust("TAURI_SERVICE_URL")) as string;
 
-const router = createRouter({
-  history: createWebHistory(), // Using HTML5 history mode
-  routes,
-});
+  // alert(`oauthURL: ${oauthURL}`);
+  // alert(`oauthRealm: ${oauthRealm}`);
+  // alert(`oauthClientId: ${oauthClientId}`);
 
-const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
+  // alert(`serviceURL: ${serviceURL}`);
 
-const app = createApp(App);
+  const options = {
+    url: oauthURL,
+    realm: oauthRealm,
+    clientId: oauthClientId,
+  };
 
-app.provide("$keycloak", keycloak);
+  // alert(`options: ${options}`);
 
-// Store keycloak user data into store
-keycloak
-  .init({
-    onLoad: "check-sso",
-    redirectUri: window.location.origin + "/",
-  })
-  .then((e: any) => {
-    console.log("Keycloak initialized");
-    console.error(e);
-  })
-  .catch((e: any) => {
-    console.error(e);
-  })
-  .finally(() => {
-    app.use(pinia).use(router).use(VueVideoPlayer).use(timeago).mount("#app");
+  const keycloak = new Keycloak(options);
+
+  const routes: Array<RouteRecordRaw> = [
+    { path: "/", name: "home", component: VideoListVue },
+    { path: "/watch/:uuid", name: "watch", component: WatchVue },
+    {
+      path: "/playlist/:playListId",
+      name: "youtubeListItem",
+      component: YoutubeListItem,
+    },
+  ];
+
+  const router = createRouter({
+    history: createWebHistory(), // Using HTML5 history mode
+    routes,
   });
+
+  const pinia = createPinia();
+  pinia.use(piniaPluginPersistedstate);
+
+  const app = createApp(App);
+  app.provide("$keycloak", keycloak);
+  app.provide("$serviceURL", serviceURL);
+
+  // Store keycloak user data into store
+  keycloak
+    .init({
+      onLoad: "check-sso",
+      redirectUri: window.location.origin + "/",
+    })
+    .then((e: any) => {
+      console.log("Keycloak initialized");
+      console.log(e);
+    })
+    .catch((e: any) => {
+      console.error(e);
+    })
+    .finally(() => {
+      app.use(pinia).use(router).use(VueVideoPlayer).use(timeago).mount("#app");
+    });
+};
+
+main();

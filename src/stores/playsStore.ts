@@ -1,33 +1,40 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { PlayLists, CurrentPlays, PlayListItem } from "../types";
 
 import axios from "axios";
 
-export const usePlaysStore = defineStore("plays", {
-  state: () => ({
-    playLists: ref<PlayLists>({}),
-    currentPlays: ref<CurrentPlays>({}),
-  }),
-  actions: {
-    async uploadUserPlays(
+export const usePlaysStore = defineStore(
+  "plays",
+  () => {
+    const serviceURL = inject("$serviceURL");
+
+    // State
+    const playLists = ref<PlayLists>({});
+    const currentPlays = ref<CurrentPlays>({});
+
+    // Actions
+    async function uploadUserPlays(
       playListId: string,
       token: string | null | undefined,
     ) {
       if (token === undefined || token === null) {
         console.log("token is null");
+        return;
       }
 
-      let data = {
+      const data = {
         playListId: playListId,
-        playListQueues: this.playLists[playListId],
-        currentPlays: this.currentPlays[playListId],
+        playListQueues: playLists.value[playListId],
+        currentPlays: currentPlays.value[playListId],
       };
 
-      let config = {
+      console.log(serviceURL);
+
+      const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${import.meta.env.VITE_SERVICE_URL}/api/v1/user_plays`,
+        url: `${serviceURL}/api/v1/user_plays`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -35,87 +42,101 @@ export const usePlaysStore = defineStore("plays", {
         data: data,
       };
 
-      axios
-        .request(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    async downloadUserCurrentPlays(token: string | null | undefined) {
+      try {
+        const response = await axios.request(config);
+        console.log(JSON.stringify(response.data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function downloadUserCurrentPlays(token: string | null | undefined) {
       if (token === undefined || token === null) {
         console.log("token is null");
+        return;
       }
 
-      let config = {
+      const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${import.meta.env.VITE_SERVICE_URL}/api/v1/user_plays/current-plays`,
+        url: `${serviceURL}/api/v1/user_plays/current-plays`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
 
-      const response = await axios.request(config);
-      // convert response.data object to CurrentPlays
-      for (const key in response.data) {
-        this.currentPlays[key] = {
-          startSeconds: response.data[key].startSeconds,
-          playListId: response.data[key].playListId,
-          channelId: response.data[key].channelId,
-          title: response.data[key].title,
-          description: response.data[key].description,
-          thumbnail: response.data[key].thumbnail,
-          channelTitle: response.data[key].channelTitle,
-          localized: {
-            title: response.data[key].localized.title,
-            description: response.data[key].localized.description,
-          },
-          contentDetails: {
-            itemCount: response.data[key].contentDetails.itemCount,
-          },
-          item: response.data[key].item,
-          publishedAt: response.data[key].publishedAt,
-          updatedAt: response.data[key].updatedAt,
-        };
+      try {
+        const response = await axios.request(config);
+
+        // Convert response.data object to CurrentPlays
+        for (const key in response.data) {
+          currentPlays.value[key] = {
+            startSeconds: response.data[key].startSeconds,
+            playListId: response.data[key].playListId,
+            channelId: response.data[key].channelId,
+            title: response.data[key].title,
+            description: response.data[key].description,
+            thumbnail: response.data[key].thumbnail,
+            channelTitle: response.data[key].channelTitle,
+            localized: {
+              title: response.data[key].localized.title,
+              description: response.data[key].localized.description,
+            },
+            contentDetails: {
+              itemCount: response.data[key].contentDetails.itemCount,
+            },
+            item: response.data[key].item,
+            publishedAt: response.data[key].publishedAt,
+            updatedAt: response.data[key].updatedAt,
+          };
+        }
+      } catch (error) {
+        console.log(error);
       }
-    },
-    async downloadUserPlayListQueues(
+    }
+
+    async function downloadUserPlayListQueues(
       playListId: string,
       token: string | null | undefined,
     ) {
       if (token === undefined || token === null) {
         console.log("token is null");
+        return;
       }
 
-      let config = {
+      console.log(serviceURL);
+
+      const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${import.meta.env.VITE_SERVICE_URL}/api/v1/user_plays/playlist-queues/${playListId}`,
+        url: `${serviceURL}/api/v1/user_plays/playlist-queues/${playListId}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
 
-      const response = await axios.request(config);
-      const prevData: PlayListItem[] = (response.data.prev as any[]).map(
-        (item) => this.convertResponseDataToPlayListItem(item),
-      );
+      try {
+        const response = await axios.request(config);
+        const prevData: PlayListItem[] = (response.data.prev as any[]).map(
+          (item) => convertResponseDataToPlayListItem(item),
+        );
 
-      const nextData: PlayListItem[] = (response.data.next as any[]).map(
-        (item) => this.convertResponseDataToPlayListItem(item),
-      );
-      this.playLists[playListId] = {
-        prev: prevData,
-        next: nextData,
-      };
-    },
+        const nextData: PlayListItem[] = (response.data.next as any[]).map(
+          (item) => convertResponseDataToPlayListItem(item),
+        );
 
-    convertResponseDataToPlayListItem(data: any): PlayListItem {
+        playLists.value[playListId] = {
+          prev: prevData,
+          next: nextData,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    function convertResponseDataToPlayListItem(data: any): PlayListItem {
       return {
         channelId: data.channelId,
         channelTitle: data.channelTitle,
@@ -132,7 +153,19 @@ export const usePlaysStore = defineStore("plays", {
         videoOwnerChannelId: data.videoOwnerChannelId,
         videoOwnerChannelTitle: data.videoOwnerChannelTitle,
       };
-    },
+    }
+
+    // Return the state and actions
+    return {
+      playLists,
+      currentPlays,
+      uploadUserPlays,
+      downloadUserCurrentPlays,
+      downloadUserPlayListQueues,
+      convertResponseDataToPlayListItem,
+    };
   },
-  persist: true,
-});
+  {
+    persist: true,
+  },
+);
