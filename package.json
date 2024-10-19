@@ -1,43 +1,30 @@
 {
   "name": "snclient",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri"
   },
   "dependencies": {
-    "@heroicons/vue": "^2.1.3",
-    "@tauri-apps/api": ">=2.0.0-rc.0",
-    "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
-    "@videojs-player/vue": "^1.0.0",
-    "axios": "^1.7.2",
-    "jwt-decode": "^4.0.0",
-    "keycloak-js": "^25.0.2",
-    "pinia": "^2.1.7",
-    "pinia-plugin-persistedstate": "^3.2.1",
-    "qs": "^6.12.3",
-    "video.js": "^7.21.6",
-    "vue": "^3.3.4",
-    "vue-router": "^4.3.2",
-    "vue-timeago3": "^2.3.2"
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-shell": "^2",
+    "keycloak-js": "^26.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": ">=2.0.0-rc.0",
-    "@types/node": "^22.1.0",
-    "@types/qs": "^6.9.15",
-    "@types/youtube": "^0.0.50",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "prettier": "^3.3.0",
-    "prettier-plugin-tailwindcss": "^0.6.1",
-    "tailwindcss": "^3.4.3",
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1",
-    "vue-tsc": "^2.0.22"
+    "vite": "^5.3.1"
   }
 }
