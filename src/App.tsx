@@ -2,6 +2,9 @@ import "./App.css";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
+import { useKeycloak } from "@react-keycloak/web";
+import { Outlet } from "react-router-dom";
+
 function App() {
   // const [greetMsg, setGreetMsg] = useState("");
   // const [name, setName] = useState("");
@@ -10,6 +13,7 @@ function App() {
   //   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
   //   setGreetMsg(await invoke("greet", { name }));
   // }
+  const { keycloak, initialized } = useKeycloak();
 
   function keycloakView() {
     console.log("keycloakView");
@@ -23,22 +27,15 @@ function App() {
   function goForward() {}
 
   return (
-    <div className="container">
-      <div className="w-fit cursor-pointer text-red-500" onClick={goHome}>
+    <div className="container-fluid">
+      <h1 className="cursor-pointer" onClick={goHome}>
         snservice
-      </div>
-      {/* {keycloak.tokenParsed?.email}
+      </h1>
+      {keycloak.tokenParsed?.email}
       <div onClick={keycloakView}>keycloakView</div>
-      {keycloak.authenticated ? (
-        <div>
-          <div onClick={() => keycloak.logout()}>keycloakLogout</div>
-          <div onClick={() => keycloak.updateToken()}>refresh token</div>
-        </div>
-      ) : (
-        <div>
-          <div onClick={() => keycloak.login()}>keycloakLogin</div>
-        </div>
-      )} */}
+      {!keycloak.authenticated && (
+        <button onClick={() => keycloak.login()}>Login</button>
+      )}
       <div>
         <ChevronLeftIcon
           className="inline-block h-6 w-6 cursor-pointer"
@@ -49,6 +46,7 @@ function App() {
           onClick={goForward}
         />
       </div>
+      <Outlet />
     </div>
   );
 }
