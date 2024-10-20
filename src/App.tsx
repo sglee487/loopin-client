@@ -1,9 +1,6 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
-import Keycloak from "keycloak-js";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
 function App() {
   // const [greetMsg, setGreetMsg] = useState("");
@@ -14,14 +11,23 @@ function App() {
   //   setGreetMsg(await invoke("greet", { name }));
   // }
 
+  function keycloakView() {
+    console.log("keycloakView");
+    // console.log(keycloak);
+  }
+
   function goHome() {}
+
+  function goBack() {}
+
+  function goForward() {}
 
   return (
     <div className="container">
       <div className="w-fit cursor-pointer text-red-500" onClick={goHome}>
         snservice
       </div>
-      {keycloak.tokenParsed?.email}
+      {/* {keycloak.tokenParsed?.email}
       <div onClick={keycloakView}>keycloakView</div>
       {keycloak.authenticated ? (
         <div>
@@ -32,7 +38,7 @@ function App() {
         <div>
           <div onClick={() => keycloak.login()}>keycloakLogin</div>
         </div>
-      )}
+      )} */}
       <div>
         <ChevronLeftIcon
           className="inline-block h-6 w-6 cursor-pointer"
