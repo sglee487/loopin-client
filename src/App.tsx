@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
 import { useKeycloak } from "@react-keycloak/web";
