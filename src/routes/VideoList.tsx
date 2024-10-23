@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactTimeago from "react-timeago";
+import { Link } from "react-router-dom";
 
 const VideoList = () => {
   const [youtubeLists, setYoutubeLists] = useState<any[]>([]);
@@ -20,7 +21,11 @@ const VideoList = () => {
     <main className=".container-fluid flex flex-wrap">
       {youtubeLists.map((youtubeList) => {
         return (
-          <div key={youtubeList.playListId} className="relative w-80 p-2">
+          <Link
+            to={`/playlist/${youtubeList.playListId}`}
+            key={youtubeList.playListId}
+            className="relative w-80 p-2"
+          >
             <img
               className="h-[180px] w-[320px] rounded-xl object-fill"
               src={youtubeList.thumbnail}
@@ -31,7 +36,7 @@ const VideoList = () => {
               <div>{youtubeList.channelTitle}</div>
               <ReactTimeago date={youtubeList.publishedAt} />
             </div>
-          </div>
+          </Link>
         );
       })}
     </main>

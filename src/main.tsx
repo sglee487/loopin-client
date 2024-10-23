@@ -8,15 +8,20 @@ import {
 } from "react-router-dom";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { initOptions, onKeycloakEvent } from "./services/Keycloak";
-import Watch from "./components/Watch";
+import Watch from "./routes/Watch";
 import Root from "./App";
-import YoutubeListItem from "./components/YoutubeListItem";
+import YoutubeListItem, {
+  loader as YoutubeListItemLoader,
+} from "./routes/YoutubeListItem";
 import { invoke } from "@tauri-apps/api/core";
 import keycloak from "./services/Keycloak";
+import VideoList from "./routes/VideoList";
+import { persistor, store } from "./app/store";
+import { Provider } from "react-redux";
 
 import "./App.css";
 import "@picocss/pico/css/pico.min.css";
-import VideoList from "./components/VideoList";
+import { PersistGate } from "redux-persist/integration/react";
 
 export const getFromRust = async (name: string) => {
   try {
@@ -43,6 +48,7 @@ const router = createBrowserRouter([
       {
         path: "/playlist/:playListId",
         element: <YoutubeListItem />,
+        loader: YoutubeListItemLoader,
       },
     ],
   },
@@ -50,13 +56,17 @@ const router = createBrowserRouter([
 
 const Main = () => {
   return (
-    <ReactKeycloakProvider
-      authClient={keycloak}
-      initOptions={initOptions}
-      onEvent={onKeycloakEvent}
-    >
-      <RouterProvider router={router} />
-    </ReactKeycloakProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ReactKeycloakProvider
+          authClient={keycloak}
+          initOptions={initOptions}
+          onEvent={onKeycloakEvent}
+        >
+          <RouterProvider router={router} />
+        </ReactKeycloakProvider>
+      </PersistGate>
+    </Provider>
   );
 };
 

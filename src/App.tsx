@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 
 import { useKeycloak } from "@react-keycloak/web";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 function App() {
   // const [greetMsg, setGreetMsg] = useState("");
@@ -12,6 +12,7 @@ function App() {
   //   setGreetMsg(await invoke("greet", { name }));
   // }
   const { keycloak, initialized } = useKeycloak();
+  const navigate = useNavigate();
 
   function keycloakView() {
     console.log("keycloakView");
@@ -20,9 +21,13 @@ function App() {
 
   function goHome() {}
 
-  function goBack() {}
+  function goBack() {
+    navigate(-1);
+  }
 
-  function goForward() {}
+  function goForward() {
+    navigate(1);
+  }
 
   return (
     <div className="container-fluid">
