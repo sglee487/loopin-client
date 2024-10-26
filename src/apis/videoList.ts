@@ -1,5 +1,10 @@
 import axios from "axios";
-import { CurrentPlays, PlayListItem } from "../types/PlayLists";
+import {
+  CurrentPlay,
+  CurrentPlays,
+  PlayListItem,
+  PlayListQueue,
+} from "../types/PlayLists";
 import { useKeycloak } from "@react-keycloak/web";
 
 export interface ResponseData {
@@ -68,4 +73,31 @@ export async function loadUserPlayListQueues(
   return axios
     .request<PlayListQueuesResponseData>(config)
     .then((response) => response.data);
+}
+
+export async function uploadUserPlayListQueue(
+  playListId: string,
+  playListQueue: PlayListQueue,
+  currentPlay: CurrentPlay
+) {
+  const { keycloak, initialized } = useKeycloak();
+
+  const data = {
+    playListId,
+    playListQueue,
+    currentPlay,
+  };
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: `http://localhost:8080/api/v1/user_plays`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${keycloak.token}`,
+    },
+    data: data,
+  };
+
+  axios.request(config);
 }

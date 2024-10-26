@@ -1,16 +1,16 @@
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { LoaderFunctionArgs, useLoaderData, useParams } from "react-router-dom";
 import { loadPlayList, ResponseData } from "../apis/videoList";
 
 import ReactPlayer from "react-player";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
-  decrement,
-  increment,
-  incrementAsync,
-  selectCount,
-  selectStatus,
-} from "../features/counterSlice";
-import { selectCurrentPlays, selectPlayLists } from "../features/playsSlice";
+  downloadUserPlayListQueueAsync,
+  initPlayListQueues,
+  playNextQueue,
+  selectCurrentPlays,
+  selectPlayLists,
+} from "../features/playsSlice";
+import { useEffect } from "react";
 
 export async function loader({
   params,
@@ -26,45 +26,53 @@ export async function loader({
 
 const YoutubeListItem = () => {
   const { playListData } = useLoaderData() as { playListData: ResponseData };
-  console.log(playListData);
+
+  const { playListId } = useParams();
 
   const dispatch = useAppDispatch();
-  const count = useAppSelector(selectCount);
-  const status = useAppSelector(selectStatus);
-
   const userPlayLists = useAppSelector(selectPlayLists);
   const userCurrentPlays = useAppSelector(selectCurrentPlays);
+  console.log(playListId);
+  if (!playListId) return null;
 
-  return (
-    <div>
-      <h1>YoutubeListItem</h1>
+  useEffect(() => {
+    // _loadYoutubeLists();
+  }, []);
+
+  console.log(userCurrentPlays);
+  console.log(userCurrentPlays[playListId]);
+
+  if (
+    userCurrentPlays[playListId] === undefined ||
+    userCurrentPlays[playListId] === null
+  ) {
+    console.log(playListData);
+    console.log(playListData.items);
+    dispatch(
+      initPlayListQueues({
+        playListId: playListId,
+        items: playListData.items,
+      })
+    );
+    console.log(userCurrentPlays);
+    console.log(userCurrentPlays[playListId]);
+    console.log(userPlayLists);
+    dispatch(playNextQueue(playListId));
+
+    console.log(userCurrentPlays[playListId]);
+  }
+
+  if (userCurrentPlays)
+    return (
       <div>
-        <span>{count}</span>
-        <button
-          onClick={() => {
-            dispatch(decrement());
-          }}
-        >
-          -
-        </button>
-        <button
-          onClick={() => {
-            dispatch(increment());
-          }}
-        >
-          +
-        </button>
-        <button
-          onClick={() => {
-            dispatch(incrementAsync(1));
-          }}
-        >
-          async increase
-        </button>
+        <h1>YoutubeListItem</h1>
+        {
+          <ReactPlayer
+            url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
+          />
+        }
       </div>
-      <ReactPlayer url="https://www.youtube.com/watch?v=LXb3EKWsInQ" />
-    </div>
-  );
+    );
 };
 
 export default YoutubeListItem;
