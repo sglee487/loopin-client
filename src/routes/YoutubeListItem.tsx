@@ -10,6 +10,7 @@ import {
   selectCount,
   selectStatus,
 } from "../features/counterSlice";
+import { selectCurrentPlays, selectPlayLists } from "../features/playsSlice";
 
 export async function loader({
   params,
@@ -30,6 +31,9 @@ const YoutubeListItem = () => {
   const dispatch = useAppDispatch();
   const count = useAppSelector(selectCount);
   const status = useAppSelector(selectStatus);
+
+  const userPlayLists = useAppSelector(selectPlayLists);
+  const userCurrentPlays = useAppSelector(selectCurrentPlays);
 
   return (
     <div>
