@@ -43,31 +43,32 @@ export async function loadPlayList(
     .then((response) => response.data);
 }
 
-export async function loadUserCurrentPlays(): Promise<CurrentPlays> {
-  const { keycloak, initialized } = useKeycloak();
+export async function loadUserCurrentPlays(
+  token: string
+): Promise<CurrentPlays> {
   const config = {
     method: "get",
     maxBodyLength: Infinity,
     url: `http://localhost:8080/api/v1/user_plays/current-plays`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${keycloak.token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
   return axios.request<CurrentPlays>(config).then((response) => response.data);
 }
 
 export async function loadUserPlayListQueues(
+  token: string,
   playListId: string
 ): Promise<PlayListQueuesResponseData> {
-  const { keycloak, initialized } = useKeycloak();
   const config = {
     method: "get",
     maxBodyLength: Infinity,
     url: `http://localhost:8080/api/v1/user_plays/playlist-queues/${playListId}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${keycloak.token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
   return axios
@@ -76,12 +77,11 @@ export async function loadUserPlayListQueues(
 }
 
 export async function uploadUserPlayListQueue(
+  token: string,
   playListId: string,
   playListQueue: PlayListQueue,
   currentPlay: CurrentPlay
 ) {
-  const { keycloak, initialized } = useKeycloak();
-
   const data = {
     playListId,
     playListQueue,
@@ -94,7 +94,7 @@ export async function uploadUserPlayListQueue(
     url: `http://localhost:8080/api/v1/user_plays`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${keycloak.token}`,
+      Authorization: `Bearer ${token}`,
     },
     data: data,
   };

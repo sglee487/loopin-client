@@ -13,6 +13,7 @@ import {
   CurrentPlay,
   PlayListItem,
 } from "../types/PlayLists";
+import { useKeycloak } from "@react-keycloak/web";
 
 export interface CounterState {
   playListQuques: PlayLists;
@@ -98,6 +99,30 @@ export const playsSlice = createSlice({
         );
       }
     },
+    setStartSeconds: (
+      state,
+      action: PayloadAction<{
+        token?: string;
+        playListId: string;
+        startSeconds: number;
+      }>
+    ) => {
+      console.log(action);
+      console.log(action.payload);
+      const { token, playListId, startSeconds } = action.payload;
+      state.currentPlays[playListId].startSeconds = startSeconds;
+
+      console.log(state.currentPlays[playListId]);
+
+      if (token) {
+        uploadUserPlayListQueue(
+          token,
+          playListId,
+          state.playListQuques[playListId],
+          state.currentPlays[playListId]
+        );
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -123,6 +148,7 @@ export const {
   playNextQueue,
   prevQueue,
   shuffleNextQueue,
+  setStartSeconds,
 } = playsSlice.actions;
 
 export default playsSlice.reducer;
@@ -133,16 +159,23 @@ export const selectCurrentPlays = (state: RootState) =>
 
 export const downloadUserCurrentPlaysAsync = createAsyncThunk(
   "plays/downloadUserCurrentPlays",
-  async () => {
-    const currentPlaysData = await loadUserCurrentPlays();
+  async (payload: { token: string }) => {
+    const { token } = payload;
+    const currentPlaysData = await loadUserCurrentPlays(token);
     return currentPlaysData;
   }
 );
 
 export const downloadUserPlayListQueueAsync = createAsyncThunk(
   "plays/downloadUserPlayListQueue",
-  async (playListId: string) => {
-    const playListQueuesData = await loadUserPlayListQueue(playListId);
+  async (payload: {
+    token: string;
+    playListId: string;
+    playListQueue: PlayListQueue;
+    currentPlay: CurrentPlay;
+  }) => {
+    const { token, playListId } = payload;
+    const playListQueuesData = await loadUserPlayListQueue(token, playListId);
     return playListQueuesData;
   }
 );
@@ -150,11 +183,12 @@ export const downloadUserPlayListQueueAsync = createAsyncThunk(
 export const updateUserPlayListQueueAsync = createAsyncThunk(
   "plays/uploadUserPlayListQueue",
   async (payload: {
+    token: string;
     playListId: string;
     playListQueue: PlayListQueue;
     currentPlay: CurrentPlay;
   }) => {
-    const { playListId, playListQueue, currentPlay } = payload;
-    uploadUserPlayListQueue(playListId, playListQueue, currentPlay);
+    const { token, playListId, playListQueue, currentPlay } = payload;
+    uploadUserPlayListQueue(token, playListId, playListQueue, currentPlay);
   }
 );
