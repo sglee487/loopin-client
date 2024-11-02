@@ -1,12 +1,11 @@
 import { LoaderFunctionArgs, useLoaderData, useParams } from "react-router-dom";
-import { loadPlayList, ResponseData } from "../apis/videoList";
+import { loadPlayList, PlayListData } from "../apis/videoList";
 
 import ReactPlayer from "react-player";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   playSelectedVideo,
   initPlayListQueues,
-  playNextQueue,
   selectCurrentPlays,
   selectPlayLists,
   setStartSeconds,
@@ -27,7 +26,7 @@ import { PlayListItem } from "../types/PlayLists";
 
 export async function loader({
   params,
-}: LoaderFunctionArgs): Promise<{ playListData: ResponseData }> {
+}: LoaderFunctionArgs): Promise<{ playListData: PlayListData }> {
   const playListId = params.playListId; // params에서 playListId를 추출
   if (!playListId) {
     throw new Error("PlayList ID is required"); // playListId가 없을 때 처리
@@ -39,7 +38,7 @@ export async function loader({
 
 const YoutubeListItem = () => {
   const { keycloak, initialized } = useKeycloak();
-  const { playListData } = useLoaderData() as { playListData: ResponseData };
+  const { playListData } = useLoaderData() as { playListData: PlayListData };
 
   const { playListId } = useParams();
 
@@ -62,10 +61,15 @@ const YoutubeListItem = () => {
     dispatch(
       initPlayListQueues({
         playListId: playListId,
-        items: playListData.items,
+        playListData: playListData,
       })
     );
-    dispatch(playNextQueue(playListId));
+    dispatch(
+      playSelectedVideo({
+        playListId,
+        selectedPlayListItem: userPlayLists[playListId]?.next[0],
+      })
+    );
   }
 
   const reversedPrevList = useMemo(
@@ -93,7 +97,12 @@ const YoutubeListItem = () => {
   };
 
   const _nextQueue = () => {
-    dispatch(playNextQueue(playListId));
+    dispatch(
+      playSelectedVideo({
+        playListId,
+        selectedPlayListItem: userPlayLists[playListId]?.next[0],
+      })
+    );
   };
 
   const _playSelectedVideo = (selectedPlayListItem: PlayListItem) => {
@@ -145,12 +154,11 @@ const YoutubeListItem = () => {
           </div>
         </div>
         <div className="flex w-[1200px]">
-          <div className="w-[320px] rounded-md border">
+          <div className="w-[360px] rounded-md border">
             <small>이전</small>
             <div className="p-2">
-              <b>{userCurrentPlays[playListId].title}</b>
-              <small>
-                {userPlayLists[playListId]?.prev.length ?? 0} /
+              <small className="text-gray-500">
+                {userPlayLists[playListId]?.prev.length ?? 0} /{" "}
                 {userCurrentPlays[playListId]?.contentDetails?.itemCount ?? 0}
               </small>
             </div>
@@ -170,10 +178,10 @@ const YoutubeListItem = () => {
           <div className="w-[400px] rounded-md border">
             <small>다음</small>
             <div className="p-2">
-              <b>{userCurrentPlays[playListId].title}</b>
+              <b>{userCurrentPlays[playListId].title} </b>
               <small className="text-gray-500">
-                {userCurrentPlays[playListId].channelTitle} ·
-                {userPlayLists[playListId]?.next.length ?? 0} /
+                {userCurrentPlays[playListId].channelTitle} ·{" "}
+                {userPlayLists[playListId]?.next.length ?? 0} /{" "}
                 {userCurrentPlays[playListId]?.contentDetails?.itemCount ?? 0}
               </small>
               <div className="flex justify-between">

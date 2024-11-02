@@ -5,9 +5,8 @@ import {
   PlayListItem,
   PlayListQueue,
 } from "../types/PlayLists";
-import { useKeycloak } from "@react-keycloak/web";
 
-export interface ResponseData {
+export interface PlayListData {
   playListId: string;
   channelId: string;
   title: string;
@@ -35,9 +34,9 @@ export interface PlayListQueuesResponseData {
 export async function loadPlayList(
   playListId: string,
   refresh: boolean = false
-): Promise<ResponseData> {
+): Promise<PlayListData> {
   return axios
-    .get<ResponseData>(
+    .get<PlayListData>(
       `http://localhost:8080/api/v1/list/listitems?playlistId=${playListId}`
     )
     .then((response) => response.data);
