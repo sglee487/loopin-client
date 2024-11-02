@@ -4,7 +4,7 @@ import { loadPlayList, ResponseData } from "../apis/videoList";
 import ReactPlayer from "react-player";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
-  downloadUserPlayListQueueAsync,
+  playSelectedVideo,
   initPlayListQueues,
   playNextQueue,
   selectCurrentPlays,
@@ -23,6 +23,7 @@ import {
   PlayPauseIcon,
 } from "@heroicons/react/16/solid";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
+import { PlayListItem } from "../types/PlayLists";
 
 export async function loader({
   params,
@@ -45,7 +46,6 @@ const YoutubeListItem = () => {
   const dispatch = useAppDispatch();
   const userPlayLists = useAppSelector(selectPlayLists);
   const userCurrentPlays = useAppSelector(selectCurrentPlays);
-  console.log(playListId);
   if (!playListId) return null;
 
   useEffect(() => {
@@ -59,20 +59,13 @@ const YoutubeListItem = () => {
     userCurrentPlays[playListId] === undefined ||
     userCurrentPlays[playListId] === null
   ) {
-    console.log(playListData);
-    console.log(playListData.items);
     dispatch(
       initPlayListQueues({
         playListId: playListId,
         items: playListData.items,
       })
     );
-    console.log(userCurrentPlays);
-    console.log(userCurrentPlays[playListId]);
-    console.log(userPlayLists);
     dispatch(playNextQueue(playListId));
-
-    console.log(userCurrentPlays[playListId]);
   }
 
   const reversedPrevList = useMemo(
@@ -99,6 +92,14 @@ const YoutubeListItem = () => {
     }
   };
 
+  const _nextQueue = () => {
+    dispatch(playNextQueue(playListId));
+  };
+
+  const _playSelectedVideo = (selectedPlayListItem: PlayListItem) => {
+    dispatch(playSelectedVideo({ playListId, selectedPlayListItem }));
+  };
+
   if (userCurrentPlays)
     return (
       <div>
@@ -119,6 +120,7 @@ const YoutubeListItem = () => {
               }}
               controls={true}
               onProgress={youtubePlayerCallback}
+              onEnded={_nextQueue}
               progressInterval={5000}
               url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
             />
@@ -156,7 +158,11 @@ const YoutubeListItem = () => {
               {userPlayLists[playListId]?.prev &&
                 reversedPrevList.map((item, i) => (
                   <div className="py-0.5" key={i}>
-                    <YoutubeVideoCard index={i} playListItem={item} />
+                    <YoutubeVideoCard
+                      index={i}
+                      playListItem={item}
+                      onClick={() => _playSelectedVideo(item)}
+                    />
                   </div>
                 ))}
             </div>
@@ -184,7 +190,11 @@ const YoutubeListItem = () => {
             <div className="h-[460px] overflow-scroll">
               {userPlayLists[playListId]?.next.map((item, i) => (
                 <div className="py-0.5" key={i}>
-                  <YoutubeVideoCard index={i} playListItem={item} />
+                  <YoutubeVideoCard
+                    index={i}
+                    playListItem={item}
+                    onClick={() => _playSelectedVideo(item)}
+                  />
                 </div>
               ))}
             </div>

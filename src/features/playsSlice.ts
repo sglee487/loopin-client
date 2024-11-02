@@ -46,35 +46,80 @@ export const playsSlice = createSlice({
     playNextQueue: (state, action: PayloadAction<string>) => {
       const playListId = action.payload;
       const playListQueue = state.playListQuques[playListId];
-      if (playListQueue) {
-        const nextItem = playListQueue.next.shift();
-        if (nextItem) {
-          if (state.currentPlays[playListId] === undefined) {
-            state.currentPlays[playListId] = {
-              startSeconds: 0,
-              playListId: playListId,
-              channelId: nextItem.channelId,
-              title: nextItem.title,
-              description: nextItem.description,
-              thumbnail: nextItem.thumbnail,
-              channelTitle: nextItem.channelTitle,
-              localized: {
-                title: nextItem.title,
-                description: nextItem.description,
-              },
-              contentDetails: {
-                itemCount: 1,
-              },
-              item: nextItem,
-              publishedAt: nextItem.publishedAt,
-              updatedAt: new Date().toISOString(),
-            };
-          } else {
-            state.currentPlays[playListId].item = nextItem;
-          }
-          playListQueue.prev.push(nextItem);
-        }
+      if (
+        state.currentPlays[playListId] &&
+        state.currentPlays[playListId].item
+      ) {
+        playListQueue.prev.push(state.currentPlays[playListId].item);
       }
+
+      const nextItem = playListQueue.next.shift();
+      if (nextItem) {
+        state.currentPlays[playListId] = {
+          startSeconds: 0,
+          playListId: playListId,
+          channelId: nextItem.channelId,
+          title: nextItem.title,
+          description: nextItem.description,
+          thumbnail: nextItem.thumbnail,
+          channelTitle: nextItem.channelTitle,
+          localized: {
+            title: nextItem.title,
+            description: nextItem.description,
+          },
+          contentDetails: {
+            itemCount: 1,
+          },
+          item: nextItem,
+          publishedAt: nextItem.publishedAt,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+    },
+    playSelectedVideo: (
+      state,
+      action: PayloadAction<{
+        playListId: string;
+        selectedPlayListItem: PlayListItem;
+      }>
+    ) => {
+      const { playListId, selectedPlayListItem } = action.payload;
+      const playListQueue = state.playListQuques[playListId];
+      if (
+        state.currentPlays[playListId] &&
+        state.currentPlays[playListId].item
+      ) {
+        playListQueue.prev.push(state.currentPlays[playListId].item);
+      }
+      // filter prev and next queue regardless of where the selected video is
+      playListQueue.prev = playListQueue.prev.filter(
+        (item) =>
+          item.resource.videoId !== selectedPlayListItem.resource.videoId
+      );
+      playListQueue.next = playListQueue.next.filter(
+        (item) =>
+          item.resource.videoId !== selectedPlayListItem.resource.videoId
+      );
+
+      state.currentPlays[playListId] = {
+        startSeconds: 0,
+        playListId: playListId,
+        channelId: selectedPlayListItem.channelId,
+        title: selectedPlayListItem.title,
+        description: selectedPlayListItem.description,
+        thumbnail: selectedPlayListItem.thumbnail,
+        channelTitle: selectedPlayListItem.channelTitle,
+        localized: {
+          title: selectedPlayListItem.title,
+          description: selectedPlayListItem.description,
+        },
+        contentDetails: {
+          itemCount: 1,
+        },
+        item: selectedPlayListItem,
+        publishedAt: selectedPlayListItem.publishedAt,
+        updatedAt: new Date().toISOString(),
+      };
     },
     prevQueue: (state, action: PayloadAction<string>) => {
       const playListId = action.payload;
@@ -146,6 +191,7 @@ export const playsSlice = createSlice({
 export const {
   initPlayListQueues,
   playNextQueue,
+  playSelectedVideo,
   prevQueue,
   shuffleNextQueue,
   setStartSeconds,

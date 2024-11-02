@@ -3,11 +3,16 @@ import { PlayListItem } from "../types/PlayLists";
 interface YoutubeVideoCardProps {
   index: number;
   playListItem: PlayListItem;
+  onClick?: () => void;
 }
 
-const YoutubeVideoCard = ({ index, playListItem }: YoutubeVideoCardProps) => {
+const YoutubeVideoCard = ({
+  index,
+  playListItem,
+  onClick,
+}: YoutubeVideoCardProps) => {
   return (
-    <div className="flex cursor-pointer hover:bg-slate-200">
+    <div className="flex cursor-pointer hover:bg-slate-200" onClick={onClick}>
       <div className="w-8 flex-none self-center text-center text-sm">
         {index}
       </div>
