@@ -83,8 +83,8 @@ export async function uploadUserPlayListQueue(
 ) {
   const data = {
     playListId,
-    playListQueue,
-    currentPlay,
+    playListQueues: playListQueue,
+    currentPlays: currentPlay,
   };
 
   const config = {

@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  original,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
 import {
@@ -114,14 +119,15 @@ export const playsSlice = createSlice({
       }>
     ) => {
       const { token, playListId, startSeconds } = action.payload;
+
       state.currentPlays[playListId].startSeconds = startSeconds;
 
       if (token) {
         uploadUserPlayListQueue(
           token,
           playListId,
-          state.playListQuques[playListId],
-          state.currentPlays[playListId]
+          original(state.playListQuques[playListId]) as PlayListQueue,
+          original(state.currentPlays[playListId]) as CurrentPlay
         );
       }
     },

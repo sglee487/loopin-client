@@ -51,13 +51,7 @@ const YoutubeListItem = () => {
     // _loadYoutubeLists();
   }, []);
 
-  console.log(userCurrentPlays);
-  console.log(userCurrentPlays[playListId]);
-
-  if (
-    userCurrentPlays[playListId] === undefined ||
-    userCurrentPlays[playListId] === null
-  ) {
+  if (userCurrentPlays[playListId].item === null) {
     dispatch(
       initPlayListQueues({
         playListId: playListId,
@@ -109,7 +103,12 @@ const YoutubeListItem = () => {
     dispatch(playSelectedVideo({ playListId, selectedPlayListItem }));
   };
 
-  if (userCurrentPlays)
+  if (
+    userCurrentPlays &&
+    userCurrentPlays[playListId] &&
+    userPlayLists[playListId] &&
+    userCurrentPlays[playListId].item
+  )
     return (
       <div>
         <div className="flex">
