@@ -106,6 +106,11 @@ const YoutubeListItem = () => {
     );
   };
 
+  const _onError = () => {
+    console.error("Error on playing video");
+    _nextQueue();
+  };
+
   const _playSelectedVideo = (selectedPlayListItem: PlayListItem) => {
     dispatch(playSelectedVideo({ playListId, selectedPlayListItem }));
   };
@@ -141,6 +146,7 @@ const YoutubeListItem = () => {
                 controls={true}
                 onProgress={youtubePlayerCallback}
                 onEnded={_nextQueue}
+                onError={_onError}
                 progressInterval={5000}
                 url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
               />
