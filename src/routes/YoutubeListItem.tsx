@@ -51,7 +51,11 @@ const YoutubeListItem = () => {
     // _loadYoutubeLists();
   }, []);
 
-  if (userCurrentPlays[playListId].item === null) {
+  if (
+    userCurrentPlays[playListId] === undefined ||
+    userCurrentPlays[playListId] === null ||
+    userCurrentPlays[playListId].item === null
+  ) {
     dispatch(
       initPlayListQueues({
         playListId: playListId,
@@ -110,29 +114,30 @@ const YoutubeListItem = () => {
     userCurrentPlays[playListId].item
   )
     return (
-      <div>
+      <main className="container">
         <div className="flex">
-          {
-            <ReactPlayer
-              width="350px"
-              height="240px"
-              playing={true}
-              config={{
-                youtube: {
-                  playerVars: {
-                    start: Math.trunc(
-                      userCurrentPlays[playListId].startSeconds
-                    ),
+          <div className="w-[350px]">
+            {
+              <ReactPlayer
+                width="350px"
+                playing={true}
+                config={{
+                  youtube: {
+                    playerVars: {
+                      start: Math.trunc(
+                        userCurrentPlays[playListId].startSeconds
+                      ),
+                    },
                   },
-                },
-              }}
-              controls={true}
-              onProgress={youtubePlayerCallback}
-              onEnded={_nextQueue}
-              progressInterval={5000}
-              url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
-            />
-          }
+                }}
+                controls={true}
+                onProgress={youtubePlayerCallback}
+                onEnded={_nextQueue}
+                progressInterval={5000}
+                url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
+              />
+            }
+          </div>
           <div className="flex flex-col justify-end p-2">
             <ArrowTopRightOnSquareIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" />
             <h2 className="line-clamp-2">
@@ -207,7 +212,7 @@ const YoutubeListItem = () => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     );
 };
 
