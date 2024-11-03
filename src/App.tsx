@@ -19,7 +19,9 @@ function App() {
     // console.log(keycloak);
   }
 
-  function goHome() {}
+  function goHome() {
+    navigate("/");
+  }
 
   function goBack() {
     navigate(-1);
