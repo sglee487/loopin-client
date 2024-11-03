@@ -7,6 +7,7 @@ import {
 import { RootState } from "../app/store";
 
 import {
+  deleteUserPlayListQueue,
   loadUserCurrentPlays,
   loadUserPlayListQueues as loadUserPlayListQueue,
   PlayListData,
@@ -78,6 +79,9 @@ export const playsSlice = createSlice({
     ) => {
       const { playListId, selectedPlayListItem } = action.payload;
       const playListQueue = state.playListQuques[playListId];
+      if (selectedPlayListItem === undefined) {
+        return;
+      }
       if (
         state.currentPlays[playListId] &&
         state.currentPlays[playListId].item
@@ -121,6 +125,22 @@ export const playsSlice = createSlice({
         playListQueues.next = playListQueues.next.sort(
           () => Math.random() - 0.5
         );
+      }
+    },
+    deletePlayList: (
+      state,
+      action: PayloadAction<{
+        token?: string;
+        playListId: string;
+      }>
+    ) => {
+      const { token, playListId } = action.payload;
+
+      delete state.currentPlays[playListId];
+      delete state.playListQuques[playListId];
+
+      if (token) {
+        deleteUserPlayListQueue(token, playListId);
       }
     },
     setStartSeconds: (
@@ -168,6 +188,7 @@ export const {
   initPlayListQueues,
   backToPrevQueue,
   playSelectedVideo,
+  deletePlayList,
   shuffleNextQueue,
   setStartSeconds,
 } = playsSlice.actions;

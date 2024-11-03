@@ -100,3 +100,24 @@ export async function uploadUserPlayListQueue(
 
   axios.request(config);
 }
+
+export async function deleteUserPlayListQueue(
+  token: string,
+  playListId: string
+) {
+  const data = {
+    playListId: playListId,
+  };
+
+  const config = {
+    method: "delete",
+    maxBodyLength: Infinity,
+    url: `http://localhost:8080/api/v1/user_plays`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: data,
+  };
+  axios.request(config);
+}

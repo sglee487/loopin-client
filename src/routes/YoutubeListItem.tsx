@@ -1,5 +1,9 @@
 import { LoaderFunctionArgs, useLoaderData, useParams } from "react-router-dom";
-import { loadPlayList, PlayListData } from "../apis/videoList";
+import {
+  deleteUserPlayListQueue,
+  loadPlayList,
+  PlayListData,
+} from "../apis/videoList";
 
 import ReactPlayer from "react-player";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -11,6 +15,7 @@ import {
   setStartSeconds,
   shuffleNextQueue,
   backToPrevQueue,
+  deletePlayList,
 } from "../features/playsSlice";
 import { useEffect, useMemo, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
@@ -52,6 +57,8 @@ const YoutubeListItem = () => {
   if (!playListId) return null;
 
   const [playing, setPlaying] = useState(true);
+
+  console.log("YoutubeListItem");
 
   useEffect(() => {
     // _loadYoutubeLists();
@@ -113,6 +120,15 @@ const YoutubeListItem = () => {
       playSelectedVideo({
         playListId,
         selectedPlayListItem: userPlayLists[playListId]?.next[0],
+      })
+    );
+  };
+
+  const _resetPlayListQueue = () => {
+    dispatch(
+      deletePlayList({
+        token: keycloak.token,
+        playListId: playListId,
       })
     );
   };
@@ -188,7 +204,10 @@ const YoutubeListItem = () => {
                 onClick={() => _nextQueue()}
               />
               <div className="grow"></div>
-              <ArrowPathIcon className="inline-block h-10 w-10 cursor-pointer place-self-end p-2 hover:bg-slate-200" />
+              <ArrowPathIcon
+                className="inline-block h-10 w-10 cursor-pointer place-self-end p-2 hover:bg-slate-200"
+                onClick={() => _resetPlayListQueue()}
+              />
             </div>
           </div>
         </div>
