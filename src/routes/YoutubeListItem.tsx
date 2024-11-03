@@ -10,8 +10,9 @@ import {
   selectPlayLists,
   setStartSeconds,
   shuffleNextQueue,
+  backToPrevQueue,
 } from "../features/playsSlice";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import {
   ArrowDownTrayIcon,
@@ -49,6 +50,8 @@ const YoutubeListItem = () => {
   const userPlayLists = useAppSelector(selectPlayLists);
   const userCurrentPlays = useAppSelector(selectCurrentPlays);
   if (!playListId) return null;
+
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     // _loadYoutubeLists();
@@ -97,6 +100,14 @@ const YoutubeListItem = () => {
     }
   };
 
+  const _prevQueue = () => {
+    dispatch(backToPrevQueue(playListId));
+  };
+
+  const _setPlaying = () => {
+    setPlaying(!playing);
+  };
+
   const _nextQueue = () => {
     dispatch(
       playSelectedVideo({
@@ -133,7 +144,7 @@ const YoutubeListItem = () => {
               <ReactPlayer
                 width="350px"
                 height="240px"
-                playing={true}
+                playing={playing}
                 config={{
                   youtube: {
                     playerVars: {
@@ -148,12 +159,13 @@ const YoutubeListItem = () => {
                 onEnded={_nextQueue}
                 onError={_onError}
                 progressInterval={5000}
+                stopOnUnmount={false}
                 url={`https://www.youtube.com/watch?v=${userCurrentPlays[playListId]?.item?.resource.videoId}`}
               />
             }
           </div>
-          <div className="flex flex-col justify-end p-2">
-            <ArrowTopRightOnSquareIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" />
+          <div className="flex flex-col justify-end h-[240px] overflow-y-scroll">
+            {/* <ArrowTopRightOnSquareIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" /> */}
             <h2 className="line-clamp-2">
               {userCurrentPlays[playListId].item!.title}
             </h2>
@@ -163,9 +175,18 @@ const YoutubeListItem = () => {
               {userCurrentPlays[playListId].item!.description}
             </div>
             <div className="flex space-x-1">
-              <ChevronDoubleLeftIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" />
-              <PlayPauseIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"></PlayPauseIcon>
-              <ChevronDoubleRightIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" />
+              <ChevronDoubleLeftIcon
+                className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+                onClick={() => _prevQueue()}
+              />
+              <PlayPauseIcon
+                className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+                onClick={() => _setPlaying()}
+              ></PlayPauseIcon>
+              <ChevronDoubleRightIcon
+                className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200"
+                onClick={() => _nextQueue()}
+              />
               <div className="grow"></div>
               <ArrowPathIcon className="inline-block h-10 w-10 cursor-pointer place-self-end p-2 hover:bg-slate-200" />
             </div>

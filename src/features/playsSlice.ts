@@ -97,6 +97,22 @@ export const playsSlice = createSlice({
       state.currentPlays[playListId].startSeconds = 0;
       state.currentPlays[playListId].item = selectedPlayListItem;
     },
+    backToPrevQueue: (state, action: PayloadAction<string>) => {
+      const playListId = action.payload;
+      const playListQueue = state.playListQuques[playListId];
+      if (playListQueue.prev.length === 0) {
+        return;
+      }
+      const currentItem = state.currentPlays[playListId].item;
+      const prevItem = playListQueue.prev.pop();
+      if (prevItem) {
+        state.currentPlays[playListId].item = prevItem;
+        state.currentPlays[playListId].startSeconds = 0;
+        if (currentItem) {
+          playListQueue.next.unshift(currentItem);
+        }
+      }
+    },
     shuffleNextQueue: (state, action: PayloadAction<string>) => {
       // shuffle next queue list only
       const playListId = action.payload;
@@ -150,6 +166,7 @@ export const playsSlice = createSlice({
 
 export const {
   initPlayListQueues,
+  backToPrevQueue,
   playSelectedVideo,
   shuffleNextQueue,
   setStartSeconds,
