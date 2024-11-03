@@ -22,6 +22,7 @@ import { Provider } from "react-redux";
 import "./App.css";
 import "@picocss/pico/css/pico.min.css";
 import "@picocss/pico/scss/pico.colors.scss";
+import "./picoCustom.css";
 import { PersistGate } from "redux-persist/integration/react";
 
 export const getFromRust = async (name: string) => {

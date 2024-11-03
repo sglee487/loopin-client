@@ -51,7 +51,7 @@ const YoutubeListItem = () => {
   const userCurrentPlays = useAppSelector(selectCurrentPlays);
   if (!playListId) return null;
 
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
     // _loadYoutubeLists();
@@ -164,7 +164,7 @@ const YoutubeListItem = () => {
               />
             }
           </div>
-          <div className="flex flex-col justify-end h-[240px] overflow-y-scroll">
+          <div className="flex flex-col justify-end h-[244px] overflow-y-scroll">
             {/* <ArrowTopRightOnSquareIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" /> */}
             <h2 className="line-clamp-2">
               {userCurrentPlays[playListId].item!.title}
