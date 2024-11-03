@@ -9,6 +9,7 @@ import {
   selectCurrentPlays,
   selectPlayLists,
   setStartSeconds,
+  shuffleNextQueue,
 } from "../features/playsSlice";
 import { useEffect, useMemo } from "react";
 import { useKeycloak } from "@react-keycloak/web";
@@ -23,6 +24,8 @@ import {
 } from "@heroicons/react/16/solid";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
 import { PlayListItem } from "../types/PlayLists";
+
+import shuffleLogo from "../assets/shuffle.svg";
 
 export async function loader({
   params,
@@ -107,6 +110,10 @@ const YoutubeListItem = () => {
     dispatch(playSelectedVideo({ playListId, selectedPlayListItem }));
   };
 
+  const _shuffleNextQueue = () => {
+    dispatch(shuffleNextQueue(playListId));
+  };
+
   if (
     userCurrentPlays &&
     userCurrentPlays[playListId] &&
@@ -116,10 +123,11 @@ const YoutubeListItem = () => {
     return (
       <main className="container">
         <div className="flex">
-          <div className="w-[350px]">
+          <div className="w-[350px] h-[240px]">
             {
               <ReactPlayer
                 width="350px"
+                height="240px"
                 playing={true}
                 config={{
                   youtube: {
@@ -192,7 +200,8 @@ const YoutubeListItem = () => {
                 <div className="inline-block">
                   <img
                     className="inline-block h-10 w-10 cursor-pointer p-2"
-                    src="../assets/shuffle.svg"
+                    src={shuffleLogo}
+                    onClick={() => _shuffleNextQueue()}
                   />
                 </div>
                 <ArrowUpTrayIcon className="inline-block h-10 w-10 cursor-pointer p-2" />

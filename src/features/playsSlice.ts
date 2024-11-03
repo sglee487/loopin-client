@@ -98,13 +98,10 @@ export const playsSlice = createSlice({
       state.currentPlays[playListId].item = selectedPlayListItem;
     },
     shuffleNextQueue: (state, action: PayloadAction<string>) => {
+      // shuffle next queue list only
       const playListId = action.payload;
       const playListQueues = state.playListQuques[playListId];
       if (playListQueues) {
-        const nextItem = playListQueues.next.shift();
-        if (nextItem) {
-          playListQueues.prev.push(nextItem);
-        }
         playListQueues.next = playListQueues.next.sort(
           () => Math.random() - 0.5
         );
