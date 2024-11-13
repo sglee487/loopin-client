@@ -37,7 +37,7 @@ export async function loadPlayList(
 ): Promise<PlayListData> {
   return axios
     .get<PlayListData>(
-      `http://localhost:8080/api/v1/list/listitems?playlistId=${playListId}`
+      `http://localhost:8080/api/v1/lists/item?playlistId=${playListId}`
     )
     .then((response) => response.data);
 }

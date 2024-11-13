@@ -11,7 +11,7 @@ const VideoList = () => {
   }, []);
 
   const _loadYoutubeLists = async () => {
-    const response = await axios.get("http://localhost:8080/api/v1/list/lists");
+    const response = await axios.get("http://localhost:8080/api/v1/lists");
     setYoutubeLists(response.data.content);
     console.log(response.data.content);
     console.log(youtubeLists);
