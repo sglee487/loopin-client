@@ -70,16 +70,15 @@ export const playsSlice = createSlice({
         next: playListData.items,
       };
     },
-    getCurrentPlays: (
+    pullCurrentPlays: (state, action: PayloadAction<{ currentPlays: any }>) => {
+      state.currentPlays = action.payload.currentPlays; // 상태 업데이트
+    },
+    pullPlayListQueues: (
       state,
-      action: PayloadAction<{
-        token?: string;
-      }>
+      action: PayloadAction<{ playListId: string; playListQueues: any }>
     ) => {
-      const { token } = action.payload;
-      if (token) {
-        loadUserCurrentPlays(token);
-      }
+      const { playListId, playListQueues } = action.payload;
+      state.playListQuques[playListId] = playListQueues;
     },
     playSelectedVideo: (
       state,
@@ -191,7 +190,7 @@ export const playsSlice = createSlice({
           prev: prevData,
           next: nextData,
         };
-      }).addCase;
+      });
   },
 });
 
@@ -199,6 +198,8 @@ export const {
   initPlayListQueues,
   backToPrevQueue,
   playSelectedVideo,
+  pullCurrentPlays,
+  pullPlayListQueues,
   deletePlayList,
   shuffleNextQueue,
   setStartSeconds,
@@ -245,3 +246,17 @@ export const updateUserPlayListQueueAsync = createAsyncThunk(
     uploadUserPlayListQueue(token, playListId, playListQueue, currentPlay);
   }
 );
+
+// 비동기 pullCurrentPlays 동기 방식으로 Wrapping
+export const fetchAndSetCurrentPlays =
+  (token: string) => async (dispatch: any) => {
+    const currentPlays = await loadUserCurrentPlays(token); // API 호출
+    dispatch(pullCurrentPlays({ currentPlays })); // Redux 상태 업데이트
+    return currentPlays; // Promise 반환
+  };
+
+export const fetchAndSetPlayListQueues =
+  (token: string, playListId: string) => async (dispatch: any) => {
+    const playListQueues = await loadUserPlayListQueue(token, playListId);
+    dispatch(pullPlayListQueues({ playListId, playListQueues }));
+  };

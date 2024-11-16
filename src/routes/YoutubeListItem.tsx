@@ -16,6 +16,7 @@ import {
   shuffleNextQueue,
   backToPrevQueue,
   deletePlayList,
+  fetchAndSetPlayListQueues,
 } from "../features/playsSlice";
 import { useEffect, useMemo, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
@@ -61,8 +62,10 @@ const YoutubeListItem = () => {
   console.log("YoutubeListItem");
 
   useEffect(() => {
-    // _loadYoutubeLists();
-  }, []);
+    if (keycloak.token && playListId) {
+      dispatch(fetchAndSetPlayListQueues(keycloak.token, playListId));
+    }
+  }, [keycloak.token, playListId, dispatch]);
 
   if (
     userCurrentPlays[playListId] === undefined ||
