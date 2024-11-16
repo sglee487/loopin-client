@@ -41,6 +41,9 @@ function App() {
       {!keycloak.authenticated && (
         <button onClick={() => keycloak.login()}>Login</button>
       )}
+      {keycloak.authenticated && (
+        <button onClick={() => keycloak.logout()}>Logout</button>
+      )}
       <div>
         <ChevronLeftIcon
           className="inline-block h-6 w-6 cursor-pointer"

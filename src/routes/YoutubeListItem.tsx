@@ -154,8 +154,8 @@ const YoutubeListItem = () => {
   )
     return (
       <main className="container">
-        <div className="flex">
-          <div className="w-[350px] h-[240px]">
+        <div className="flex space-x-2">
+          <div className="w-[350px] h-[240px] flex-none">
             {
               <ReactPlayer
                 width="350px"
@@ -180,7 +180,7 @@ const YoutubeListItem = () => {
               />
             }
           </div>
-          <div className="flex flex-col justify-end h-[244px] overflow-y-scroll">
+          <div className="grow flex flex-col justify-end h-[244px] overflow-y-scroll">
             {/* <ArrowTopRightOnSquareIcon className="inline-block h-10 w-10 cursor-pointer p-2 hover:bg-slate-200" /> */}
             <h2 className="line-clamp-2">
               {userCurrentPlays[playListId].item!.title}
