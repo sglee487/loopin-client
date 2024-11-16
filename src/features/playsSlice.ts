@@ -70,6 +70,17 @@ export const playsSlice = createSlice({
         next: playListData.items,
       };
     },
+    getCurrentPlays: (
+      state,
+      action: PayloadAction<{
+        token?: string;
+      }>
+    ) => {
+      const { token } = action.payload;
+      if (token) {
+        loadUserCurrentPlays(token);
+      }
+    },
     playSelectedVideo: (
       state,
       action: PayloadAction<{

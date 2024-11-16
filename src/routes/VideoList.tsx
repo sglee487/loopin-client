@@ -1,7 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import ReactTimeago from "react-timeago";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import { selectCurrentPlays } from "../features/playsSlice";
+
+interface ComputedVideoList {
+  playListId: string;
+  startSeconds: number;
+  thumbnail: string | undefined;
+  title: string;
+  channelTitle: string | undefined;
+  publishedAt: string | undefined;
+}
 
 const VideoList = () => {
   const [youtubeLists, setYoutubeLists] = useState<any[]>([]);
@@ -13,13 +24,60 @@ const VideoList = () => {
   const _loadYoutubeLists = async () => {
     const response = await axios.get("http://localhost:8080/api/v1/lists");
     setYoutubeLists(response.data.content);
-    console.log(response.data.content);
-    console.log(youtubeLists);
   };
+
+  const userCurrentPlays = useAppSelector(selectCurrentPlays);
+
+  const computedVideoLists = useMemo(() => {
+    const result: ComputedVideoList[] = [];
+    Object.entries(userCurrentPlays).forEach(([playListId, play]) => {
+      result.push({
+        playListId: playListId,
+        startSeconds: play.startSeconds,
+        thumbnail: play.item?.thumbnail,
+        title: play.localized?.title,
+        channelTitle: play.item?.channelTitle,
+        publishedAt: play.item?.publishedAt,
+      });
+    });
+    youtubeLists.forEach((youtubeList) => {
+      if (!(youtubeList.playListId in userCurrentPlays)) {
+        result.push({
+          playListId: youtubeList.playListId,
+          startSeconds: 0,
+          thumbnail: youtubeList.thumbnail,
+          title: youtubeList.title,
+          channelTitle: youtubeList.channelTitle,
+          publishedAt: youtubeList.publishedAt,
+        });
+      }
+    });
+    return result;
+  }, [youtubeLists, userCurrentPlays]);
 
   return (
     <main className=".container-fluid flex flex-wrap">
-      {youtubeLists.map((youtubeList) => {
+      {computedVideoLists.map((computedVideoList) => {
+        return (
+          <Link
+            to={`/playlist/${computedVideoList.playListId}`}
+            key={computedVideoList.playListId}
+            className="relative w-80 p-2"
+          >
+            <img
+              className="h-[180px] w-[320px] rounded-xl object-fill"
+              src={computedVideoList.thumbnail}
+              alt={computedVideoList.title}
+            />
+            <div>
+              <b>{computedVideoList.title}</b>
+              <div>{computedVideoList.channelTitle}</div>
+              <ReactTimeago date={computedVideoList.publishedAt || ""} />
+            </div>
+          </Link>
+        );
+      })}
+      {/* {youtubeLists.map((youtubeList) => {
         return (
           <Link
             to={`/playlist/${youtubeList.playListId}`}
@@ -38,7 +96,7 @@ const VideoList = () => {
             </div>
           </Link>
         );
-      })}
+      })} */}
     </main>
   );
 };
