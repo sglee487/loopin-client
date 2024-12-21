@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HelloWorld from '../components/HelloWorld';
+import HelloWorld from '../components/HelloWorldComponent';
 
 const ApplicationRoutes: React.FC = () => {
   return (
