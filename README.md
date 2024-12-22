@@ -9,3 +9,15 @@ This template should help get you started developing with Tauri, React and Types
 ```shell
 npm run tauri dev
 ```
+
+## storybook
+
+install
+```shell
+npx storybook@latest init
+```
+
+run
+```shell
+npm run storybook
+```

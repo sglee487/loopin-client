@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HelloWorld from '../components/HelloWorldComponent';
+import PlayItemListContainer from '../containers/PlayItemListContainer';
 
 const ApplicationRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<HelloWorld />} />
+      <Route path="/" element={<PlayItemListContainer  />} />
     </Routes>
   );
 };
