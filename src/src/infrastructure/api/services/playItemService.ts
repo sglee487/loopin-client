@@ -1,16 +1,28 @@
 import axios from 'axios';
-import { NewPlayItem } from '../../../domain/entities/NewPlayItem';
+import { Playlist } from '../../../domain/entities/Playlist';
 
-export const fetchPlayItems = async (): Promise<NewPlayItem[]> => {
-  const response = await axios.get('http://localhost:8080/api/v1/playlist/batch?size=50');
+export const fetchPlaylists = async (): Promise<Playlist[]> => {
+  const response = await axios.get('http://localhost:8080/api/v1/playlists?size=50');
   return response.data.data.content.map((item: any) => ({
     ...item,
     playListId: item.playlistId,
     publishedAt: new Date(item.publishedAt),
+    updatedAt: new Date(item.publishedAt),
+  }));
+};
+
+export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
+  const response = await axios.get(`http://localhost:8080/api/v1/playlists/${id}`);
+  const item = response.data.data;
+  return {
+    ...item,
+    playListId: item.playlistId,
+    publishedAt: new Date(item.publishedAt),
+    position: item.position || 0,
     resource: {
       kind: 'youtube#video',
-      videoId: ''
+      videoId: item.videoId || ''
     },
     startSeconds: 0
-  }));
+  };
 };

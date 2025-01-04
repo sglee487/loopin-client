@@ -1,11 +1,12 @@
-export interface NewPlayItem {
+export interface PlayItem {
     publishedAt: Date;
     channelId: string;
     title: string;
     description?: string;
     thumbnail?: string; // URL as string
     channelTitle: string;
-    playListId: string;
+
+    playlistId: string;
     position: number;
     resource: Resource;
     videoOwnerChannelId?: string;

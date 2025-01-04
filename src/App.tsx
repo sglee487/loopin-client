@@ -1,11 +1,14 @@
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { store } from './src/application/store/configureStore';
-import HelloWorldComponent from './src/presentation/components/HelloWorldComponent';
+import ApplicationRoutes from './src/presentation/routes/ApplicationRoutes';
 
 function App() {
   return (
     <Provider store={store}>
-      <HelloWorldComponent />
+      <BrowserRouter>
+        <ApplicationRoutes />
+      </BrowserRouter>
     </Provider>
   );
 }
