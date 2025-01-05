@@ -1,19 +1,18 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import PlaylistsContainer from '../containers/PlaylistsContainer.tsx';
 import PlaylistContainer from '../containers/PlaylistContainer';
 import RootContainer from "../containers/RootContainer.tsx";
 
 const ApplicationRoutes: React.FC = () => {
     return (
-        <Route>
+        <Routes>
             <Route path="/" element={<RootContainer/>}>
                 <Route path="/" element={<PlaylistsContainer/>}/>
                 <Route path="/playlist/:id" element={<PlaylistContainer/>}/>
             </Route>
-        </Route>
-    )
-        ;
+        </Routes>
+    );
 };
 
 export default ApplicationRoutes;

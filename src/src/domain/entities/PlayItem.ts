@@ -6,7 +6,6 @@ export interface PlayItem {
     thumbnail?: string; // URL as string
     channelTitle: string;
 
-    playlistId: string;
     position: number;
     resource: Resource;
     videoOwnerChannelId?: string;

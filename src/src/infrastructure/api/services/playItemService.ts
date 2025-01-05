@@ -18,11 +18,6 @@ export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
     ...item,
     playListId: item.playlistId,
     publishedAt: new Date(item.publishedAt),
-    position: item.position || 0,
-    resource: {
-      kind: 'youtube#video',
-      videoId: item.videoId || ''
-    },
-    startSeconds: 0
+    updatedAt: new Date(item.updatedAt),
   };
 };

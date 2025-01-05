@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from "../../application/store/configureStore";
 import PlaylistsContainer from './PlaylistsContainer';
-import { http, HttpResponse } from 'msw';
 
 const meta = {
   component: PlaylistsContainer,

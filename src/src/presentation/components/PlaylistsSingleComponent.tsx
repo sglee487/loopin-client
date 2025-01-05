@@ -3,11 +3,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Playlist } from '../../domain/entities/Playlist';
 
-interface PlaylistBatchSingleComponentProps {
+interface PlaylistsSingleComponentProps {
   item: Playlist;
 }
 
-const PlaylistsSingleComponent: React.FC<PlaylistBatchSingleComponentProps> = ({ item }) => {
+const PlaylistsSingleComponent: React.FC<PlaylistsSingleComponentProps> = ({ item }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -21,7 +21,7 @@ const PlaylistsSingleComponent: React.FC<PlaylistBatchSingleComponentProps> = ({
     >
       <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
         <img 
-          src={item.thumbnail} 
+          src={item.thumbnail}
           alt={item.title} 
           className="absolute top-0 left-0 w-full h-full object-cover"
         />

@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { CurrentPlay, CurrentPlayMap } from '../../domain/entities/CurrentPlay';
-import { loadPlaylistById } from '../actions/playItemActions';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {CurrentPlay, CurrentPlayMap} from '../../domain/entities/CurrentPlay';
+import {loadPlaylistById} from '../actions/playItemActions';
+import {PlayItem} from "../../domain/entities/PlayItem.ts";
 
 export interface CurrentPlayMapState {
     CurrentPlayMap: CurrentPlayMap;
@@ -22,21 +23,96 @@ const currentPlayMapSlice = createSlice({
     name: 'currentPlayMap',
     initialState,
     reducers: {
-        // initCurrentPlay: (
-        //     state,
-        //     action: PayloadAction<{
-        //         playlistId: string;
-        //         playlist: Playlist;
-        //     }>
-        // ) => {
-        //     const playlistId = action.payload.playlistId;
-        //     const playlist = action.payload.playlist;
+        playSelectedPlayItem: (
+            state,
+            action: PayloadAction<{
+                playlistId: string;
+                selectedPlayItem: PlayItem;
+            }>
+        ) => {
+            const { playlistId, selectedPlayItem } = action.payload;
+            const currentPlay = state.CurrentPlayMap.get(playlistId);
 
-        //     state.item[playlistId] = {
-        //         nowPlayingItem: playlist.,
-        //         plr
-        //     }
-        // }
+            if (!currentPlay) {
+                console.error(`Playlist with ID ${playlistId} not found.`);
+                return;
+            }
+
+            if (currentPlay.nowPlayingItem) {
+                currentPlay.prev.push(currentPlay.nowPlayingItem);
+            }
+
+            currentPlay.prev = currentPlay.prev.filter(
+                (item) => item.resource.videoId !== selectedPlayItem.resource.videoId
+            );
+
+            currentPlay.next = currentPlay.next.filter(
+                (item) => item.resource.videoId !== selectedPlayItem.resource.videoId
+            );
+
+            currentPlay.nowPlayingItem = {
+                ...selectedPlayItem,
+                startSeconds: 0, // startSeconds 값을 0으로 설정
+            };
+
+            state.CurrentPlayMap.set(playlistId, currentPlay)
+        },
+        backToPrev: (state, action: PayloadAction<{
+            playlistId: string;
+            prevPlayItem: PlayItem;
+        }>) => {
+            const {playlistId, prevPlayItem} = action.payload;
+
+            const currentPlay = state.CurrentPlayMap.get(playlistId);
+
+            if (!currentPlay) {
+                console.error(`Playlist with ID ${playlistId} not found.`);
+                return;
+            }
+
+            if (currentPlay.nowPlayingItem) {
+                currentPlay.next.unshift(currentPlay.nowPlayingItem);
+            }
+
+            currentPlay.prev = currentPlay.prev.filter(
+                (item) => item.resource.videoId !== prevPlayItem.resource.videoId
+            );
+
+            currentPlay.next = currentPlay.next.filter(
+                (item) => item.resource.videoId !== prevPlayItem.resource.videoId
+            );
+
+            currentPlay.nowPlayingItem = {
+                ...prevPlayItem,
+                startSeconds: 0, // startSeconds 값을 0으로 설정
+            };
+
+            state.CurrentPlayMap.set(playlistId, currentPlay)
+
+        },
+        setStartSeconds: (
+            state,
+            action: PayloadAction<{
+                playlistId: string;
+                startSeconds: number;
+            }>
+        ) => {
+            const { playlistId, startSeconds } = action.payload;
+
+            const currentPlay = state.CurrentPlayMap.get(playlistId);
+            if (!currentPlay) {
+                console.error(`Playlist with ID ${playlistId} not found.`);
+                return;
+            }
+
+            if (currentPlay.nowPlayingItem === undefined) {
+                console.error(`Playlist with ID ${playlistId} not found.`);
+                return;
+            }
+
+            currentPlay.nowPlayingItem.startSeconds = startSeconds;
+
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -45,13 +121,20 @@ const currentPlayMapSlice = createSlice({
         })
         .addCase(loadPlaylistById.fulfilled, (state, action) => {
             state.loading = false;
+
             const playlist = action.payload;
+
+            // TODO: if add new list, add in next queue
+
+            if (state.CurrentPlayMap.get(playlist.playlistId) !== undefined) {
+                return
+            }
 
             const currentPlay: CurrentPlay = {
                 nowPlayingItem: undefined,
                 playlist: playlist,
                 prev: [],
-                next: playlist.items ?? []
+                next: playlist.items ?? [],
             };
 
             state.CurrentPlayMap.set(playlist.playlistId, currentPlay);
@@ -62,5 +145,8 @@ const currentPlayMapSlice = createSlice({
         })
     }
 })
+
+
+export const { playSelectedPlayItem, backToPrev, setStartSeconds } = currentPlayMapSlice.actions;
 
 export default currentPlayMapSlice.reducer;

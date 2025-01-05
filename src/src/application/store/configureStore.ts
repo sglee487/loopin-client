@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { enableMapSet } from 'immer';
-import playlistsReducer from '../reducers/playlistsReducer.ts';
+import playlistsReducer from '../reducers/playlistsReducer';
 import currentPlayMapReducer from '../reducers/currentPlayMapReducer';
 
 // Enable Map and Set support in Immer
@@ -12,14 +12,9 @@ export const store = configureStore({
     currentPlayMap: currentPlayMapReducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these paths in the state
-        ignoredPaths: ['currentPlayMap.item'],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ['payload.publishedAt', 'meta.arg']
-      }
-    }),
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
   devTools: true
 });
 
