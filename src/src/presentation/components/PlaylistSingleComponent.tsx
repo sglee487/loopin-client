@@ -15,14 +15,14 @@ const PlaylistsSingleComponent: React.FC<PlaylistsSingleComponentProps> = ({ ite
   };
 
   return (
-    <div 
+    <div
       onClick={handleClick}
-      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+      className="bg-stone-100 dark:bg-stone-900 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
     >
       <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
-        <img 
+        <img
           src={item.thumbnail}
-          alt={item.title} 
+          alt={item.title}
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
       </div>

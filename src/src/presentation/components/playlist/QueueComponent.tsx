@@ -1,5 +1,5 @@
-import React, {useMemo} from "react";
-import {PlayItem} from "../../../domain/entities/PlayItem.ts";
+import React, { useMemo } from "react";
+import { PlayItem } from "../../../domain/entities/PlayItem.ts";
 
 interface QueueComponentProps {
     name: string;
@@ -9,7 +9,7 @@ interface QueueComponentProps {
     selectPlayItem: (playItem: PlayItem) => void;
 }
 
-const QueueComponent: React.FC<QueueComponentProps> = ({name, playItems, total, reverse = false, selectPlayItem}) => {
+const QueueComponent: React.FC<QueueComponentProps> = ({ name, playItems, total, reverse = false, selectPlayItem }) => {
 
     const renderPlayItems = useMemo(
         () => {
@@ -31,7 +31,7 @@ const QueueComponent: React.FC<QueueComponentProps> = ({name, playItems, total, 
             </div>
             <div className="h-[460px] overflow-scroll">
                 {renderPlayItems.map((item, index) => (
-                    <PlayItemQueueCard key={index} playItem={item} index={index} onSelect={() => selectPlayItem(item)}/>
+                    <PlayItemQueueCard key={index} playItem={item} index={index} onSelect={() => selectPlayItem(item)} />
                 ))}
             </div>
         </div>
@@ -46,7 +46,7 @@ interface PlayItemQueueCardProps {
     onSelect: () => void;
 }
 
-const PlayItemQueueCard: React.FC<PlayItemQueueCardProps> = ({playItem, index, onSelect}) => {
+const PlayItemQueueCard: React.FC<PlayItemQueueCardProps> = ({ playItem, index, onSelect }) => {
 
     return (
         <div className="flex cursor-pointer hover:bg-slate-200" onClick={onSelect}>

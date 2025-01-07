@@ -1,5 +1,5 @@
 import React from 'react';
-import {CurrentPlay} from "../../../domain/entities/CurrentPlay.ts";
+import { CurrentPlay } from "../../../domain/entities/CurrentPlay.ts";
 
 interface PlaylistBatchSingleComponentProps {
     currentPlay: CurrentPlay;

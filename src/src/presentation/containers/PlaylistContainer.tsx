@@ -66,7 +66,7 @@ const PlaylistContainer: React.FC = () => {
         <div className="container mx-auto p-4">
             <button
                 onClick={handleBack}
-                className="mb-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center"
+                className="mb-4 px-4 py-2 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg flex items-center"
             >
                 ← Back
             </button>

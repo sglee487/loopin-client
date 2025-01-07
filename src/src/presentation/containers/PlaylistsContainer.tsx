@@ -31,7 +31,7 @@ const PlaylistsContainer: React.FC = () => {
   // 에러 처리
   if (errorC || errorP) {
     return (
-      <div className="flex justify-center p-8 text-red-500">
+      <div className="flex justify-center p-8">
         Error: {errorC || errorP}
       </div>
     );

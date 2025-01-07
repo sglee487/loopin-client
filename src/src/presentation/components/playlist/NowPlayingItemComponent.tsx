@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {PlayItem} from "../../../domain/entities/PlayItem.ts";
-import {ArrowPathIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PlayPauseIcon,} from "@heroicons/react/16/solid";
+import React, { useEffect, useState } from "react";
+import { PlayItem } from "../../../domain/entities/PlayItem.ts";
+import { ArrowPathIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PlayPauseIcon, } from "@heroicons/react/16/solid";
 import ReactPlayer from "react-player";
-import {setStartSeconds} from "../../../application/reducers/currentPlayMapReducer.ts";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../../../application/store/configureStore.ts";
+import { setStartSeconds } from "../../../application/reducers/currentPlayMapReducer.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../application/store/configureStore.ts";
 
 interface NowPlayingItemComponentProps {
     playlistId: string;
@@ -13,7 +13,7 @@ interface NowPlayingItemComponentProps {
     nextQueue: () => void;
 }
 
-const NowPlayingItemComponent: React.FC<NowPlayingItemComponentProps> = ({playlistId, nowPlayingItem, prevQueue, nextQueue}) => {
+const NowPlayingItemComponent: React.FC<NowPlayingItemComponentProps> = ({ playlistId, nowPlayingItem, prevQueue, nextQueue }) => {
     const [playing, setPlaying] = useState(true);
 
     return (
@@ -55,7 +55,7 @@ interface NowPlayItemPlayerProps {
     nextQueue: () => void;
     playing: boolean;
 }
-const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({playlistId, nowPlayingItem, nextQueue, playing}) => {
+const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({ playlistId, nowPlayingItem, nextQueue, playing }) => {
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -74,12 +74,12 @@ const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({playlistId, nowPla
             if (nowPlayingItem === undefined) {
                 return
             }
-                dispatch(
-                    setStartSeconds({
-                        playlistId: playlistId,
-                        startSeconds: e.playedSeconds,
-                    })
-                )
+            dispatch(
+                setStartSeconds({
+                    playlistId: playlistId,
+                    startSeconds: e.playedSeconds,
+                })
+            )
         } catch (e) {
             console.error(e);
         }
@@ -102,7 +102,7 @@ const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({playlistId, nowPla
     console.log(nowPlayingItem.startSeconds)
 
     return (
-        <div className="flex">
+        <div className="flex space-x-2">
             <div className="flex-none rounded-md bg-purple-200 p-2">
                 {
                     <ReactPlayer
