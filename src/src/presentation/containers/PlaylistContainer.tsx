@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch} from '../../application/store/configureStore';
-import {loadPlaylistById} from '../../application/actions/playItemActions';
+import React, { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../application/store/configureStore';
+import { loadPlaylistById } from '../../application/actions/playItemActions';
 import {
     backToPrev,
     CurrentPlayMapRootState,
@@ -10,13 +10,13 @@ import {
 } from '../../application/reducers/currentPlayMapReducer';
 import NowPlayingItemComponent from "../components/playlist/NowPlayingItemComponent.tsx";
 import QueueComponent from "../components/playlist/QueueComponent.tsx";
-import {PlayItem} from "../../domain/entities/PlayItem.ts";
+import { PlayItem } from "../../domain/entities/PlayItem.ts";
 
 const PlaylistContainer: React.FC = () => {
-    const {id: playlistId} = useParams<{ id: string }>();
+    const { id: playlistId } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const {CurrentPlayMap, loading, error} = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
+    const { currentPlayMap: CurrentPlayMap, loading, error } = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
 
     useEffect(() => {
         if (playlistId) {
@@ -74,14 +74,14 @@ const PlaylistContainer: React.FC = () => {
             <div className="rounded-lg shadow-lg overflow-hidden">
 
                 <NowPlayingItemComponent playlistId={playlistId} nowPlayingItem={currentPlay.nowPlayingItem} prevQueue={prevQueue}
-                                         nextQueue={nextQueue} key={playlistId}/>
+                    nextQueue={nextQueue} key={playlistId} />
 
                 <div className="flex">
                     <QueueComponent name='이전' playItems={currentPlay.prev}
-                                    total={currentPlay.playlist.items?.length || 0} reverse={true}
-                                    selectPlayItem={selectedPlayItem}/>
+                        total={currentPlay.playlist.items?.length || 0} reverse={true}
+                        selectPlayItem={selectedPlayItem} />
                     <QueueComponent name='다음' playItems={currentPlay.next}
-                                    total={currentPlay.playlist.items?.length || 0} selectPlayItem={selectedPlayItem}/>
+                        total={currentPlay.playlist.items?.length || 0} selectPlayItem={selectedPlayItem} />
                 </div>
 
             </div>
@@ -90,4 +90,3 @@ const PlaylistContainer: React.FC = () => {
 };
 
 export default PlaylistContainer;
-  

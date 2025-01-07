@@ -1,10 +1,10 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {CurrentPlay, CurrentPlayMap} from '../../domain/entities/CurrentPlay';
-import {loadPlaylistById} from '../actions/playItemActions';
-import {PlayItem} from "../../domain/entities/PlayItem.ts";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CurrentPlay, CurrentPlayMap } from '../../domain/entities/CurrentPlay';
+import { loadPlaylistById } from '../actions/playItemActions';
+import { PlayItem } from "../../domain/entities/PlayItem.ts";
 
 export interface CurrentPlayMapState {
-    CurrentPlayMap: CurrentPlayMap;
+    currentPlayMap: CurrentPlayMap;
     loading: boolean;
     error: string | null;
 }
@@ -14,7 +14,7 @@ export interface CurrentPlayMapRootState {
 }
 
 const initialState: CurrentPlayMapState = {
-    CurrentPlayMap: new Map<string, CurrentPlay>(),
+    currentPlayMap: new Map<string, CurrentPlay>(),
     loading: false,
     error: null,
 }
@@ -31,7 +31,7 @@ const currentPlayMapSlice = createSlice({
             }>
         ) => {
             const { playlistId, selectedPlayItem } = action.payload;
-            const currentPlay = state.CurrentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap.get(playlistId);
 
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
@@ -55,15 +55,15 @@ const currentPlayMapSlice = createSlice({
                 startSeconds: 0, // startSeconds 값을 0으로 설정
             };
 
-            state.CurrentPlayMap.set(playlistId, currentPlay)
+            state.currentPlayMap.set(playlistId, currentPlay)
         },
         backToPrev: (state, action: PayloadAction<{
             playlistId: string;
             prevPlayItem: PlayItem;
         }>) => {
-            const {playlistId, prevPlayItem} = action.payload;
+            const { playlistId, prevPlayItem } = action.payload;
 
-            const currentPlay = state.CurrentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap.get(playlistId);
 
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
@@ -87,7 +87,7 @@ const currentPlayMapSlice = createSlice({
                 startSeconds: 0, // startSeconds 값을 0으로 설정
             };
 
-            state.CurrentPlayMap.set(playlistId, currentPlay)
+            state.currentPlayMap.set(playlistId, currentPlay)
 
         },
         setStartSeconds: (
@@ -99,7 +99,7 @@ const currentPlayMapSlice = createSlice({
         ) => {
             const { playlistId, startSeconds } = action.payload;
 
-            const currentPlay = state.CurrentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap.get(playlistId);
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
                 return;
@@ -116,33 +116,33 @@ const currentPlayMapSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(loadPlaylistById.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(loadPlaylistById.fulfilled, (state, action) => {
-            state.loading = false;
+            .addCase(loadPlaylistById.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(loadPlaylistById.fulfilled, (state, action) => {
+                state.loading = false;
 
-            const playlist = action.payload;
+                const playlist = action.payload;
 
-            // TODO: if add new list, add in next queue
+                // TODO: if add new list, add in next queue
 
-            if (state.CurrentPlayMap.get(playlist.playlistId) !== undefined) {
-                return
-            }
+                if (state.currentPlayMap.get(playlist.playlistId) !== undefined) {
+                    return
+                }
 
-            const currentPlay: CurrentPlay = {
-                nowPlayingItem: undefined,
-                playlist: playlist,
-                prev: [],
-                next: playlist.items ?? [],
-            };
+                const currentPlay: CurrentPlay = {
+                    nowPlayingItem: undefined,
+                    playlist: playlist,
+                    prev: [],
+                    next: playlist.items ?? [],
+                };
 
-            state.CurrentPlayMap.set(playlist.playlistId, currentPlay);
-        })
-        .addCase(loadPlaylistById.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message || 'Error fetching playlist by id'
-        })
+                state.currentPlayMap.set(playlist.playlistId, currentPlay);
+            })
+            .addCase(loadPlaylistById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Error fetching playlist by id'
+            })
     }
 })
 

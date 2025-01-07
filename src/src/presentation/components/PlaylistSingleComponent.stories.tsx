@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import PlaylistsSingleComponent from './PlaylistsSingleComponent.tsx';
+import PlaylistsSingleComponent from './PlaylistSingleComponent.tsx';
 
 const meta = {
   component: PlaylistsSingleComponent,
