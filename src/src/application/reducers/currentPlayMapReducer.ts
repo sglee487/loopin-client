@@ -14,10 +14,10 @@ export interface CurrentPlayMapRootState {
 }
 
 const initialState: CurrentPlayMapState = {
-    currentPlayMap: new Map<string, CurrentPlay>(),
+    currentPlayMap: {},
     loading: false,
-    error: null,
-}
+    error: null
+};
 
 const currentPlayMapSlice = createSlice({
     name: 'currentPlayMap',
@@ -31,7 +31,7 @@ const currentPlayMapSlice = createSlice({
             }>
         ) => {
             const { playlistId, selectedPlayItem } = action.payload;
-            const currentPlay = state.currentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap[playlistId]
 
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
@@ -55,7 +55,7 @@ const currentPlayMapSlice = createSlice({
                 startSeconds: 0, // startSeconds 값을 0으로 설정
             };
 
-            state.currentPlayMap.set(playlistId, currentPlay)
+            state.currentPlayMap[playlistId] = currentPlay
         },
         backToPrev: (state, action: PayloadAction<{
             playlistId: string;
@@ -63,7 +63,7 @@ const currentPlayMapSlice = createSlice({
         }>) => {
             const { playlistId, prevPlayItem } = action.payload;
 
-            const currentPlay = state.currentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap[playlistId]
 
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
@@ -87,7 +87,7 @@ const currentPlayMapSlice = createSlice({
                 startSeconds: 0, // startSeconds 값을 0으로 설정
             };
 
-            state.currentPlayMap.set(playlistId, currentPlay)
+            state.currentPlayMap[playlistId] = currentPlay
 
         },
         setStartSeconds: (
@@ -99,7 +99,7 @@ const currentPlayMapSlice = createSlice({
         ) => {
             const { playlistId, startSeconds } = action.payload;
 
-            const currentPlay = state.currentPlayMap.get(playlistId);
+            const currentPlay = state.currentPlayMap[playlistId];
             if (!currentPlay) {
                 console.error(`Playlist with ID ${playlistId} not found.`);
                 return;
@@ -126,7 +126,7 @@ const currentPlayMapSlice = createSlice({
 
                 // TODO: if add new list, add in next queue
 
-                if (state.currentPlayMap.get(playlist.playlistId) !== undefined) {
+                if (state.currentPlayMap[playlist.playlistId] !== undefined) {
                     return
                 }
 
@@ -137,7 +137,7 @@ const currentPlayMapSlice = createSlice({
                     next: playlist.items ?? [],
                 };
 
-                state.currentPlayMap.set(playlist.playlistId, currentPlay);
+                state.currentPlayMap[playlist.playlistId] = currentPlay;
             })
             .addCase(loadPlaylistById.rejected, (state, action) => {
                 state.loading = false;

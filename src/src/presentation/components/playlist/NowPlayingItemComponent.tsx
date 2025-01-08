@@ -99,7 +99,6 @@ const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({ playlistId, nowPl
             </div>
         )
     }
-    console.log(nowPlayingItem.startSeconds)
 
     return (
         <div className="flex space-x-2">

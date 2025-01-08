@@ -26,33 +26,33 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   parameters: {
     msw: {
-      handlers: [
-        http.get('http://localhost:8080/api/v1/playlists', () => {
-          return HttpResponse.json({
-            data: {
-              content: [
-                {
-                  playlistId: "PLx8rAXc66SGIqrxzBZ9yaGx2sGbby51dM",
-                  channelId: "UCYzIlosTCqwoRUzNgV21o_Q",
-                  title: "Test Playlist",
-                  description: "Test Description",
-                  thumbnail: "https://i.ytimg.com/vi/_xnBucjnPuQ/sddefault.jpg",
-                  channelTitle: "Test Channel",
-                  localized: {
-                    title: "Test Playlist",
-                    description: "Test Description"
-                  },
-                  contentDetails: {
-                    itemCount: 16
-                  },
-                  publishedAt: "2022-05-31T17:22:37.377Z",
-                  updatedAt: "2024-03-21T06:30:48.085Z"
-                }
-              ]
-            }
-          });
-        })
-      ]
+      // handlers: [
+      //   http.get('http://localhost:8080/api/v1/playlists', () => {
+      //     return HttpResponse.json({
+      //       data: {
+      //         content: [
+      //           {
+      //             playlistId: "PLx8rAXc66SGIqrxzBZ9yaGx2sGbby51dM",
+      //             channelId: "UCYzIlosTCqwoRUzNgV21o_Q",
+      //             title: "Test Playlist",
+      //             description: "Test Description",
+      //             thumbnail: "https://i.ytimg.com/vi/_xnBucjnPuQ/sddefault.jpg",
+      //             channelTitle: "Test Channel",
+      //             localized: {
+      //               title: "Test Playlist",
+      //               description: "Test Description"
+      //             },
+      //             contentDetails: {
+      //               itemCount: 16
+      //             },
+      //             publishedAt: "2022-05-31T17:22:37.377Z",
+      //             updatedAt: "2024-03-21T06:30:48.085Z"
+      //           }
+      //         ]
+      //       }
+      //     });
+      //   })
+      // ]
     }
   }
 };

@@ -1,22 +1,35 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { enableMapSet } from 'immer';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import playlistsReducer from '../reducers/playlistsReducer';
 import currentPlayMapReducer from '../reducers/currentPlayMapReducer';
+import { CurrentMapTransform } from './mappers/CurrentMapTransform';
 
 // Enable Map and Set support in Immer
 enableMapSet();
 
+const currentPlayMapPersistConfig = {
+  key: 'currentPlayMap',
+  storage,
+  transforms: [CurrentMapTransform],
+};
+
+const persistedCurrentPlayMapReducer = persistReducer(currentPlayMapPersistConfig, currentPlayMapReducer);
+
 export const store = configureStore({
   reducer: {
     playlists: playlistsReducer,
-    currentPlayMap: currentPlayMapReducer
+    currentPlayMap: persistedCurrentPlayMapReducer,
   },
   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: false,
-      }),
-  devTools: true
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+  devTools: true,
 });
+
+export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

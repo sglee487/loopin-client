@@ -48,16 +48,18 @@ const PlaylistsContainer: React.FC = () => {
       <div className="mb-6">
         <h2 className="text-4xl font-bold">Current Playlist</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {Array.from(currentPlayMap.values()).map((currentPlay) => (
-            <CurrentPlaySingleComponent key={currentPlay.playlist.playlistId} currentPlay={currentPlay} />
-          ))}
+          {
+            Object.values(currentPlayMap).map((currentPlay) => (
+                <CurrentPlaySingleComponent key={currentPlay.playlist.playlistId} currentPlay={currentPlay} />
+            ))
+          }
         </div>
       </div>
 
       <h2 className="text-2xl font-bold mb-4">Playlists</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {playlists
-          .filter((item: Playlist) => !currentPlayMap.has(item.playlistId))
+          .filter((item: Playlist) => (currentPlayMap[item.playlistId] === undefined))
           .map((item: Playlist) => (
             <PlaylistSingleComponent key={item.playlistId} item={item} />
           ))}

@@ -16,7 +16,7 @@ const PlaylistContainer: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { currentPlayMap: CurrentPlayMap, loading, error } = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
+    const { currentPlayMap, loading, error } = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
 
     useEffect(() => {
         if (playlistId) {
@@ -26,12 +26,11 @@ const PlaylistContainer: React.FC = () => {
 
     if (loading) return <div className="flex justify-center p-8">Loading...</div>;
     if (error) return <div className="flex justify-center p-8 text-red-500">Error: {error}</div>;
-    if (!playlistId || !CurrentPlayMap.has(playlistId)) return <div className="flex justify-center p-8">Playlist not
+
+    if (!playlistId || (currentPlayMap[playlistId] === undefined)) return <div className="flex justify-center p-8">Playlist not
         found</div>;
 
-    console.log(CurrentPlayMap);
-    const currentPlay = CurrentPlayMap.get(playlistId)!;
-    console.log('currentPlay', currentPlay);
+    const currentPlay = currentPlayMap[playlistId]!;
 
     const handleBack = () => {
         navigate(-1);
