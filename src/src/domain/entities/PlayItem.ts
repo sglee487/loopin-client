@@ -10,7 +10,6 @@ export interface PlayItem {
     resource: Resource;
     videoOwnerChannelId?: string;
     videoOwnerChannelTitle?: string;
-    startSeconds: number;
   }
 
   export interface Resource {

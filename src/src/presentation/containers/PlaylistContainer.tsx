@@ -73,7 +73,7 @@ const PlaylistContainer: React.FC = () => {
             <div className="rounded-lg shadow-lg overflow-hidden">
 
                 <NowPlayingItemComponent playlistId={playlistId} nowPlayingItem={currentPlay.nowPlayingItem} prevQueue={prevQueue}
-                    nextQueue={nextQueue} key={playlistId} />
+                    nextQueue={nextQueue} startSeconds={currentPlay.startSeconds} key={playlistId} />
 
                 <div className="flex">
                     <QueueComponent name='이전' playItems={currentPlay.prev}

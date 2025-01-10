@@ -8,3 +8,7 @@ export const loadPlaylists = createAsyncThunk('playlists/load', async () => {
 export const loadPlaylistById = createAsyncThunk('playlist/load', async (id: string) => {
   return await fetchPlaylistById(id);
 })
+
+export const uploadCurrentState = createAsyncThunk('currentPlay/upload', async (token: string) => {
+  return await fetchPlaylists();
+});

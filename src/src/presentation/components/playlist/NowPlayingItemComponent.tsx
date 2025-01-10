@@ -11,15 +11,16 @@ interface NowPlayingItemComponentProps {
     nowPlayingItem: PlayItem | undefined;
     prevQueue: () => void;
     nextQueue: () => void;
+    startSeconds: number;
 }
 
-const NowPlayingItemComponent: React.FC<NowPlayingItemComponentProps> = ({ playlistId, nowPlayingItem, prevQueue, nextQueue }) => {
+const NowPlayingItemComponent: React.FC<NowPlayingItemComponentProps> = ({ playlistId, nowPlayingItem, prevQueue, nextQueue, startSeconds = 0 }) => {
     const [playing, setPlaying] = useState(true);
 
     return (
         <div className="flex flex-col">
             <div>
-                <NowPlayItemPlayer playlistId={playlistId} nowPlayingItem={nowPlayingItem} nextQueue={nextQueue} playing={playing} />
+                <NowPlayItemPlayer playlistId={playlistId} nowPlayingItem={nowPlayingItem} nextQueue={nextQueue} playing={playing} startSeconds={startSeconds} />
             </div>
             <div className="flex flex-col justify-end p-2">
                 <div className="flex space-x-1">
@@ -54,8 +55,9 @@ interface NowPlayItemPlayerProps {
     nowPlayingItem: PlayItem | undefined;
     nextQueue: () => void;
     playing: boolean;
+    startSeconds: number;
 }
-const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({ playlistId, nowPlayingItem, nextQueue, playing }) => {
+const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({ playlistId, nowPlayingItem, nextQueue, playing, startSeconds }) => {
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -112,7 +114,7 @@ const NowPlayItemPlayer: React.FC<NowPlayItemPlayerProps> = ({ playlistId, nowPl
                             youtube: {
                                 playerVars: {
                                     start: Math.trunc(
-                                        nowPlayingItem.startSeconds
+                                        startSeconds
                                     ),
                                 },
                             },

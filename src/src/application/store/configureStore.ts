@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import playlistsReducer from '../reducers/playlistsReducer';
 import currentPlayMapReducer from '../reducers/currentPlayMapReducer';
 import { CurrentMapTransform } from './mappers/CurrentMapTransform';
+import uploadCurrentPlayMiddleware from './middleware/uploadCurrentPlayMiddleware';
 
 // Enable Map and Set support in Immer
 enableMapSet();
@@ -25,7 +26,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat(uploadCurrentPlayMiddleware),
   devTools: true,
 });
 

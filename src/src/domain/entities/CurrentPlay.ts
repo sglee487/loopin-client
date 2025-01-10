@@ -9,6 +9,8 @@ export interface CurrentPlay {
     nowPlayingItem?: PlayItem;
     playlist: Playlist;
 
+    startSeconds: number;
+
     prev: PlayItem[];
     next: PlayItem[];
 }

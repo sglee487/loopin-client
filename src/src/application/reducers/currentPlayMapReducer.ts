@@ -52,8 +52,8 @@ const currentPlayMapSlice = createSlice({
 
             currentPlay.nowPlayingItem = {
                 ...selectedPlayItem,
-                startSeconds: 0, // startSeconds 값을 0으로 설정
             };
+            currentPlay.startSeconds = 0;
 
             state.currentPlayMap[playlistId] = currentPlay
         },
@@ -84,8 +84,8 @@ const currentPlayMapSlice = createSlice({
 
             currentPlay.nowPlayingItem = {
                 ...prevPlayItem,
-                startSeconds: 0, // startSeconds 값을 0으로 설정
             };
+            currentPlay.startSeconds = 0;
 
             state.currentPlayMap[playlistId] = currentPlay
 
@@ -110,8 +110,24 @@ const currentPlayMapSlice = createSlice({
                 return;
             }
 
-            currentPlay.nowPlayingItem.startSeconds = startSeconds;
+            currentPlay.startSeconds = startSeconds;
+        },
+        shuffleNextQueue: (
+            state,
+            action: PayloadAction<{
+                playlistId: string;
+            }>
+        ) => {
+            const { playlistId } = action.payload;
+            const currentPlay = state.currentPlayMap[playlistId];
+            if (!currentPlay) {
+                console.error(`Playlist with ID ${playlistId} not found.`);
+                return;
+            }
 
+            currentPlay.next = currentPlay.next.sort(
+                () => Math.random() - 0.5
+            );
         },
     },
     extraReducers: (builder) => {
@@ -135,6 +151,7 @@ const currentPlayMapSlice = createSlice({
                     playlist: playlist,
                     prev: [],
                     next: playlist.items ?? [],
+                    startSeconds: 0,
                 };
 
                 state.currentPlayMap[playlist.playlistId] = currentPlay;
