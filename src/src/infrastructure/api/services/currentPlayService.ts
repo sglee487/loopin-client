@@ -19,12 +19,9 @@ export const uploadCurrentPlay = async (playlistId: string, currentPlay: Current
     nowPlayingItem: currentPlay.nowPlayingItem,
     prevItemIdList: currentPlay.prev.map((item) => item.resource.videoId),
     nextItemIdList: currentPlay.next.map((item) => item.resource.videoId),
+    startSeconds: currentPlay.startSeconds,
   }
-
-  console.log(data);
-
-  const result = await axios.post(`http://localhost:8080/api/v1/current-plays/${playlistId}`, data);
-  console.log(result);
+  await axios.post(`http://localhost:8080/api/v1/current-plays/${playlistId}`, data);
 };
 
 export const uploadCurrentPlayStartSeconds = async (playlistId: string, startSeconds: number): Promise<undefined> => {
@@ -66,8 +63,6 @@ export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
     },
     {} as CurrentPlayMap
   );
-
-  console.log(currentPlayMap);
   return currentPlayMap;
 };
 

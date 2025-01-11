@@ -1,15 +1,26 @@
 import React, { useMemo } from "react";
+
+import { useDispatch } from 'react-redux';
+import shuffleLogo from "../../../../assets/shuffle.svg";
 import { PlayItem } from "../../../domain/entities/PlayItem.ts";
+import { AppDispatch } from "../../../application/store/configureStore.ts";
+import { shuffleNextQueue } from "../../../application/actions/currentPlayMapActions.ts";
 
 interface QueueComponentProps {
     name: string;
+    playlistId: string;
     playItems: PlayItem[];
     total: number;
     reverse?: boolean;
     selectPlayItem: (playItem: PlayItem) => void;
 }
 
-const QueueComponent: React.FC<QueueComponentProps> = ({ name, playItems, total, reverse = false, selectPlayItem }) => {
+const QueueComponent: React.FC<QueueComponentProps> = ({ name, playlistId, playItems, total, reverse = false, selectPlayItem }) => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    const _shuffleNextQueue = () => {
+        dispatch(shuffleNextQueue(playlistId));
+    }
 
     const renderPlayItems = useMemo(
         () => {
@@ -24,10 +35,17 @@ const QueueComponent: React.FC<QueueComponentProps> = ({ name, playItems, total,
     return (
         <div className="w-[360px] rounded-md border">
             <small>{name}</small>
-            <div className="p-2">
+            <div className="p-2 flex justify-between">
                 <small className="text-gray-500">
                     {playItems.length} / {total}
                 </small>
+                <div>
+                    {!reverse && <img
+                        className="inline-block h-10 w-10 cursor-pointer p-2"
+                        src={shuffleLogo}
+                        onClick={() => _shuffleNextQueue()}
+                    />}
+                </div>
             </div>
             <div className="h-[460px] overflow-scroll">
                 {renderPlayItems.map((item, index) => (

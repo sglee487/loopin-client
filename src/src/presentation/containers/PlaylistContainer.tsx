@@ -78,10 +78,10 @@ const PlaylistContainer: React.FC = () => {
                     nextQueue={nextQueue} startSeconds={currentPlay.startSeconds} key={playlistId} />
 
                 <div className="flex">
-                    <QueueComponent name='이전' playItems={currentPlay.prev}
+                    <QueueComponent name='이전' playlistId={playlistId} playItems={currentPlay.prev}
                         total={currentPlay.playlist.items?.length || 0} reverse={true}
                         selectPlayItem={selectedPlayItem} />
-                    <QueueComponent name='다음' playItems={currentPlay.next}
+                    <QueueComponent name='다음' playlistId={playlistId} playItems={currentPlay.next}
                         total={currentPlay.playlist.items?.length || 0} selectPlayItem={selectedPlayItem} />
                 </div>
 

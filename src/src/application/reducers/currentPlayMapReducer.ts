@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CurrentPlay, CurrentPlayMap } from '../../domain/entities/CurrentPlay';
 import { loadPlaylistById } from '../actions/playlistActions.ts';
 import { PlayItem } from "../../domain/entities/PlayItem.ts";
-import { pullCurrentPlay, pullCurrentPlayMap } from '../actions/currentPlayMapActions.ts';
+import { pullCurrentPlay, pullCurrentPlayMap, shuffleNextQueue } from '../actions/currentPlayMapActions.ts';
 
 export interface CurrentPlayMapState {
     currentPlayMap: CurrentPlayMap;
@@ -188,6 +188,19 @@ const currentPlayMapSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Error fetching current play'
             })
+
+            .addCase(shuffleNextQueue, (state, action) => {
+                const { playlistId } = action.payload;
+                const currentPlay = state.currentPlayMap[playlistId];
+                if (!currentPlay) {
+                    console.error(`Playlist with ID ${playlistId} not found.`);
+                    return;
+                }
+
+                currentPlay.next = currentPlay.next.sort(
+                    () => Math.random() - 0.5
+                );
+            });
     }
 })
 
