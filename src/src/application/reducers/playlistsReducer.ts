@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loadPlaylists } from '../actions/playItemActions';
+import { loadPlaylists } from '../actions/playlistActions';
 import { Playlist } from '../../domain/entities/Playlist';
 
 export interface PlaylistsState {

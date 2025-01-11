@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../application/store/configureStore';
-import { loadPlaylistById } from '../../application/actions/playItemActions';
+import { loadPlaylistById } from '../../application/actions/playlistActions.ts';
 import {
     backToPrev,
     CurrentPlayMapRootState,
@@ -11,6 +11,7 @@ import {
 import NowPlayingItemComponent from "../components/playlist/NowPlayingItemComponent.tsx";
 import QueueComponent from "../components/playlist/QueueComponent.tsx";
 import { PlayItem } from "../../domain/entities/PlayItem.ts";
+import { pullCurrentPlay } from '../../application/actions/currentPlayMapActions.ts';
 
 const PlaylistContainer: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();
@@ -21,6 +22,7 @@ const PlaylistContainer: React.FC = () => {
     useEffect(() => {
         if (playlistId) {
             dispatch(loadPlaylistById(playlistId));
+            dispatch(pullCurrentPlay(playlistId))
         }
     }, [dispatch, playlistId]);
 
@@ -32,9 +34,9 @@ const PlaylistContainer: React.FC = () => {
 
     const currentPlay = currentPlayMap[playlistId]!;
 
-    const handleBack = () => {
-        navigate(-1);
-    };
+    const handleHome = () => {
+        navigate('/');
+    }
 
     const prevQueue = () => {
         dispatch(
@@ -64,10 +66,10 @@ const PlaylistContainer: React.FC = () => {
     return (
         <div className="container mx-auto p-4">
             <button
-                onClick={handleBack}
+                onClick={handleHome}
                 className="mb-4 px-4 py-2 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg flex items-center"
             >
-                ← Back
+                ← Home
             </button>
 
             <div className="rounded-lg shadow-lg overflow-hidden">

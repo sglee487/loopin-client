@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CurrentPlay, CurrentPlayMap } from '../../domain/entities/CurrentPlay';
-import { loadPlaylistById } from '../actions/playItemActions';
+import { loadPlaylistById } from '../actions/playlistActions.ts';
 import { PlayItem } from "../../domain/entities/PlayItem.ts";
+import { pullCurrentPlay, pullCurrentPlayMap } from '../actions/currentPlayMapActions.ts';
 
 export interface CurrentPlayMapState {
     currentPlayMap: CurrentPlayMap;
@@ -159,6 +160,33 @@ const currentPlayMapSlice = createSlice({
             .addCase(loadPlaylistById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Error fetching playlist by id'
+            })
+
+            .addCase(pullCurrentPlayMap.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(pullCurrentPlayMap.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action)
+                console.log(action.payload)
+                state.currentPlayMap = action.payload;
+            })
+            .addCase(pullCurrentPlayMap.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Error fetching current play map'
+            })
+
+            .addCase(pullCurrentPlay.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(pullCurrentPlay.fulfilled, (state, action) => {
+                console.log(action.payload);
+                state.loading = false;
+                state.currentPlayMap[action.payload.playlist.playlistId] = action.payload;
+            })
+            .addCase(pullCurrentPlay.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Error fetching current play'
             })
     }
 })

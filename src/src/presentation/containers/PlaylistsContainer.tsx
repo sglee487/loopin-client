@@ -3,24 +3,27 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../../application/store/configureStore';
 import PlaylistSingleComponent from '../components/PlaylistSingleComponent.tsx';
 import CurrentPlaySingleComponent from '../components/CurrentPlaySingleComponent.tsx';
-import { loadPlaylists } from '../../application/actions/playItemActions';
+import { loadPlaylists } from '../../application/actions/playlistActions.ts';
 import { Playlist } from '../../domain/entities/Playlist';
 import { PlaylistsRootState } from '../../application/reducers/playlistsReducer.ts';
 import { CurrentPlayMapRootState } from '../../application/reducers/currentPlayMapReducer.ts';
+import { pullCurrentPlayMap } from '../../application/actions/currentPlayMapActions.ts';
 
 const PlaylistsContainer: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // 상태 가져오기
-  const { currentPlayMap, loading: loadingC, error: errorC } = useSelector(
-    (state: CurrentPlayMapRootState) => state.currentPlayMap
-  );
   const { playlists, loading: loadingP, error: errorP } = useSelector(
     (state: PlaylistsRootState) => state.playlists
+  );
+  // 상태 가져오기
+  const { currentPlayMap, loading: loadingC, error: errorC } = useSelector(
+    (state: CurrentPlayMapRootState) => state.currentPlayMap
   );
 
   useEffect(() => {
     dispatch(loadPlaylists());
+    dispatch(pullCurrentPlayMap());
   }, [dispatch]);
 
   // 로딩 상태 처리
@@ -50,7 +53,7 @@ const PlaylistsContainer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {
             Object.values(currentPlayMap).map((currentPlay) => (
-                <CurrentPlaySingleComponent key={currentPlay.playlist.playlistId} currentPlay={currentPlay} />
+              <CurrentPlaySingleComponent key={currentPlay.playlist.playlistId} currentPlay={currentPlay} />
             ))
           }
         </div>
