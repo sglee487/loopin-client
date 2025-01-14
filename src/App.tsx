@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { store, persistor } from './src/application/store/configureStore';
 import ApplicationRoutes from './src/presentation/routes/ApplicationRoutes';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
-import keycloak, { initOptions, onKeycloakEvent } from "./src/presentation/services/keycloakService";
+import keycloak, { initOptions, onKeycloakEvent } from "./src/infrastructure/api/services/keycloakService";
 
 function App() {
   return (

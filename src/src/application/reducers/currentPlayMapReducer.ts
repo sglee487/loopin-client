@@ -167,8 +167,6 @@ const currentPlayMapSlice = createSlice({
             })
             .addCase(pullCurrentPlayMap.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action)
-                console.log(action.payload)
                 state.currentPlayMap = action.payload;
             })
             .addCase(pullCurrentPlayMap.rejected, (state, action) => {
@@ -180,7 +178,6 @@ const currentPlayMapSlice = createSlice({
                 state.loading = true;
             })
             .addCase(pullCurrentPlay.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.loading = false;
                 state.currentPlayMap[action.payload.playlist.playlistId] = action.payload;
             })

@@ -1,18 +1,7 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { CurrentPlay, CurrentPlayMap } from '../../../domain/entities/CurrentPlay';
 import { PlayItem } from '../../../domain/entities/PlayItem';
-
-// export const uploadCurrentPlay = async (): Promise<Playlist[]> => {
-//   const response = await axios.post('http://localhost:8080/api/v1/current-plays', {
-
-//   });
-//   return response.data.data.content.map((item: any) => ({
-//     ...item,
-//     playListId: item.playlistId,
-//     publishedAt: new Date(item.publishedAt),
-//     updatedAt: new Date(item.publishedAt),
-//   }));
-// };
+import axiosInstance from '../axiosInstance';
 
 export const uploadCurrentPlay = async (playlistId: string, currentPlay: CurrentPlay): Promise<undefined> => {
   const data = {
@@ -21,17 +10,17 @@ export const uploadCurrentPlay = async (playlistId: string, currentPlay: Current
     nextItemIdList: currentPlay.next.map((item) => item.resource.videoId),
     startSeconds: currentPlay.startSeconds,
   }
-  await axios.post(`http://localhost:8080/api/v1/current-plays/${playlistId}`, data);
+  await axiosInstance.post(`http://localhost:8080/api/v1/current-plays/${playlistId}`, data);
 };
 
 export const uploadCurrentPlayStartSeconds = async (playlistId: string, startSeconds: number): Promise<undefined> => {
-  await axios.post(`http://localhost:8080/api/v1/current-plays/${playlistId}/start-seconds`, {
+  await axiosInstance.post(`http://localhost:8080/api/v1/current-plays/${playlistId}/start-seconds`, {
     startSeconds: startSeconds,
   });
 }
 
 export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
-  const response = await axios.get(`http://localhost:8080/api/v1/current-plays`);
+  const response = await axiosInstance.get(`http://localhost:8080/api/v1/current-plays`);
   const item = response.data.data;
 
   const currentPlayMap: CurrentPlayMap = Object.entries(item.currentPlayMap).reduce(
@@ -67,7 +56,7 @@ export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
 };
 
 export const fetchCurrentPlay = async (playlistId: string): Promise<CurrentPlay> => {
-  const response = await axios.get(`http://localhost:8080/api/v1/current-plays/${playlistId}`);
+  const response = await axiosInstance.get(`http://localhost:8080/api/v1/current-plays/${playlistId}`);
   const item = response.data.data;
 
   const currentPlay: CurrentPlay = {

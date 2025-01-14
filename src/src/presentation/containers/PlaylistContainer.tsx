@@ -27,7 +27,7 @@ const PlaylistContainer: React.FC = () => {
     }, [dispatch, playlistId]);
 
     if (loading) return <div className="flex justify-center p-8">Loading...</div>;
-    if (error) return <div className="flex justify-center p-8 text-red-500">Error: {error}</div>;
+    // if (error) return <div className="flex justify-center p-8 text-red-500">Error: {error}</div>;
 
     if (!playlistId || (currentPlayMap[playlistId] === undefined)) return <div className="flex justify-center p-8">Playlist not
         found</div>;

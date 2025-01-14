@@ -31,14 +31,17 @@ const PlaylistsContainer: React.FC = () => {
     return <div className="flex justify-center p-8">Loading...</div>;
   }
 
+  // console.error('errorC', errorC);
+  // console.error('errorP', errorP);
+
   // 에러 처리
-  if (errorC || errorP) {
-    return (
-      <div className="flex justify-center p-8">
-        Error: {errorC || errorP}
-      </div>
-    );
-  }
+  // if (errorC || errorP) {
+  //   return (
+  //     <div className="flex justify-center p-8">
+  //       Error: {errorC || errorP}
+  //     </div>
+  //   );
+  // }
 
   // 플레이리스트가 없는 경우 처리
   if (!playlists || playlists.length === 0) {
