@@ -31,13 +31,16 @@ export interface PlayListQueuesResponseData {
   next: PlayListItem[];
 }
 
+
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+
 export async function loadPlayList(
   playListId: string,
   refresh: boolean = false
 ): Promise<PlayListData> {
   return axios
     .get<PlayListData>(
-      `http://localhost:8080/api/v1/lists/item?playlistId=${playListId}`
+      `${API_BASE_URL}/lists/item?playlistId=${playListId}`
     )
     .then((response) => response.data);
 }
@@ -48,7 +51,7 @@ export async function loadUserCurrentPlays(
   const config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `http://localhost:8080/api/v1/user_plays/current-plays`,
+    url: `${API_BASE_URL}/user_plays/current-plays`,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -64,7 +67,7 @@ export async function loadUserPlayListQueues(
   const config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `http://localhost:8080/api/v1/user_plays/playlist-queues/${playListId}`,
+    url: `${API_BASE_URL}/user_plays/playlist-queues/${playListId}`,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -90,7 +93,7 @@ export async function uploadUserPlayListQueue(
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: `http://localhost:8080/api/v1/user_plays`,
+    url: `${API_BASE_URL}/user_plays`,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -112,7 +115,7 @@ export async function deleteUserPlayListQueue(
   const config = {
     method: "delete",
     maxBodyLength: Infinity,
-    url: `http://localhost:8080/api/v1/user_plays`,
+    url: `${API_BASE_URL}/user_plays`,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

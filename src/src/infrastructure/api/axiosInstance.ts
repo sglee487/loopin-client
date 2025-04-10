@@ -1,8 +1,10 @@
 import axios from 'axios';
 import keycloak from './services/keycloakService'; // Keycloak 인스턴스 가져오기
 
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api/v1',
+    baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },

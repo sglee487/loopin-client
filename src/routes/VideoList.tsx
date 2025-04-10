@@ -14,6 +14,8 @@ interface ComputedVideoList {
   publishedAt: string | undefined;
 }
 
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+
 const VideoList = () => {
   const [youtubeLists, setYoutubeLists] = useState<any[]>([]);
 
@@ -22,7 +24,7 @@ const VideoList = () => {
   }, []);
 
   const _loadYoutubeLists = async () => {
-    const response = await axios.get("http://localhost:8080/api/v1/lists");
+    const response = await axios.get(`${API_BASE_URL}/lists`);
     setYoutubeLists(response.data.content);
   };
 

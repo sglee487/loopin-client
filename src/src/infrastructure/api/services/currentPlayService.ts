@@ -3,6 +3,8 @@ import { CurrentPlay, CurrentPlayMap } from '../../../domain/entities/CurrentPla
 import { PlayItem } from '../../../domain/entities/PlayItem';
 import axiosInstance from '../axiosInstance';
 
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+
 export const uploadCurrentPlay = async (playlistId: string, currentPlay: CurrentPlay): Promise<undefined> => {
   const data = {
     nowPlayingItem: currentPlay.nowPlayingItem,
@@ -10,17 +12,17 @@ export const uploadCurrentPlay = async (playlistId: string, currentPlay: Current
     nextItemIdList: currentPlay.next.map((item) => item.resource.videoId),
     startSeconds: currentPlay.startSeconds,
   }
-  await axiosInstance.post(`http://localhost:8080/api/v1/current-plays/${playlistId}`, data);
+  await axiosInstance.post(`${API_BASE_URL}/current-plays/${playlistId}`, data);
 };
 
 export const uploadCurrentPlayStartSeconds = async (playlistId: string, startSeconds: number): Promise<undefined> => {
-  await axiosInstance.patch(`http://localhost:8080/api/v1/current-plays/${playlistId}/start-seconds`, {
+  await axiosInstance.patch(`${API_BASE_URL}/current-plays/${playlistId}/start-seconds`, {
     startSeconds: startSeconds,
   });
 }
 
 export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
-  const response = await axiosInstance.get(`http://localhost:8080/api/v1/current-plays`);
+  const response = await axiosInstance.get(`${API_BASE_URL}/current-plays`);
   const item = response.data.data;
 
   const currentPlayMap: CurrentPlayMap = Object.entries(item.currentPlayMap).reduce(
@@ -56,7 +58,7 @@ export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
 };
 
 export const fetchCurrentPlay = async (playlistId: string): Promise<CurrentPlay> => {
-  const response = await axiosInstance.get(`http://localhost:8080/api/v1/current-plays/${playlistId}`);
+  const response = await axiosInstance.get(`${API_BASE_URL}/current-plays/${playlistId}`);
   const item = response.data.data;
 
   const currentPlay: CurrentPlay = {
