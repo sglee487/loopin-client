@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchPlaylists, fetchPlaylistById } from '@infrastructure/api/services/playItemService';
+import { fetchPlaylists, fetchPlaylistById } from '@infrastructure/api/services/playlistService';
 
 export const loadPlaylists = createAsyncThunk('playlists/load', async () => {
   return await fetchPlaylists();

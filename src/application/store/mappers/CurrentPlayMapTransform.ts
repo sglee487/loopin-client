@@ -1,7 +1,7 @@
 import { createTransform } from 'redux-persist';
 import { CurrentPlayMap } from '@domain/entities/CurrentPlay';
 
-export const CurrentMapTransform = createTransform<CurrentPlayMap, CurrentPlayMap>(
+export const CurrentPlayMapTransform = createTransform<CurrentPlayMap, CurrentPlayMap>(
     // Outbound: Before saving to storage
     (inboundState) => {
       const serializedState = Object.entries(inboundState).reduce((acc, [key, value]) => {
@@ -36,7 +36,7 @@ export const CurrentMapTransform = createTransform<CurrentPlayMap, CurrentPlayMa
         };
         return acc;
       }, {} as Record<string, any>);
-      return serializedState as CurrentPlayMap; // Cast to CurrentPlayMap
+      return serializedState as CurrentPlayMap;
     },
     // Inbound: After loading from storage
     (outboundState) => {
@@ -59,12 +59,12 @@ export const CurrentMapTransform = createTransform<CurrentPlayMap, CurrentPlayMa
             : undefined,
           playlist: {
             ...value.playlist,
-            publishedAt: new Date(value.playlist.publishedAt), // Deserialize Date
+            publishedAt: new Date(value.playlist.publishedAt),
           },
         };
         return acc;
       }, {} as Record<string, any>);
-      return deserializedState as CurrentPlayMap; // Cast to CurrentPlayMap
+      return deserializedState as CurrentPlayMap;
     },
     { whitelist: ['currentPlayMap'] }
   );

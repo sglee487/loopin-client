@@ -4,7 +4,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import playlistsReducer from '@application/reducers/playlistsReducer';
 import currentPlayMapReducer from '@application/reducers/currentPlayMapReducer';
-import { CurrentMapTransform } from './mappers/CurrentMapTransform';
+import { CurrentPlayMapTransform } from './mappers/CurrentPlayMapTransform';
 import uploadCurrentPlayMiddleware from './middleware/uploadCurrentPlayMiddleware';
 
 // Enable Map and Set support in Immer
@@ -13,7 +13,7 @@ enableMapSet();
 const currentPlayMapPersistConfig = {
   key: 'currentPlayMap',
   storage,
-  transforms: [CurrentMapTransform],
+  transforms: [CurrentPlayMapTransform],
 };
 
 const persistedCurrentPlayMapReducer = persistReducer(currentPlayMapPersistConfig, currentPlayMapReducer);

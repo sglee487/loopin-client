@@ -18,7 +18,7 @@ const initialState: PlaylistsState = {
   error: null,
 };
 
-const playItemSlice = createSlice({
+const playlistsSlice = createSlice({
   name: 'playlists',
   initialState,
   reducers: {},
@@ -38,4 +38,4 @@ const playItemSlice = createSlice({
   },
 });
 
-export default playItemSlice.reducer;
+export default playlistsSlice.reducer;

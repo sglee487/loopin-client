@@ -12,12 +12,12 @@ import { pullCurrentPlayMap } from '@application/actions/currentPlayMapActions.t
 const PlaylistsContainer: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  // 상태 가져오기
-  const { playlists, loading: loadingP, error: errorP } = useSelector(
+  // Get playlists state
+  const { playlists, loading: playlistsLoading, error: playlistsError } = useSelector(
     (state: PlaylistsRootState) => state.playlists
   );
-  // 상태 가져오기
-  const { currentPlayMap, loading: loadingC, error: errorC } = useSelector(
+  // Get current play map state
+  const { currentPlayMap, loading: currentPlayLoading, error: currentPlayError } = useSelector(
     (state: CurrentPlayMapRootState) => state.currentPlayMap
   );
 
@@ -26,8 +26,8 @@ const PlaylistsContainer: React.FC = () => {
     dispatch(pullCurrentPlayMap());
   }, [dispatch]);
 
-  // 로딩 상태 처리
-  if (loadingC || loadingP) {
+  // Handle loading state
+  if (currentPlayLoading || playlistsLoading) {
     return <div className="flex justify-center p-8">Loading...</div>;
   }
 
@@ -43,7 +43,7 @@ const PlaylistsContainer: React.FC = () => {
   //   );
   // }
 
-  // 플레이리스트가 없는 경우 처리
+  // Handle playlists not available
   if (!playlists || playlists.length === 0) {
     return <div className="flex justify-center p-8">No playlists available</div>;
   }
@@ -65,9 +65,9 @@ const PlaylistsContainer: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4">Playlists</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {playlists
-          .filter((item: Playlist) => (currentPlayMap[item.playlistId] === undefined))
-          .map((item: Playlist) => (
-            <PlaylistSingleComponent key={item.playlistId} item={item} />
+          .filter((playlist: Playlist) => (currentPlayMap[playlist.playlistId] === undefined))
+          .map((playlist: Playlist) => (
+            <PlaylistSingleComponent key={playlist.playlistId} playlist={playlist} />
           ))}
       </div>
     </div>
