@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Playlist } from '../../domain/entities/Playlist';
+import { QueueListIcon } from '@heroicons/react/24/outline';
 
 interface PlaylistsSingleComponentProps {
   item: Playlist;
@@ -25,6 +26,10 @@ const PlaylistsSingleComponent: React.FC<PlaylistsSingleComponentProps> = ({ ite
           alt={item.title}
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
+        <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+          <QueueListIcon className="h-3 w-3" />
+          {item.contentDetails.itemCount}
+        </div>
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold line-clamp-2 mb-2">{item.title}</h3>

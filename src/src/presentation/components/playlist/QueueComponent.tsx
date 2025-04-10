@@ -69,7 +69,7 @@ const PlayItemQueueCard: React.FC<PlayItemQueueCardProps> = ({ playItem, index, 
     return (
         <div className="flex cursor-pointer hover:bg-slate-200" onClick={onSelect}>
             <div className="w-8 flex-none self-center text-center text-sm">
-                {index}
+                {index + 1}
             </div>
             <img
                 className="h-[56.25px] w-[100px] flex-none p-0.5"

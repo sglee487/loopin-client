@@ -13,4 +13,6 @@ export interface CurrentPlay {
 
     prev: PlayItem[];
     next: PlayItem[];
+    prevItemCount: number;
+    nextItemCount: number;
 }

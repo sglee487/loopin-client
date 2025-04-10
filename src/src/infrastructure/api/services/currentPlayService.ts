@@ -14,7 +14,7 @@ export const uploadCurrentPlay = async (playlistId: string, currentPlay: Current
 };
 
 export const uploadCurrentPlayStartSeconds = async (playlistId: string, startSeconds: number): Promise<undefined> => {
-  await axiosInstance.post(`http://localhost:8080/api/v1/current-plays/${playlistId}/start-seconds`, {
+  await axiosInstance.patch(`http://localhost:8080/api/v1/current-plays/${playlistId}/start-seconds`, {
     startSeconds: startSeconds,
   });
 }

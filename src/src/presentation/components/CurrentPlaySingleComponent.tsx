@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CurrentPlay } from '../../domain/entities/CurrentPlay';
+import { PlayIcon } from '@heroicons/react/24/outline';
 
 interface CurrentPlaySingleComponentProps {
     currentPlay: CurrentPlay;
@@ -24,6 +25,10 @@ const CurrentPlaySingleComponent: React.FC<CurrentPlaySingleComponentProps> = ({
                     alt={currentPlay.nowPlayingItem?.title}
                     className="absolute top-0 left-0 w-full h-full object-cover"
                 />
+                <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                    <PlayIcon className="h-3 w-3" />
+                    {currentPlay.prevItemCount + 1} / {currentPlay.playlist.contentDetails.itemCount}
+                </div>
             </div>
             <div className="p-4">
                 <h3 className="text-lg font-semibold line-clamp-2 mb-2">{currentPlay.playlist.title}</h3>
