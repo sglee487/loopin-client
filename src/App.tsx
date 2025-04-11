@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { store, persistor } from '@application/store/configureStore';
 import ApplicationRoutes from '@presentation/routes/ApplicationRoutes';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
-import keycloak, { initOptions, onKeycloakEvent } from "@infrastructure/api/services/keycloakService";
+import keycloak, { keycloakConfig, handleKeycloakEvent } from "@infrastructure/api/services/keycloakService";
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
       <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
         <ReactKeycloakProvider
           authClient={keycloak}
-          initOptions={initOptions}
-          onEvent={onKeycloakEvent}>
+          initOptions={keycloakConfig}
+          onEvent={handleKeycloakEvent}>
           <BrowserRouter>
             <ApplicationRoutes />
           </BrowserRouter>

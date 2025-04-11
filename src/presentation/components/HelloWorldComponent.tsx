@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMessage } from '@application/reducers/helloWorldReducer';
+import { setMessage } from '@/application/state/helloWorldReducer';
 
 const HelloWorldComponent: React.FC = () => {
   const message = useSelector((state: { helloWorld: { message: string } }) => state.helloWorld.message);

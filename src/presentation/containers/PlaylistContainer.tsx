@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@application/store/configureStore';
 import { loadPlaylistById } from '@application/actions/playlistActions.ts';
-import { PlaylistsRootState } from '@application/reducers/playlistsReducer.ts';
+import { PlaylistsRootState } from '@/application/state/playlistsReducer';
 import {
     backToPrev,
     CurrentPlayMapRootState,
     playSelectedPlayItem
-} from '@application/reducers/currentPlayMapReducer';
+} from '@/application/state/currentPlayMapReducer';
 import { pullCurrentPlay, pullCurrentPlayMap } from '@application/actions/currentPlayMapActions.ts';
 import NowPlayingItemComponent from "@presentation/components/playlist/NowPlayingItemComponent.tsx";
 import QueueComponent from "@presentation/components/playlist/QueueComponent.tsx";

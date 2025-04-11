@@ -153,6 +153,8 @@ const currentPlayMapSlice = createSlice({
                     prev: [],
                     next: playlist.items ?? [],
                     startSeconds: 0,
+                    prevItemCount: 0,
+                    nextItemCount: 0
                 };
 
                 state.currentPlayMap[playlist.playlistId] = currentPlay;

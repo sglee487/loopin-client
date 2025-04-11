@@ -5,8 +5,8 @@ import PlaylistSingleComponent from '@presentation/components/PlaylistSingleComp
 import CurrentPlaySingleComponent from '@presentation/components/CurrentPlaySingleComponent.tsx';
 import { loadPlaylists } from '@application/actions/playlistActions.ts';
 import { Playlist } from '@domain/entities/Playlist';
-import { PlaylistsRootState } from '@application/reducers/playlistsReducer.ts';
-import { CurrentPlayMapRootState } from '@application/reducers/currentPlayMapReducer.ts';
+import { PlaylistsRootState } from '@/application/state/playlistsReducer';
+import { CurrentPlayMapRootState } from '@/application/state/currentPlayMapReducer';
 import { pullCurrentPlayMap } from '@application/actions/currentPlayMapActions.ts';
 
 const PlaylistsContainer: React.FC = () => {

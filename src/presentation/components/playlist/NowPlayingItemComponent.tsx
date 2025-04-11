@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PlayItem } from "@domain/entities/PlayItem.ts";
 import { ArrowPathIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PlayPauseIcon, } from "@heroicons/react/16/solid";
 import ReactPlayer from "react-player";
-import { setStartSeconds } from "@application/reducers/currentPlayMapReducer.ts";
+import { setStartSeconds } from "@/application/state/currentPlayMapReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "@application/store/configureStore.ts";
