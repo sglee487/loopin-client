@@ -1,4 +1,4 @@
-import { PlayItem } from "./PlayItem";
+import { PlayItem } from "@domain/entities/PlayItem";
 
 export interface Playlist {
     playlistId: string;

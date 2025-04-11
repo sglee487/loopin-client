@@ -1,5 +1,5 @@
-import { PlayItem } from "./PlayItem";
-import { Playlist } from "./Playlist";
+import { PlayItem } from "@domain/entities/PlayItem";
+import { Playlist } from "@domain/entities/Playlist";
 
 export interface CurrentPlayMap {
     [key: string]: CurrentPlay;
