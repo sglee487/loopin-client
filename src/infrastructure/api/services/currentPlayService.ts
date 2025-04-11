@@ -5,6 +5,14 @@ import axiosInstance from '@infrastructure/api/axiosInstance';
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
+/**
+ * Uploads the current play state for a specific playlist to the server.
+ * This includes the currently playing item, previous and next items, and start time.
+ * 
+ * @param {string} playlistId - The ID of the playlist to update
+ * @param {CurrentPlay} currentPlay - The current play state to upload
+ * @returns {Promise<undefined>} A promise that resolves when the upload is complete
+ */
 export const uploadCurrentPlay = async (playlistId: string, currentPlay: CurrentPlay): Promise<undefined> => {
   const data = {
     nowPlayingItem: currentPlay.nowPlayingItem,
@@ -15,12 +23,26 @@ export const uploadCurrentPlay = async (playlistId: string, currentPlay: Current
   await axiosInstance.post(`${API_BASE_URL}/current-plays/${playlistId}`, data);
 };
 
+/**
+ * Updates only the start seconds (current position) for a specific playlist.
+ * This is used when the user seeks to a different position in the video.
+ * 
+ * @param {string} playlistId - The ID of the playlist to update
+ * @param {number} startSeconds - The new start position in seconds
+ * @returns {Promise<undefined>} A promise that resolves when the update is complete
+ */
 export const uploadCurrentPlayStartSeconds = async (playlistId: string, startSeconds: number): Promise<undefined> => {
   await axiosInstance.patch(`${API_BASE_URL}/current-plays/${playlistId}/start-seconds`, {
     startSeconds: startSeconds,
   });
 }
 
+/**
+ * Fetches the current play state for all playlists from the server.
+ * This includes converting date strings to Date objects for all relevant fields.
+ * 
+ * @returns {Promise<CurrentPlayMap>} A promise that resolves to a map of playlist IDs to their current play states
+ */
 export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
   const response = await axiosInstance.get(`${API_BASE_URL}/current-plays`);
   const item = response.data.data;
@@ -57,6 +79,13 @@ export const fetchCurrentPlayMap = async (): Promise<CurrentPlayMap> => {
   return currentPlayMap;
 };
 
+/**
+ * Fetches the current play state for a specific playlist from the server.
+ * This includes converting date strings to Date objects for all relevant fields.
+ * 
+ * @param {string} playlistId - The ID of the playlist to fetch
+ * @returns {Promise<CurrentPlay>} A promise that resolves to the current play state for the specified playlist
+ */
 export const fetchCurrentPlay = async (playlistId: string): Promise<CurrentPlay> => {
   const response = await axiosInstance.get(`${API_BASE_URL}/current-plays/${playlistId}`);
   const item = response.data.data;
