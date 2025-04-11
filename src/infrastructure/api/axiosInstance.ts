@@ -1,5 +1,5 @@
 import axios from 'axios';
-import keycloak from '@infrastructure/api/services/keycloakService'; // Keycloak 인스턴스 가져오기
+import keycloak from '@infrastructure/auth/keycloakService';
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 

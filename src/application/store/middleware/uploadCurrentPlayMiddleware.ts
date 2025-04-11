@@ -1,7 +1,7 @@
 import { Dispatch, Middleware, UnknownAction } from '@reduxjs/toolkit';
 import { PlayItem } from '@domain/entities/PlayItem';
 import { uploadCurrentPlay, uploadCurrentPlayStartSeconds } from '@infrastructure/api/services/currentPlayService';
-import keycloak from '@infrastructure/api/services/keycloakService';
+import keycloak from '@infrastructure/auth/keycloakService';
 
 // Define the middleware
 const uploadCurrentPlayMiddleware: Middleware<{}, any, Dispatch<UnknownAction>> = (storeAPI) => (next) => async (action: any) => {
