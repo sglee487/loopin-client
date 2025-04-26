@@ -106,14 +106,9 @@ Additional documentation can be found in the `docs/` directory.
 npm run tauri dev
 ```
 
-## storybook
+### build and push docker image
 
-install
-```shell
-npx storybook@latest init
-```
-
-run
-```shell
-npm run storybook
+(windows)
+```powershell
+.\deploy.ps1
 ```
