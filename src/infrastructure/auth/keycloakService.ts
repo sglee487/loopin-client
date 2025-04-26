@@ -15,7 +15,7 @@ export const keycloakConfig = {
 };
 
 // Keycloak event handler
-export const handleKeycloakEvent = async (event: string, error: any) => {
+export const handleKeycloakEvent = async (event: string) => {
     switch (event) {
         case "onAuthSuccess":
             break;

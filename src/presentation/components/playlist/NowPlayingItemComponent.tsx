@@ -4,7 +4,6 @@ import { ArrowPathIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PlayPause
 import ReactPlayer from "react-player";
 import { setStartSeconds } from "@/application/state/currentPlayMapReducer";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { AppDispatch } from "@application/store/configureStore.ts";
 
 interface NowPlayingItemComponentProps {

@@ -3,13 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@application/store/configureStore';
 import { loadPlaylistById } from '@application/actions/playlistActions.ts';
-import { PlaylistsRootState } from '@/application/state/playlistsReducer';
 import {
     backToPrev,
     CurrentPlayMapRootState,
     playSelectedPlayItem
 } from '@/application/state/currentPlayMapReducer';
-import { pullCurrentPlay, pullCurrentPlayMap } from '@application/actions/currentPlayMapActions.ts';
+import { pullCurrentPlay } from '@application/actions/currentPlayMapActions.ts';
 import NowPlayingItemComponent from "@presentation/components/playlist/NowPlayingItemComponent.tsx";
 import QueueComponent from "@presentation/components/playlist/QueueComponent.tsx";
 import { PlayItem } from "@domain/entities/PlayItem.ts";
@@ -18,7 +17,7 @@ const PlaylistContainer: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { currentPlayMap, loading, error } = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
+    const { currentPlayMap, loading } = useSelector((state: CurrentPlayMapRootState) => state.currentPlayMap);
 
     useEffect(() => {
         if (playlistId) {

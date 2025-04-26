@@ -13,11 +13,11 @@ const PlaylistsContainer: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Get playlists state
-  const { playlists, loading: playlistsLoading, error: playlistsError } = useSelector(
+  const { playlists, loading: playlistsLoading } = useSelector(
     (state: PlaylistsRootState) => state.playlists
   );
   // Get current play map state
-  const { currentPlayMap, loading: currentPlayLoading, error: currentPlayError } = useSelector(
+  const { currentPlayMap, loading: currentPlayLoading } = useSelector(
     (state: CurrentPlayMapRootState) => state.currentPlayMap
   );
 
