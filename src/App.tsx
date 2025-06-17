@@ -1,44 +1,50 @@
-/**
- * Main Application Component
- * 
- * This component serves as the root of the application and sets up:
- * 1. Redux store with persistence
- * 2. Keycloak authentication provider
- * 3. React Router for navigation
- * 
- * The application follows a layered architecture:
- * - Presentation: UI components and routing
- * - Application: Business logic and state management
- * - Infrastructure: External services (Keycloak, API)
- * - Domain: Core business entities
- */
-
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { BrowserRouter } from 'react-router-dom';
-import { store, persistor } from '@application/store/configureStore';
-import ApplicationRoutes from '@presentation/routes/ApplicationRoutes';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
-import keycloak, { keycloakConfig, handleKeycloakEvent } from "@infrastructure/auth/keycloakService";
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import { invoke } from "@tauri-apps/api/core";
+import "./App.css";
 
 function App() {
+  const [greetMsg, setGreetMsg] = useState("");
+  const [name, setName] = useState("");
+
+  async function greet() {
+    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+    setGreetMsg(await invoke("greet", { name }));
+  }
+
   return (
-    // Redux Provider for state management
-    <Provider store={store}>
-      {/* PersistGate ensures Redux state is rehydrated before rendering */}
-      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
-        {/* Keycloak Provider for authentication */}
-        <ReactKeycloakProvider
-          authClient={keycloak}
-          initOptions={keycloakConfig}
-          onEvent={handleKeycloakEvent}>
-          {/* React Router for navigation */}
-          <BrowserRouter>
-            <ApplicationRoutes />
-          </BrowserRouter>
-        </ReactKeycloakProvider>
-      </PersistGate>
-    </Provider>
+    <main className="container">
+      <h1>Welcome to Tauri + React</h1>
+
+      <div className="row">
+        <a href="https://vitejs.dev" target="_blank">
+          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
+        </a>
+        <a href="https://tauri.app" target="_blank">
+          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
+        </a>
+        <a href="https://reactjs.org" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+
+      <form
+        className="row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          greet();
+        }}
+      >
+        <input
+          id="greet-input"
+          onChange={(e) => setName(e.currentTarget.value)}
+          placeholder="Enter a name..."
+        />
+        <button type="submit">Greet</button>
+      </form>
+      <p>{greetMsg}</p>
+    </main>
   );
 }
 
