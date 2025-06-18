@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
 import { RootState } from '../../store';
 import { apiClient } from '../../lib/api';
 import { DashboardData } from '../../types';
@@ -31,243 +30,95 @@ const DashboardPage: React.FC = () => {
   if (isLoading) {
     return (
       <Layout>
-        <LoadingContainer>
-          <LoadingText>로딩 중...</LoadingText>
-        </LoadingContainer>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-gray-600">로딩 중...</div>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <DashboardContainer>
-        <DashboardHeader>
-          <DashboardTitle>대시보드</DashboardTitle>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">대시보드</h1>
           {isAuthenticated && user ? (
-            <UserGreeting>
+            <div className="text-sm text-gray-600">
               안녕하세요, {user.name}님!
-            </UserGreeting>
+            </div>
           ) : (
-            <GuestMessage>
+            <div className="text-sm text-gray-600 italic">
               게스트로 접속 중입니다
-            </GuestMessage>
+            </div>
           )}
-        </DashboardHeader>
+        </div>
 
         {isAuthenticated && dashboardData ? (
           <>
-            <StatsGrid>
-              <StatCard title="총 사용자 수">
-                <StatNumber color="#2563eb">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card title="총 사용자 수" className="text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">
                   {dashboardData.totalUsers.toLocaleString()}
-                </StatNumber>
-                <StatLabel>전체 등록된 사용자</StatLabel>
-              </StatCard>
+                </div>
+                <p className="text-sm text-gray-600 m-0">전체 등록된 사용자</p>
+              </Card>
 
-              <StatCard title="활성 사용자">
-                <StatNumber color="#059669">
+              <Card title="활성 사용자" className="text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">
                   {dashboardData.activeUsers.toLocaleString()}
-                </StatNumber>
-                <StatLabel>현재 활성 사용자</StatLabel>
-              </StatCard>
+                </div>
+                <p className="text-sm text-gray-600 m-0">현재 활성 사용자</p>
+              </Card>
 
-              <StatCard title="활성률">
-                <StatNumber color="#7c3aed">
+              <Card title="활성률" className="text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">
                   {dashboardData.totalUsers > 0 
                     ? Math.round((dashboardData.activeUsers / dashboardData.totalUsers) * 100)
                     : 0}%
-                </StatNumber>
-                <StatLabel>활성 사용자 비율</StatLabel>
-              </StatCard>
-            </StatsGrid>
+                </div>
+                <p className="text-sm text-gray-600 m-0">활성 사용자 비율</p>
+              </Card>
+            </div>
 
             <Card title="최근 활동">
               {dashboardData.recentActivity && dashboardData.recentActivity.length > 0 ? (
-                <ActivityList>
+                <div className="space-y-4">
                   {dashboardData.recentActivity.map((activity) => (
-                    <ActivityItem key={activity.id}>
-                      <ActivityContent>
-                        <ActivityDescription>{activity.description}</ActivityDescription>
-                        <ActivityType>{activity.type}</ActivityType>
-                      </ActivityContent>
-                      <ActivityDate>
+                    <div key={activity.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900 m-0">{activity.description}</p>
+                        <p className="text-sm text-gray-600 m-0">{activity.type}</p>
+                      </div>
+                      <div className="text-sm text-gray-500">
                         {new Date(activity.timestamp).toLocaleDateString()}
-                      </ActivityDate>
-                    </ActivityItem>
+                      </div>
+                    </div>
                   ))}
-                </ActivityList>
+                </div>
               ) : (
-                <EmptyState>
+                <div className="text-center py-8 text-gray-500">
                   최근 활동이 없습니다.
-                </EmptyState>
+                </div>
               )}
             </Card>
           </>
         ) : (
-          <GuestWelcomeCard title="환영합니다">
-            <WelcomeTitle>LoopIn에 오신 것을 환영합니다!</WelcomeTitle>
-            <WelcomeDescription>
+          <Card title="환영합니다" className="text-center py-12 px-6 text-red-500">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">LoopIn에 오신 것을 환영합니다!</h2>
+            <p className="text-base text-gray-600 mb-8">
               로그인하시면 더 많은 기능을 이용하실 수 있습니다.
-            </WelcomeDescription>
-            <FeatureList>
-              <FeatureItem>📊 상세한 대시보드 통계</FeatureItem>
-              <FeatureItem>📈 실시간 데이터 분석</FeatureItem>
-              <FeatureItem>🔔 개인화된 알림</FeatureItem>
-              <FeatureItem>⚙️ 고급 설정 옵션</FeatureItem>
-            </FeatureList>
-          </GuestWelcomeCard>
+            </p>
+            <div className="flex flex-col gap-3 max-w-md mx-auto">
+              <div className="text-sm text-gray-700 text-left">📊 상세한 대시보드 통계</div>
+              <div className="text-sm text-gray-700 text-left">📈 실시간 데이터 분석</div>
+              <div className="text-sm text-gray-700 text-left">🔔 개인화된 알림</div>
+              <div className="text-sm text-gray-700 text-left">⚙️ 고급 설정 옵션</div>
+            </div>
+          </Card>
         )}
-      </DashboardContainer>
+      </div>
     </Layout>
   );
 };
 
-export default DashboardPage;
-
-const DashboardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const DashboardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const DashboardTitle = styled.h1`
-  font-size: 30px;
-  font-weight: 700;
-  color: #111827;
-`;
-
-const UserGreeting = styled.div`
-  font-size: 14px;
-  color: #6b7280;
-`;
-
-const GuestMessage = styled.div`
-  font-size: 14px;
-  color: #6b7280;
-  font-style: italic;
-`;
-
-const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const StatCard = styled(Card)`
-  text-align: center;
-`;
-
-const StatNumber = styled.div<{ color: string }>`
-  font-size: 30px;
-  font-weight: 700;
-  color: ${props => props.color};
-  margin-bottom: 8px;
-`;
-
-const StatLabel = styled.p`
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0;
-`;
-
-const ActivityList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const ActivityItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-`;
-
-const ActivityContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const ActivityDescription = styled.p`
-  font-weight: 500;
-  color: #111827;
-  margin: 0;
-`;
-
-const ActivityType = styled.p`
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0;
-`;
-
-const ActivityDate = styled.div`
-  font-size: 14px;
-  color: #6b7280;
-`;
-
-const EmptyState = styled.div`
-  text-align: center;
-  padding: 32px;
-  color: #6b7280;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 256px;
-`;
-
-const LoadingText = styled.div`
-  font-size: 18px;
-  color: #6b7280;
-`;
-
-const GuestWelcomeCard = styled(Card)`
-  text-align: center;
-  padding: 48px 24px;
-`;
-
-const WelcomeTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 16px;
-`;
-
-const WelcomeDescription = styled.p`
-  font-size: 16px;
-  color: #6b7280;
-  margin-bottom: 32px;
-`;
-
-const FeatureList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
-`;
-
-const FeatureItem = styled.div`
-  font-size: 14px;
-  color: #374151;
-  text-align: left;
-`; 
+export default DashboardPage; 

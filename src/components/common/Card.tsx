@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { CardProps } from '../../types';
 
 const Card: React.FC<CardProps> = ({
@@ -8,41 +7,17 @@ const Card: React.FC<CardProps> = ({
   className = '',
 }) => {
   return (
-    <StyledCard className={className}>
+    <div className={`bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden ${className}`}>
       {title && (
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 m-0">{title}</h3>
+        </div>
       )}
-      <CardBody>
+      <div className="px-6 py-4">
         {children}
-      </CardBody>
-    </StyledCard>
+      </div>
+    </div>
   );
 };
 
-export default Card;
-
-const StyledCard = styled.div`
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-`;
-
-const CardHeader = styled.div`
-  padding: 16px 24px;
-  border-bottom: 1px solid #e5e7eb;
-`;
-
-const CardTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0;
-`;
-
-const CardBody = styled.div`
-  padding: 16px 24px;
-`; 
+export default Card; 

@@ -1,12 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
 import { ButtonProps } from '../../types';
-
-interface StyledButtonProps {
-  variant: 'primary' | 'secondary' | 'danger';
-  size: 'small' | 'medium' | 'large';
-  disabled: boolean;
-}
 
 const Button: React.FC<ButtonProps> = ({
   children,
@@ -17,87 +10,32 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   className = '',
 }) => {
+  const baseClasses = 'inline-flex items-center justify-center border-none rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  
+  const variantClasses = {
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+  };
+
+  const sizeClasses = {
+    small: 'px-2 py-1 text-sm',
+    medium: 'px-4 py-2',
+    large: 'px-6 py-3 text-lg',
+  };
+
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+
   return (
-    <StyledButton
+    <button
       type={type}
-      variant={variant}
-      size={size}
-      disabled={disabled}
+      className={classes}
       onClick={onClick}
-      className={className}
+      disabled={disabled}
     >
       {children}
-    </StyledButton>
+    </button>
   );
 };
 
-export default Button;
-
-const StyledButton = styled.button<StyledButtonProps>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  opacity: ${props => props.disabled ? 0.5 : 1};
-  outline: none;
-  
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-  }
-
-  /* Size variants */
-  ${props => {
-    switch (props.size) {
-      case 'small':
-        return `
-          padding: 4px 8px;
-          font-size: 14px;
-        `;
-      case 'large':
-        return `
-          padding: 12px 24px;
-          font-size: 18px;
-        `;
-      default: // medium
-        return `
-          padding: 8px 16px;
-          font-size: 16px;
-        `;
-    }
-  }}
-
-  /* Color variants */
-  ${props => {
-    switch (props.variant) {
-      case 'primary':
-        return `
-          background-color: #2563eb;
-          color: white;
-          &:hover:not(:disabled) {
-            background-color: #1d4ed8;
-          }
-        `;
-      case 'secondary':
-        return `
-          background-color: #4b5563;
-          color: white;
-          &:hover:not(:disabled) {
-            background-color: #374151;
-          }
-        `;
-      case 'danger':
-        return `
-          background-color: #dc2626;
-          color: white;
-          &:hover:not(:disabled) {
-            background-color: #b91c1c;
-          }
-        `;
-    }
-  }}
-`; 
+export default Button; 
