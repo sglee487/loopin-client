@@ -11,6 +11,7 @@ export interface MediaPlaylist {
   channelTitle: string;
   publishedAt: string;
   platformType: string;
+  itemCount: number;
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;

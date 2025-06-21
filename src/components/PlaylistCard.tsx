@@ -35,9 +35,9 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
           alt={`${playlist.title} thumbnail`}
         />
         {/* Item count indicator */}
-        <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+        <div className="absolute bottom-2 right-2 bg-black opacity-80 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
           <QueueListIcon className="h-3 w-3" />
-          323
+          {playlist.itemCount}
         </div>
       </div>
 
