@@ -10,37 +10,45 @@ interface PlaylistCardProps {
 const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    // TODO: Navigate to playlist detail page
+    // navigate(`/playlist/${playlist.id}`);
+  };
+
   return (
-    <div className="flex flex-col justify-start items-start relative overflow-hidden gap-2">
+    <div
+      className="flex flex-col gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+    >
       <div className="relative w-full aspect-video overflow-hidden">
         <img
           src={playlist.thumbnail}
           className="w-full h-full object-cover object-center rounded-lg"
-          alt={playlist.title}
+          alt={`${playlist.title} thumbnail`}
         />
         {/* Item count indicator */}
-        <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
           <QueueListIcon className="h-3 w-3" />
           323
         </div>
       </div>
 
-      <div className="flex flex-col justify-start items-start self-stretch flex-grow gap-1">
-        <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
-          <p className="self-stretch flex-grow-0 flex-shrink-0 w-80 text-base font-bold text-left text-white">
-            {playlist.title}
-          </p>
-        </div>
-        <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
-          <p className="self-stretch flex-grow-0 flex-shrink-0 w-80 text-sm text-left text-[#9eb8a8]">
-            {playlist.description ?? "No description"}
-          </p>
-        </div>
-        <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
-          <p className="self-stretch flex-grow-0 flex-shrink-0 w-80 text-sm text-left text-[#9eb8a8]">
-            {playlist.channelTitle}
-          </p>
-        </div>
+      <div className="flex flex-col gap-1">
+        <h3 className="text-base font-bold text-white truncate">
+          {playlist.title}
+        </h3>
+        <p className="text-sm text-[#9eb8a8] truncate">
+          {playlist.description || "No description"}
+        </p>
+        <p className="text-sm text-[#9eb8a8]">{playlist.channelTitle}</p>
       </div>
     </div>
   );
