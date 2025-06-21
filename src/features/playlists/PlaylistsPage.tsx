@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  useGetPlaylistsSliceQuery,
-} from "./playlistsApi";
+import { useGetPlaylistsSliceQuery } from "./playlistsApi";
 import PlaylistCard from "@/components/PlaylistCard";
 import type { MediaPlaylist } from "@/types/media";
 
@@ -38,17 +36,17 @@ export default function PlaylistsPage() {
       {/* 전체 플레이리스트 */}
       <section>
         <h2 className="mb-4 text-xl font-bold">Playlists</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-3 8xl:grid-cols-4 9xl:grid-cols-5 10xl:grid-cols-6 gap-4">
           {playlists.map((pl) => (
-            <div key={pl.resourceId} className="">
-              <PlaylistCard playlist={pl} />
-            </div>
+            <PlaylistCard key={pl.resourceId} playlist={pl} />
           ))}
         </div>
         {playlists.length === 0 && (
-          <p className="mt-6 text-center text-gray-500">등록된 플레이리스트가 없습니다.</p>
+          <p className="mt-6 text-center text-gray-500">
+            등록된 플레이리스트가 없습니다.
+          </p>
         )}
       </section>
     </div>
   );
-};
+}
