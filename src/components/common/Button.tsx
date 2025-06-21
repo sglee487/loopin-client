@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonProps } from '../../types';
+import { ButtonProps } from '../../types/media';
 
 const Button: React.FC<ButtonProps> = ({
   children,

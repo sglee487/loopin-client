@@ -1,16 +1,22 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import DashboardPage from '../pages/dashboard/DashboardPage';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import PlaylistsPage from '@/features/playlists/PlaylistsPage';
 
-const AppRouter: React.FC = () => {
+export default function AppRouter() {
   return (
-    <Routes>
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      {/* OAuth2 콜백 처리 라우트 */}
-      <Route path="/auth/callback" element={<div>인증 처리 중...</div>} />
-    </Routes>
-  );
-};
+    <BrowserRouter>
+      <Routes>
+        {/* 루트 → PlaylistsPage */}
+        <Route path="/"           element={<PlaylistsPage />} />
+        {/* URL에 /playlists 로 접근해도 동일 페이지 활용 */}
+        <Route path="/playlists"  element={<PlaylistsPage />} />
 
-export default AppRouter; 
+        {/* 기타 상세·편집 등 필요 시 추가
+            <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
+        */}
+
+        {/* 잘못된 주소는 홈으로 리다이렉트 */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

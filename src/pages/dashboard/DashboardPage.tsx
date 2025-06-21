@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { apiClient } from '../../lib/api';
-import { DashboardData } from '../../types';
+import { DashboardData } from '../../types/media';
 import Card from '../../components/common/Card';
 import Layout from '../../components/layout/Layout';
 import Button from '../../components/common/Button';
