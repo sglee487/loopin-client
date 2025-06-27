@@ -1,5 +1,22 @@
 /* src/types/media.ts */
 
+export interface MediaItem {
+  id: number;
+  resourceId: string;
+  title: string;
+  description: string;
+  kind: string;
+  publishedAt: string;
+  thumbnail: string;
+  channelId: string;
+  channelTitle: string;
+  platformType: string;
+  durationSeconds: number;
+  position: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface MediaPlaylist {
   id?: number;
   resourceId: string;
@@ -16,6 +33,7 @@ export interface MediaPlaylist {
   updatedAt?: string;
   createdBy?: string;
   updatedBy?: string;
+  items?: MediaItem[];
 }
 
 export interface CreatePlaylistRequest {

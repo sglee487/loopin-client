@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import type { MediaPlaylist } from "@/types/media/index";
 import { QueueListIcon } from "@heroicons/react/24/outline";
 
-interface PlaylistCardProps {
+interface QueueItemCardProps {
   playlist: MediaPlaylist;
 }
 
-const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
+const QueueItemCard: React.FC<QueueItemCardProps> = ({ playlist }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // 플레이리스트 상세 페이지로 이동
-    navigate(`/playlists/${playlist.id}`);
+    // TODO: Navigate to playlist detail page
+    // navigate(`/playlist/${playlist.id}`);
   };
 
   return (
@@ -54,4 +54,4 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
   );
 };
 
-export default PlaylistCard;
+export default QueueItemCard;
