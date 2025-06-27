@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './rootReducer';
+import playlistsSlice from '@/features/playlists/playlistsSlice';
+import playerSlice from '@/features/player/playerSlice';
 import { playlistsApi } from '@/features/playlists/api/playlistsApi';
 
 export const store = configureStore({
   reducer: {
-    ...rootReducer,
+    playlists: playlistsSlice,
+    player: playerSlice,
     [playlistsApi.reducerPath]: playlistsApi.reducer,
   },
   middleware: getDefaultMiddleware =>
@@ -13,5 +15,5 @@ export const store = configureStore({
     ),
 });
 
-export type RootState   = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

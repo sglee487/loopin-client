@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import type { MediaPlaylist } from "@/features/playlists/types";
 import { QueueListIcon } from "@heroicons/react/24/outline";
 
@@ -8,8 +7,6 @@ interface QueueItemCardProps {
 }
 
 const QueueItemCard: React.FC<QueueItemCardProps> = ({ playlist }) => {
-  const navigate = useNavigate();
-
   const handleClick = () => {
     // TODO: Navigate to playlist detail page
     // navigate(`/playlist/${playlist.id}`);
