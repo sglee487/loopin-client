@@ -1,12 +1,14 @@
-import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetPlaylistByIdQuery } from "./playlistDetailApi";
+import { useGetPlaylistByIdQuery } from "../playlistsApi";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { formatDuration, formatDate } from "@/lib/utils";
 import {
   ArrowLeftIcon,
   PlayIcon,
   ClockIcon,
 } from "@heroicons/react/24/outline";
-import type { MediaItem } from "@/types/media";
+import type { MediaItem } from "../types";
 
 /** 플레이리스트 상세 페이지 */
 export default function PlaylistDetailPage() {
@@ -27,37 +29,13 @@ export default function PlaylistDetailPage() {
     navigate(-1);
   };
 
-  const formatDuration = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:00`;
-    }
-    return `${minutes}:00`;
-  };
-
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   if (isLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center text-lg font-semibold">
-        Loading…
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (isError || !playlist) {
     return (
-      <div className="flex h-[60vh] items-center justify-center text-red-600">
-        플레이리스트를 불러오는 중 오류가 발생했습니다.
-      </div>
+      <ErrorMessage message="플레이리스트를 불러오는 중 오류가 발생했습니다." />
     );
   }
 

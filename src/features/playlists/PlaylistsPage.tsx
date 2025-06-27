@@ -1,7 +1,7 @@
-import React from "react";
 import { useGetPlaylistsSliceQuery } from "./playlistsApi";
 import PlaylistCard from "@/components/PlaylistCard";
-import type { MediaPlaylist } from "@/types/media";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ErrorMessage from "@/components/common/ErrorMessage";
 
 /** 루트(/)에서 렌더되는 플레이리스트 메인 페이지 */
 export default function PlaylistsPage() {
@@ -14,19 +14,11 @@ export default function PlaylistsPage() {
 
   // 통합 로딩/에러 처리
   if (playlistsLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center text-lg font-semibold">
-        Loading…
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (playlistsError) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center text-red-600">
-        데이터를 불러오는 중 오류가 발생했습니다.
-      </div>
-    );
+    return <ErrorMessage message="데이터를 불러오는 중 오류가 발생했습니다." />;
   }
 
   const playlists = playlistsResponse?.items || [];

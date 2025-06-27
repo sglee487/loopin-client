@@ -4,7 +4,7 @@ import { playlistsApi } from '@/features/playlists/playlistsApi';
 
 export const store = configureStore({
   reducer: {
-    ...rootReducer,                       // 나머지 slice
+    ...rootReducer,
     [playlistsApi.reducerPath]: playlistsApi.reducer,
   },
   middleware: getDefaultMiddleware =>

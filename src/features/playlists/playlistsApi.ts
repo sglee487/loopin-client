@@ -3,7 +3,7 @@ import type {
   MediaPlaylist,
   CreatePlaylistRequest,
   SliceResponse,
-} from '@/types/media';
+} from './types';
 
 /**
  * 매 페이지 호출 시 전달할 파라미터 타입

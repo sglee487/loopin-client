@@ -1,61 +1,34 @@
-// API 레이어 - 백엔드 통신을 담당
-export class ApiClient {
-  private baseUrl: string;
+// RTK Query용 baseQuery
+export const baseQuery = async (args: any) => {
+  const { url, method = 'GET', body, params } = args;
+  
+  const config: RequestInit = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-  constructor(baseUrl: string = 'http://localhost:3000/api') {
-    this.baseUrl = baseUrl;
+  if (body) {
+    config.body = JSON.stringify(body);
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
-    const config: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    try {
-      const response = await fetch(url, config);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  let fullUrl = url;
+  if (params) {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
       }
-
-      return await response.json();
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
-    }
-  }
-
-  // 인증 관련 API
-  async login(credentials: { email: string; password: string }) {
-    return this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
     });
+    fullUrl += `?${searchParams.toString()}`;
   }
 
-  async logout() {
-    return this.request('/auth/logout', {
-      method: 'POST',
-    });
+  const response = await fetch(fullUrl, config);
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  async getProfile() {
-    return this.request('/auth/profile');
-  }
-
-  // 대시보드 관련 API
-  async getDashboardData() {
-    return this.request('/dashboard');
-  }
-}
-
-// 싱글톤 인스턴스
-export const apiClient = new ApiClient(); 
+  return response.json();
+}; 

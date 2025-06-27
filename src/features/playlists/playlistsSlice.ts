@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { UIState } from './types';
 
-interface UIState {
-  sort: 'title' | 'recent';
-  filterText: string;
-}
 const initialState: UIState = { sort: 'recent', filterText: '' };
 
 const playlistsSlice = createSlice({

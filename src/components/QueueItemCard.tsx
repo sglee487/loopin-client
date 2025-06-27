@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import type { MediaPlaylist } from "@/types/media/index";
+import type { MediaPlaylist } from "@/features/playlists/types";
 import { QueueListIcon } from "@heroicons/react/24/outline";
 
 interface QueueItemCardProps {

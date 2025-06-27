@@ -1,5 +1,3 @@
-/* src/types/media.ts */
-
 export interface MediaItem {
   id: number;
   resourceId: string;
@@ -44,3 +42,8 @@ export interface SliceResponse<T> {
   items: T[];
   hasNext: boolean;
 }
+
+export interface UIState {
+  sort: 'title' | 'recent';
+  filterText: string;
+} 
