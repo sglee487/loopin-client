@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
-import { playlistsApi } from '@/features/playlists/playlistsApi';
+import { playlistsApi } from '@/features/playlists/api/playlistsApi';
 
 export const store = configureStore({
   reducer: {
