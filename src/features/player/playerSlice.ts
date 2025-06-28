@@ -9,12 +9,19 @@ const initialState: PlayerState = {
   currentTime: 0,
   duration: 0,
   volume: 1,
+  panelExpanded: false,
 };
 
 const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
+    setPanelExpanded: (state, action: PayloadAction<boolean>) => {
+      state.panelExpanded = action.payload;
+    },
+    togglePanel: (state) => {
+      state.panelExpanded = !state.panelExpanded;
+    },
     playVideo: (state, action: PayloadAction<PlayVideoPayload>) => {
       const { video, addToQueue = false } = action.payload;
       
@@ -109,6 +116,8 @@ export const {
   updateVolume,
   clearQueue,
   removeFromQueue,
+  setPanelExpanded,
+  togglePanel,
 } = playerSlice.actions;
 
 export default playerSlice.reducer; 

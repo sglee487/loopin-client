@@ -1,7 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useGetPlaylistByIdQuery } from "../api/playlistsApi";
-import { playVideo } from "@/features/player/playerSlice";
+import {
+  playVideo,
+  clearQueue,
+  setPanelExpanded,
+} from "@/features/player/playerSlice";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { formatDuration, formatDate } from "@/lib/utils";
@@ -37,14 +41,36 @@ export default function DetailPage() {
       channelTitle: item.channelTitle,
       publishedAt: item.publishedAt,
       durationSeconds: item.durationSeconds,
+      resourceId: item.resourceId,
     };
 
-    console.log("Dispatching playVideo with:", videoItem);
+    dispatch(clearQueue());
     dispatch(playVideo({ video: videoItem }));
+
+    // queue the rest items in order
+    if (playlist?.items) {
+      const rest = playlist.items.filter((v) => v.id !== item.id);
+      rest.forEach((v) => {
+        const q: VideoItem = {
+          id: v.id,
+          title: v.title,
+          thumbnail: v.thumbnail,
+          channelTitle: v.channelTitle,
+          publishedAt: v.publishedAt,
+          durationSeconds: v.durationSeconds,
+          resourceId: v.resourceId,
+        };
+        dispatch(playVideo({ video: q, addToQueue: true }));
+      });
+    }
+
+    dispatch(setPanelExpanded(true));
   };
 
   const handlePlayAll = () => {
     if (playlist?.items && playlist.items.length > 0) {
+      dispatch(clearQueue());
+
       const firstVideo: VideoItem = {
         id: playlist.items[0].id,
         title: playlist.items[0].title,
@@ -52,6 +78,7 @@ export default function DetailPage() {
         channelTitle: playlist.items[0].channelTitle,
         publishedAt: playlist.items[0].publishedAt,
         durationSeconds: playlist.items[0].durationSeconds,
+        resourceId: playlist.items[0].resourceId,
       };
 
       // 첫 번째 비디오를 재생하고 나머지를 대기열에 추가
@@ -66,6 +93,7 @@ export default function DetailPage() {
           channelTitle: item.channelTitle,
           publishedAt: item.publishedAt,
           durationSeconds: item.durationSeconds,
+          resourceId: item.resourceId,
         };
         dispatch(playVideo({ video: videoItem, addToQueue: true }));
       });

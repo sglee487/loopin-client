@@ -6,6 +6,7 @@ export interface PlayerState {
   duration: number;
   volume: number;
   history: VideoItem[];
+  panelExpanded: boolean;
 }
 
 export interface VideoItem {
@@ -15,6 +16,7 @@ export interface VideoItem {
   channelTitle: string;
   publishedAt: string;
   durationSeconds: number;
+  resourceId: string;
   videoUrl?: string;
 }
 
