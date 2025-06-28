@@ -46,9 +46,9 @@ export default function PlayerBar() {
               controls
               volume={volume}
               width={isExpanded ? "440px" : "120px"}
-              height={isExpanded ? "360px" : "40px"}
+              height={isExpanded ? "360px" : "20px"}
               style={{ borderRadius: "8px" }}
-              className="z-50"
+              className={isExpanded ? "z-50" : "fixed bottom-0"}
             />
             <VideoInfo video={currentVideo} />
           </div>
