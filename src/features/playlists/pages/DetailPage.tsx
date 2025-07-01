@@ -6,6 +6,7 @@ import {
   clearQueue,
   setPanelExpanded,
 } from "@/features/player/playerSlice";
+import { useSaveSessionMutation } from "@/features/player/api/playSessionApi";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { formatDuration, formatDate } from "@/lib/utils";
@@ -21,6 +22,7 @@ export default function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [saveSession] = useSaveSessionMutation();
   const playlistId = id ? parseInt(id, 10) : 0;
 
   const {
@@ -38,7 +40,7 @@ export default function DetailPage() {
       id: item.id,
       title: item.title,
       thumbnail: item.thumbnail,
-      channelTitle: item.channelTitle,
+      channelTitle: item.videoOwnerChannelTitle,
       publishedAt: item.publishedAt,
       durationSeconds: item.durationSeconds,
       resourceId: item.resourceId,
@@ -46,6 +48,22 @@ export default function DetailPage() {
 
     dispatch(clearQueue());
     dispatch(playVideo({ video: videoItem }));
+
+    // Save play session to server
+    if (playlist) {
+      const itemsArr = playlist.items ?? [];
+      const clickedIndex = itemsArr.findIndex((v) => v.id === item.id);
+      const prevItems = itemsArr.slice(0, clickedIndex).map((v) => v.id);
+      const nextItems = itemsArr.slice(clickedIndex + 1).map((v) => v.id);
+
+      saveSession({
+        playlistId,
+        nowPlayingItemId: item.id,
+        startSeconds: 0,
+        prevItems,
+        nextItems,
+      });
+    }
 
     // queue the rest items in order
     if (playlist?.items) {
@@ -55,7 +73,7 @@ export default function DetailPage() {
           id: v.id,
           title: v.title,
           thumbnail: v.thumbnail,
-          channelTitle: v.channelTitle,
+          channelTitle: v.videoOwnerChannelTitle,
           publishedAt: v.publishedAt,
           durationSeconds: v.durationSeconds,
           resourceId: v.resourceId,
@@ -75,7 +93,7 @@ export default function DetailPage() {
         id: playlist.items[0].id,
         title: playlist.items[0].title,
         thumbnail: playlist.items[0].thumbnail,
-        channelTitle: playlist.items[0].channelTitle,
+        channelTitle: playlist.items[0].videoOwnerChannelTitle,
         publishedAt: playlist.items[0].publishedAt,
         durationSeconds: playlist.items[0].durationSeconds,
         resourceId: playlist.items[0].resourceId,
@@ -85,17 +103,28 @@ export default function DetailPage() {
       dispatch(playVideo({ video: firstVideo }));
 
       // 나머지 비디오들을 대기열에 추가
-      playlist.items.slice(1).forEach((item) => {
+      const restItems = playlist.items.slice(1);
+      restItems.forEach((item) => {
         const videoItem: VideoItem = {
           id: item.id,
           title: item.title,
           thumbnail: item.thumbnail,
-          channelTitle: item.channelTitle,
+          channelTitle: item.videoOwnerChannelTitle,
           publishedAt: item.publishedAt,
           durationSeconds: item.durationSeconds,
           resourceId: item.resourceId,
         };
         dispatch(playVideo({ video: videoItem, addToQueue: true }));
+      });
+
+      // Save play session for "play all" from beginning
+      const nextItems = restItems.map((v) => v.id);
+      saveSession({
+        playlistId,
+        nowPlayingItemId: firstVideo.id,
+        startSeconds: 0,
+        prevItems: [],
+        nextItems,
       });
     }
   };
@@ -175,7 +204,7 @@ export default function DetailPage() {
                       {item.title}
                     </h3>
                     <p className="text-[#9eb8a8] text-sm mb-1">
-                      {item.channelTitle}
+                      {item.videoOwnerChannelTitle}
                     </p>
                     <div className="flex items-center gap-4 text-[#9eb8a8] text-sm">
                       <span>{formatDate(item.publishedAt)}</span>

@@ -2,15 +2,15 @@ export interface MediaItem {
   id: number;
   resourceId: string;
   title: string;
-  description: string;
+  description?: string;
   kind: string;
   publishedAt: string;
-  thumbnail: string;
-  channelId: string;
-  channelTitle: string;
+  thumbnail?: string;
+  videoOwnerChannelId: string;
+  videoOwnerChannelTitle: string;
   platformType: string;
   durationSeconds: number;
-  position: number;
+  position?: number;
   createdAt?: string;
   updatedAt?: string;
 }

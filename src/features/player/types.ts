@@ -12,7 +12,7 @@ export interface PlayerState {
 export interface VideoItem {
   id: number;
   title: string;
-  thumbnail: string;
+  thumbnail?: string;
   channelTitle: string;
   publishedAt: string;
   durationSeconds: number;

@@ -3,6 +3,7 @@ import playlistsSlice from '@/features/playlists/playlistsSlice';
 import playerSlice from '@/features/player/playerSlice';
 import { playlistsApi } from '@/features/playlists/api/playlistsApi';
 import { authApi } from '@/features/auth/api/authApi';
+import { playSessionApi } from '@/features/player/api/playSessionApi';
 
 export const store = configureStore({
   reducer: {
@@ -10,11 +11,13 @@ export const store = configureStore({
     player: playerSlice,
     [playlistsApi.reducerPath]: playlistsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [playSessionApi.reducerPath]: playSessionApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(
       playlistsApi.middleware,
       authApi.middleware,
+      playSessionApi.middleware,
     ),
 });
 
