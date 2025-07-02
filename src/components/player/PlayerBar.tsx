@@ -6,7 +6,13 @@ import "./PlayerBar.css";
 import ReactPlayer from "react-player/youtube";
 import VideoInfo from "./VideoInfo";
 import QueueList from "./QueueList";
-import { setPanelExpanded, nextVideo } from "@/features/player/playerSlice";
+import {
+  setPanelExpanded,
+  nextVideo,
+  playVideo,
+  removeFromQueue,
+  removeFromHistory,
+} from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
 
 export default function PlayerBar() {
@@ -34,6 +40,18 @@ export default function PlayerBar() {
     volume,
     queue,
   });
+
+  // Handler when selecting a video from the upcoming queue
+  const selectFromQueue = (video: (typeof queue)[number]) => {
+    dispatch(removeFromQueue(video.id));
+    dispatch(playVideo({ video }));
+  };
+
+  // Handler when selecting a video from the history list
+  const selectFromHistory = (video: (typeof history)[number]) => {
+    dispatch(removeFromHistory(video.id));
+    dispatch(playVideo({ video }));
+  };
 
   if (!currentVideo) {
     return null;
@@ -96,8 +114,16 @@ export default function PlayerBar() {
             </div>
 
             <div className="flex-1 flex gap-6 min-w-0">
-              <QueueList title="이전 재생목록" videos={history} />
-              <QueueList title="다음 재생목록" videos={queue} />
+              <QueueList
+                title="이전 재생목록"
+                videos={history}
+                onSelect={selectFromHistory}
+              />
+              <QueueList
+                title="다음 재생목록"
+                videos={queue}
+                onSelect={selectFromQueue}
+              />
             </div>
           </div>
         </div>

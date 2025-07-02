@@ -103,6 +103,10 @@ const playerSlice = createSlice({
       state.queue = state.queue.filter(video => video.id !== action.payload);
     },
     
+    removeFromHistory: (state, action: PayloadAction<number>) => {
+      state.history = state.history.filter(video => video.id !== action.payload);
+    },
+    
     loadSession: (state, action: PayloadAction<import('./types').LoadSessionPayload>) => {
       const { current, prevItems, nextItems, startSeconds = 0 } = action.payload;
       state.currentVideo = current;
@@ -126,6 +130,7 @@ export const {
   updateVolume,
   clearQueue,
   removeFromQueue,
+  removeFromHistory,
   setPanelExpanded,
   togglePanel,
 } = playerSlice.actions;
