@@ -10,8 +10,15 @@ import { setPanelExpanded } from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
 
 export default function PlayerBar() {
-  const { currentVideo, isPlaying, currentTime, duration, volume, queue } =
-    useSelector((state: RootState) => state.player);
+  const {
+    currentVideo,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    queue,
+    history,
+  } = useSelector((state: RootState) => state.player);
 
   const isExpanded = useSelector(
     (state: RootState) => state.player.panelExpanded
@@ -88,7 +95,7 @@ export default function PlayerBar() {
             </div>
 
             <div className="flex-1 flex gap-6 min-w-0">
-              <QueueList title="이전 재생목록" videos={queue} />
+              <QueueList title="이전 재생목록" videos={history} />
               <QueueList title="다음 재생목록" videos={queue} />
             </div>
           </div>

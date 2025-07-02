@@ -102,11 +102,21 @@ const playerSlice = createSlice({
     removeFromQueue: (state, action: PayloadAction<number>) => {
       state.queue = state.queue.filter(video => video.id !== action.payload);
     },
+    
+    loadSession: (state, action: PayloadAction<import('./types').LoadSessionPayload>) => {
+      const { current, prevItems, nextItems, startSeconds = 0 } = action.payload;
+      state.currentVideo = current;
+      state.history = [...prevItems].reverse();
+      state.queue = [...nextItems];
+      state.currentTime = startSeconds;
+      state.isPlaying = true;
+    },
   },
 });
 
 export const {
   playVideo,
+  loadSession,
   pauseVideo,
   resumeVideo,
   nextVideo,

@@ -23,4 +23,11 @@ export interface VideoItem {
 export interface PlayVideoPayload {
   video: VideoItem;
   addToQueue?: boolean;
+}
+
+export interface LoadSessionPayload {
+  current: VideoItem;
+  prevItems: VideoItem[];
+  nextItems: VideoItem[];
+  startSeconds?: number;
 } 

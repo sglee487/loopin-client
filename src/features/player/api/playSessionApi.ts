@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { MediaPlaylist, MediaItem } from '@/features/playlists/types';
 
 export interface SavePlaySessionPayload {
   playlistId: number;
@@ -9,12 +10,15 @@ export interface SavePlaySessionPayload {
 }
 
 export interface PlaySession {
-  playlistId: number;
-  nowPlayingItemId: number;
+  id?: number;
   startSeconds: number;
-  prevItems: number[];
-  nextItems: number[];
-  updatedAt: string;
+  prevItems: MediaItem[] | null;
+  nextItems: MediaItem[] | null;
+  prevItemsLength?: number;
+  nextItemsLength?: number;
+  playlist?: MediaPlaylist;
+  nowPlaying?: MediaItem;
+  updatedAt?: string;
 }
 
 const BASE_URL = 'http://localhost:59000/api/v1/user-play-session';
@@ -47,7 +51,15 @@ export const playSessionApi = createApi({
     getSession: builder.query<PlaySession, number>({
       query: (playlistId) => `/sessions/${playlistId}`,
     }),
+
+    getSessions: builder.query<PlaySession[], void>({
+      query: () => '/sessions',
+    }),
   }),
 });
 
-export const { useSaveSessionMutation, useGetSessionQuery } = playSessionApi; 
+export const {
+  useSaveSessionMutation,
+  useGetSessionQuery,
+  useGetSessionsQuery,
+} = playSessionApi; 
