@@ -6,7 +6,7 @@ import "./PlayerBar.css";
 import ReactPlayer from "react-player/youtube";
 import VideoInfo from "./VideoInfo";
 import QueueList from "./QueueList";
-import { setPanelExpanded } from "@/features/player/playerSlice";
+import { setPanelExpanded, nextVideo } from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
 
 export default function PlayerBar() {
@@ -90,6 +90,7 @@ export default function PlayerBar() {
                 height="360px"
                 style={{ borderRadius: "8px" }}
                 className="z-50"
+                onEnded={() => dispatch(nextVideo())}
               />
               <VideoInfo video={currentVideo} />
             </div>
