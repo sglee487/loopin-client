@@ -52,9 +52,18 @@ export default function DetailPage() {
     // Save play session to server
     if (playlist) {
       const itemsArr = playlist.items ?? [];
-      const clickedIndex = itemsArr.findIndex((v) => v.id === item.id);
-      const prevItems = itemsArr.slice(0, clickedIndex).map((v) => v.id);
-      const nextItems = itemsArr.slice(clickedIndex + 1).map((v) => v.id);
+      // 느슨한 동등성 비교를 사용하여 문자열-숫자 타입 불일치로 인한 인덱스 탐색 실패를 방지한다
+      const clickedIndex = itemsArr.findIndex((v) => v.id == item.id);
+
+      // 클릭한 비디오가 배열에서 발견되지 못한 경우를 대비한 안전한 분기 처리
+      const prevItems: number[] =
+        clickedIndex > -1
+          ? itemsArr.slice(0, clickedIndex).map((v) => v.id)
+          : [];
+      const nextItems: number[] =
+        clickedIndex > -1
+          ? itemsArr.slice(clickedIndex + 1).map((v) => v.id)
+          : itemsArr.filter((v) => v.id !== item.id).map((v) => v.id);
 
       saveSession({
         playlistId,
