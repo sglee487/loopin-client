@@ -72,18 +72,23 @@ export default function PlayerControlsBar() {
       <div className="px-4 py-3 flex items-center justify-between max-w-7xl mx-auto">
         {/* Left: video thumbnail and info */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <img
-            src={currentVideo.thumbnail}
-            alt={currentVideo.title}
-            className="w-12 h-12 object-cover rounded"
-          />
-          <div className="min-w-0 flex-1">
-            <h3 className="text-white font-medium text-sm truncate">
-              {currentVideo.title}
-            </h3>
-            <p className="text-gray-400 text-xs truncate">
-              {currentVideo.channelTitle}
-            </p>
+          <div
+            className="flex items-center gap-3 cursor-pointer px-2 rounded-md"
+            onClick={toggleExpand}
+          >
+            <img
+              src={currentVideo.thumbnail}
+              alt={currentVideo.title}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="min-w-0 flex-1">
+              <h3 className="text-white font-medium text-sm truncate">
+                {currentVideo.title}
+              </h3>
+              <p className="text-gray-400 text-xs truncate">
+                {currentVideo.channelTitle}
+              </p>
+            </div>
           </div>
         </div>
 
