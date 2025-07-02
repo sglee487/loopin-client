@@ -5,6 +5,7 @@ import {
   playVideo,
   clearQueue,
   setPanelExpanded,
+  setCurrentPlaylistId,
 } from "@/features/player/playerSlice";
 import { useSaveSessionMutation } from "@/features/player/api/playSessionApi";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -48,6 +49,7 @@ export default function DetailPage() {
 
     dispatch(clearQueue());
     dispatch(playVideo({ video: videoItem }));
+    dispatch(setCurrentPlaylistId(playlistId));
 
     // Save play session to server
     if (playlist) {
@@ -110,6 +112,7 @@ export default function DetailPage() {
 
       // 첫 번째 비디오를 재생하고 나머지를 대기열에 추가
       dispatch(playVideo({ video: firstVideo }));
+      dispatch(setCurrentPlaylistId(playlistId));
 
       // 나머지 비디오들을 대기열에 추가
       const restItems = playlist.items.slice(1);

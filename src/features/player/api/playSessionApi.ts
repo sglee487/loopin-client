@@ -55,6 +55,14 @@ export const playSessionApi = createApi({
     getSessions: builder.query<PlaySession[], void>({
       query: () => '/sessions',
     }),
+
+    updateStartSeconds: builder.mutation<void, { playlistId: number; startSeconds: number }>({
+      query: ({ playlistId, startSeconds }) => ({
+        url: `/sessions/${playlistId}/start-seconds`,
+        method: 'PATCH',
+        body: { startSeconds },
+      }),
+    }),
   }),
 });
 
@@ -62,4 +70,5 @@ export const {
   useSaveSessionMutation,
   useGetSessionQuery,
   useGetSessionsQuery,
+  useUpdateStartSecondsMutation,
 } = playSessionApi; 

@@ -7,6 +7,7 @@ import {
   setPanelExpanded,
   playVideo,
   clearQueue,
+  setCurrentPlaylistId,
 } from "@/features/player/playerSlice";
 import type { VideoItem } from "@/features/player/types";
 import { PlayIcon } from "@heroicons/react/24/outline";
@@ -57,13 +58,20 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
           prevItems: prevArr,
           nextItems: nextArr,
           startSeconds: sessionDetail.startSeconds,
+          playlistId: playlist?.id,
         })
       );
+      if (playlist?.id) {
+        dispatch(setCurrentPlaylistId(playlist.id));
+      }
     } else if (session.nowPlaying) {
       // Fallback: only nowPlaying available
       const fallbackVid = toVideoItem(session.nowPlaying);
       dispatch(clearQueue());
       dispatch(playVideo({ video: fallbackVid }));
+      if (playlist?.id) {
+        dispatch(setCurrentPlaylistId(playlist.id));
+      }
     } else {
       return;
     }

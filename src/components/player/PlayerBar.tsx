@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import PlayerControlsBar from "./PlayerControlsBar";
@@ -12,8 +12,13 @@ import {
   playVideo,
   removeFromQueue,
   removeFromHistory,
+  updateCurrentTime,
 } from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
+import {
+  useSaveSessionMutation,
+  useUpdateStartSecondsMutation,
+} from "@/features/player/api/playSessionApi";
 
 export default function PlayerBar() {
   const {
@@ -30,7 +35,54 @@ export default function PlayerBar() {
     (state: RootState) => state.player.panelExpanded
   );
 
+  const currentPlaylistId = useSelector(
+    (state: RootState) => state.player.currentPlaylistId
+  );
+
   const dispatch = useDispatch();
+
+  // Mutations for session updates
+  const [saveSession] = useSaveSessionMutation();
+  const [updateStartSeconds] = useUpdateStartSecondsMutation();
+
+  const playerRef = useRef<ReactPlayer>(null);
+
+  const handleProgress = useCallback(
+    ({ playedSeconds }: { playedSeconds: number }) => {
+      const secs = Math.floor(playedSeconds);
+      dispatch(updateCurrentTime(secs));
+
+      if (currentPlaylistId == null) return;
+
+      updateStartSeconds({
+        playlistId: currentPlaylistId,
+        startSeconds: secs,
+      });
+    },
+    [currentPlaylistId, dispatch, updateStartSeconds]
+  );
+
+  // Save session whenever a new video starts playing
+  const handleStart = useCallback(() => {
+    if (!currentVideo || currentPlaylistId == null) return;
+
+    const prevIds = [...history].reverse().map((v) => v.id);
+    const nextIds = queue.map((v) => v.id);
+
+    saveSession({
+      playlistId: currentPlaylistId,
+      nowPlayingItemId: currentVideo.id,
+      startSeconds: 0,
+      prevItems: prevIds,
+      nextItems: nextIds,
+    });
+  }, [currentVideo?.id, currentPlaylistId, history, queue, saveSession]);
+
+  const handleReady = useCallback(() => {
+    if (playerRef.current && currentTime > 0) {
+      playerRef.current.seekTo(currentTime, "seconds");
+    }
+  }, [currentTime]);
 
   console.log("PlayerBar state:", {
     currentVideo,
@@ -108,7 +160,12 @@ export default function PlayerBar() {
                 height="360px"
                 style={{ borderRadius: "8px" }}
                 className="z-50"
+                ref={playerRef}
                 onEnded={() => dispatch(nextVideo())}
+                onReady={handleReady}
+                onStart={handleStart}
+                onProgress={handleProgress}
+                progressInterval={5000}
               />
               <VideoInfo video={currentVideo} />
             </div>

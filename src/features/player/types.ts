@@ -7,6 +7,8 @@ export interface PlayerState {
   volume: number;
   history: VideoItem[];
   panelExpanded: boolean;
+  /** Currently playing playlist id, if a play session is active */
+  currentPlaylistId?: number | null;
 }
 
 export interface VideoItem {
@@ -30,4 +32,5 @@ export interface LoadSessionPayload {
   prevItems: VideoItem[];
   nextItems: VideoItem[];
   startSeconds?: number;
+  playlistId?: number;
 } 

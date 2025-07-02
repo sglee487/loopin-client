@@ -10,6 +10,7 @@ const initialState: PlayerState = {
   duration: 0,
   volume: 1,
   panelExpanded: false,
+  currentPlaylistId: null,
 };
 
 const playerSlice = createSlice({
@@ -21,6 +22,9 @@ const playerSlice = createSlice({
     },
     togglePanel: (state) => {
       state.panelExpanded = !state.panelExpanded;
+    },
+    setCurrentPlaylistId: (state, action: PayloadAction<number | null>) => {
+      state.currentPlaylistId = action.payload;
     },
     playVideo: (state, action: PayloadAction<PlayVideoPayload>) => {
       const { video, addToQueue = false } = action.payload;
@@ -108,12 +112,16 @@ const playerSlice = createSlice({
     },
     
     loadSession: (state, action: PayloadAction<import('./types').LoadSessionPayload>) => {
-      const { current, prevItems, nextItems, startSeconds = 0 } = action.payload;
+      const { current, prevItems, nextItems, startSeconds = 0, playlistId } = action.payload;
       state.currentVideo = current;
       state.history = [...prevItems].reverse();
       state.queue = [...nextItems];
       state.currentTime = startSeconds;
       state.isPlaying = true;
+
+      if (typeof playlistId === 'number') {
+        state.currentPlaylistId = playlistId;
+      }
     },
   },
 });
@@ -133,6 +141,7 @@ export const {
   removeFromHistory,
   setPanelExpanded,
   togglePanel,
+  setCurrentPlaylistId,
 } = playerSlice.actions;
 
 export default playerSlice.reducer; 
