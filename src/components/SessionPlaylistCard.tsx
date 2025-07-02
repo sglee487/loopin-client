@@ -9,7 +9,7 @@ import {
   clearQueue,
 } from "@/features/player/playerSlice";
 import type { VideoItem } from "@/features/player/types";
-import { QueueListIcon } from "@heroicons/react/24/outline";
+import { PlayIcon } from "@heroicons/react/24/outline";
 
 interface SessionPlaylistCardProps {
   session: PlaySession;
@@ -92,10 +92,29 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
           className="w-full h-full object-cover object-center rounded-lg"
           alt={`${playlist.title} thumbnail`}
         />
-        {/* Item count indicator */}
+        {/* Watched / Total indicator */}
         <div className="absolute bottom-2 right-2 bg-black opacity-80 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
-          <QueueListIcon className="h-3 w-3" />
-          {playlist.itemCount}
+          <PlayIcon className="h-3 w-3" />
+          {(() => {
+            // Calculate how many videos the user has watched
+            let watched = 0;
+
+            // Prefer the detailed session info if available
+            const detail = sessionDetail ?? session;
+
+            if (typeof detail.prevItemsLength === "number") {
+              watched += detail.prevItemsLength;
+            } else if (Array.isArray(detail.prevItems)) {
+              watched += detail.prevItems.length;
+            }
+
+            // Count the currently playing video (if any) as watched
+            if (detail.nowPlaying) {
+              watched += 1;
+            }
+
+            return `${watched} / ${playlist.itemCount}`;
+          })()}
         </div>
         {/* (no overlay, mimic PlaylistCard) */}
       </div>
