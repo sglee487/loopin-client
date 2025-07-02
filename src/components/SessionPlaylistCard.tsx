@@ -31,6 +31,20 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
 
   const playlist = session.playlist;
 
+  // Calculate how much of the current video has been watched (percentage)
+  const durationSeconds =
+    sessionDetail?.nowPlaying?.durationSeconds ??
+    session.nowPlaying?.durationSeconds ??
+    0;
+
+  const startSeconds =
+    sessionDetail?.startSeconds ??
+    (typeof session.startSeconds === "number" ? session.startSeconds : 0);
+
+  const progressPercent = durationSeconds
+    ? Math.min(100, (startSeconds / durationSeconds) * 100)
+    : 0;
+
   const handleClick = () => {
     // helper convert
     const toVideoItem = (
@@ -125,6 +139,16 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
           })()}
         </div>
         {/* (no overlay, mimic PlaylistCard) */}
+
+        {/* Progress bar indicating how much of the current video has been watched */}
+        {durationSeconds > 0 && (
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-700/70">
+            <div
+              className="h-full bg-red-600"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">
