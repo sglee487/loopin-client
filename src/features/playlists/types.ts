@@ -36,6 +36,7 @@ export interface MediaPlaylist {
 
 export interface CreatePlaylistRequest {
   resourceId: string;
+  type?: string;
 }
 
 export interface SliceResponse<T> {
