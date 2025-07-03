@@ -14,6 +14,9 @@ import {
   removeFromHistory,
   updateCurrentTime,
   updateDuration,
+  pauseVideo,
+  resumeVideo,
+  updateVolume,
 } from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
 import {
@@ -55,8 +58,24 @@ export default function PlayerBar() {
           startSeconds: secs,
         });
       }
+
+      // Sync volume from the underlying YouTube player when user changes it via native controls
+      if (playerRef.current) {
+        // For YouTube, getInternalPlayer returns the YT player instance that has getVolume (0-100)
+        const internal: any = (playerRef.current as any).getInternalPlayer?.();
+        if (internal && typeof internal.getVolume === "function") {
+          const volRaw: number = internal.getVolume();
+          if (typeof volRaw === "number") {
+            const volNorm = Math.round(volRaw) / 100; // 0-1 range
+            // Only dispatch if changed to avoid excessive updates
+            if (Math.abs(volNorm - volume) > 0.01) {
+              dispatch(updateVolume(volNorm));
+            }
+          }
+        }
+      }
     },
-    [currentPlaylistId, dispatch, updateStartSeconds]
+    [currentPlaylistId, dispatch, updateStartSeconds, volume]
   );
 
   // Save session whenever a new video starts playing
@@ -109,6 +128,15 @@ export default function PlayerBar() {
     dispatch(removeFromHistory(video.id));
     dispatch(playVideo({ video }));
   };
+
+  // If user pauses/plays via the embedded player controls, sync to global state
+  const handlePlay = useCallback(() => {
+    dispatch(resumeVideo());
+  }, [dispatch]);
+
+  const handlePause = useCallback(() => {
+    dispatch(pauseVideo());
+  }, [dispatch]);
 
   if (!currentVideo) {
     return null;
@@ -169,6 +197,8 @@ export default function PlayerBar() {
                 onEnded={() => dispatch(nextVideo())}
                 onReady={handleReady}
                 onStart={handleStart}
+                onPlay={handlePlay}
+                onPause={handlePause}
                 onSeek={handleSeek}
                 onProgress={handleProgress}
                 onDuration={handleDuration}
