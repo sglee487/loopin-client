@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: 'var(--color-brand)',
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/line-clamp'),

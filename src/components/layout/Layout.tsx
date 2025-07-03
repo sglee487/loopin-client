@@ -37,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   isSidebarCollapsed
                     ? "flex-col items-center gap-1"
                     : "items-center gap-3",
-                  isActive && "bg-gray-100 text-indigo-600 font-semibold",
+                  isActive && "bg-brand/10 text-brand font-semibold",
                 ]
                   .filter(Boolean)
                   .join(" ")

@@ -36,15 +36,15 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           {/* Drawer toggle button */}
           <button
             onClick={onToggleSidebar}
-            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 cursor-pointer"
+            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand cursor-pointer"
             aria-label="Toggle sidebar"
           >
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
 
           {/* Banner / Logo that routes to home */}
-          <Link to="/" className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">LoopIn</h1>
+          <Link to="/" className="flex items-center px-2">
+            <img src="/Logo.svg" alt="LoopIn logo" className="h-12 w-auto" />
           </Link>
         </div>
 
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           ) : (
             <button
               onClick={handleLogin}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700"
+              className="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-brand/90"
             >
               로그인
             </button>
