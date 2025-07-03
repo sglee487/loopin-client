@@ -2,13 +2,22 @@
  * 초를 시:분:초 형식으로 변환
  */
 export const formatDuration = (seconds: number): string => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, "0")}:00`;
+  if (seconds == null || isNaN(seconds)) {
+    return "0:00";
   }
-  return `${minutes}:00`;
+
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  const paddedMins = mins.toString().padStart(2, "0");
+  const paddedSecs = secs.toString().padStart(2, "0");
+
+  if (hrs > 0) {
+    return `${hrs}:${paddedMins}:${paddedSecs}`;
+  }
+
+  return `${mins}:${paddedSecs}`;
 };
 
 /**

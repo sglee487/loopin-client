@@ -1,4 +1,5 @@
 import React from "react";
+import type ReactPlayer from "react-player/youtube";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import {
@@ -22,7 +23,13 @@ import {
 } from "@heroicons/react/24/solid";
 import { formatDuration } from "@/lib/utils";
 
-export default function PlayerControlsBar() {
+interface PlayerControlsBarProps {
+  playerRef: React.RefObject<ReactPlayer>;
+}
+
+export default function PlayerControlsBar({
+  playerRef,
+}: PlayerControlsBarProps) {
   const dispatch = useDispatch();
   const { currentVideo, isPlaying, currentTime, duration, volume } =
     useSelector((state: RootState) => state.player);
@@ -45,6 +52,11 @@ export default function PlayerControlsBar() {
   const handlePrevious = () => dispatch(previousVideo());
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = parseFloat(e.target.value);
+    // Seek the actual player
+    if (playerRef.current) {
+      playerRef.current.seekTo(newTime, "seconds");
+    }
+    // Update global state so UI reflects new time
     dispatch(updateCurrentTime(newTime));
   };
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +166,7 @@ export default function PlayerControlsBar() {
               type="range"
               min="0"
               max="1"
-              step="0.1"
+              step="0.01"
               value={volume}
               onChange={handleVolumeChange}
               className="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer player-slider"

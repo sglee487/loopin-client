@@ -13,6 +13,7 @@ import {
   removeFromQueue,
   removeFromHistory,
   updateCurrentTime,
+  updateDuration,
 } from "@/features/player/playerSlice";
 import { Transition } from "@headlessui/react";
 import {
@@ -21,15 +22,8 @@ import {
 } from "@/features/player/api/playSessionApi";
 
 export default function PlayerBar() {
-  const {
-    currentVideo,
-    isPlaying,
-    currentTime,
-    duration,
-    volume,
-    queue,
-    history,
-  } = useSelector((state: RootState) => state.player);
+  const { currentVideo, isPlaying, currentTime, volume, queue, history } =
+    useSelector((state: RootState) => state.player);
 
   const isExpanded = useSelector(
     (state: RootState) => state.player.panelExpanded
@@ -54,10 +48,13 @@ export default function PlayerBar() {
 
       if (currentPlaylistId == null) return;
 
-      updateStartSeconds({
-        playlistId: currentPlaylistId,
-        startSeconds: secs,
-      });
+      // 5초마다 한번씩 재생시간 동기화
+      if (secs > 0 && secs % 5 === 0) {
+        updateStartSeconds({
+          playlistId: currentPlaylistId,
+          startSeconds: secs,
+        });
+      }
     },
     [currentPlaylistId, dispatch, updateStartSeconds]
   );
@@ -84,14 +81,22 @@ export default function PlayerBar() {
     }
   }, [currentTime]);
 
-  console.log("PlayerBar state:", {
-    currentVideo,
-    isPlaying,
-    currentTime,
-    duration,
-    volume,
-    queue,
-  });
+  const handleSeek = useCallback(
+    (seconds: number) => {
+      if (playerRef.current) {
+        playerRef.current.seekTo(seconds, "seconds");
+        dispatch(updateCurrentTime(seconds));
+      }
+    },
+    [dispatch]
+  );
+
+  const handleDuration = useCallback(
+    (dur: number) => {
+      dispatch(updateDuration(Math.floor(dur)));
+    },
+    [dispatch]
+  );
 
   // Handler when selecting a video from the upcoming queue
   const selectFromQueue = (video: (typeof queue)[number]) => {
@@ -164,8 +169,10 @@ export default function PlayerBar() {
                 onEnded={() => dispatch(nextVideo())}
                 onReady={handleReady}
                 onStart={handleStart}
+                onSeek={handleSeek}
                 onProgress={handleProgress}
-                progressInterval={5000}
+                onDuration={handleDuration}
+                progressInterval={1000}
               />
               <VideoInfo video={currentVideo} />
             </div>
@@ -187,7 +194,7 @@ export default function PlayerBar() {
       </Transition>
 
       {/* Player bar controls */}
-      <PlayerControlsBar />
+      <PlayerControlsBar playerRef={playerRef} />
     </>
   );
 }
