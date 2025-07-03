@@ -67,7 +67,9 @@ const playerSlice = createSlice({
         state.currentVideo = state.queue.shift() || null;
         state.currentTime = 0;
       } else {
-        state.currentVideo = null;
+        // Keep the last played video so that the player bar remains visible
+        // when all items in the queue have finished playing. Simply stop
+        // playback instead of clearing the currentVideo.
         state.isPlaying = false;
       }
     },
