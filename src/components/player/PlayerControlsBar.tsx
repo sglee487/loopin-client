@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import type ReactPlayer from "react-player/youtube";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
@@ -34,6 +34,16 @@ export default function PlayerControlsBar({
   const { currentVideo, isPlaying, currentTime, duration, volume } =
     useSelector((state: RootState) => state.player);
 
+  // Remember the last non-zero volume to restore after unmuting
+  const lastVolumeRef = useRef(volume);
+
+  // Keep the reference up-to-date whenever volume changes (and is not muted)
+  useEffect(() => {
+    if (volume > 0) {
+      lastVolumeRef.current = volume;
+    }
+  }, [volume]);
+
   const isExpanded = useSelector(
     (state: RootState) => state.player.panelExpanded
   );
@@ -61,9 +71,21 @@ export default function PlayerControlsBar({
   };
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVol = parseFloat(e.target.value);
+    if (newVol > 0) {
+      lastVolumeRef.current = newVol;
+    }
     dispatch(updateVolume(newVol));
   };
-  const toggleMute = () => dispatch(updateVolume(volume > 0 ? 0 : 1));
+  const toggleMute = () => {
+    if (volume > 0) {
+      // Mute and remember current volume
+      lastVolumeRef.current = volume;
+      dispatch(updateVolume(0));
+    } else {
+      // Restore to the previous volume (or 1 as a fallback)
+      dispatch(updateVolume(lastVolumeRef.current || 1));
+    }
+  };
 
   if (!currentVideo) return null;
 
@@ -108,14 +130,14 @@ export default function PlayerControlsBar({
         <div className="flex items-center gap-4">
           <button
             onClick={handlePrevious}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors cursor-pointer"
           >
             <BackwardIcon className="h-5 w-5" />
           </button>
 
           <button
             onClick={handlePlayPause}
-            className="bg-white text-black rounded-full p-2 hover:scale-105 transition-transform"
+            className="bg-white text-black rounded-full p-2 hover:scale-105 transition-transform cursor-pointer"
           >
             {isPlaying ? (
               <PauseIcon className="h-5 w-5" />
@@ -126,7 +148,7 @@ export default function PlayerControlsBar({
 
           <button
             onClick={handleNext}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors cursor-pointer"
           >
             <ForwardIcon className="h-5 w-5" />
           </button>
@@ -154,7 +176,7 @@ export default function PlayerControlsBar({
           <div className="flex items-center gap-2">
             <button
               onClick={toggleMute}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-white transition-colors cursor-pointer"
             >
               {volume > 0 ? (
                 <SpeakerWaveIcon className="h-4 w-4" />
