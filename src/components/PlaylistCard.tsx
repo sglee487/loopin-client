@@ -42,13 +42,13 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <h3 className="text-base font-bold text-white truncate">
+        <h3 className="text-base font-bold text-brand truncate">
           {playlist.title}
         </h3>
-        <p className="text-sm text-[#9eb8a8] truncate">
+        <p className="text-sm text-gray-600 truncate">
           {playlist.description || "No description"}
         </p>
-        <p className="text-sm text-[#9eb8a8]">{playlist.channelTitle}</p>
+        <p className="text-sm text-gray-500">{playlist.channelTitle}</p>
       </div>
     </div>
   );
