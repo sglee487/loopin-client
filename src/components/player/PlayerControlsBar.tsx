@@ -115,8 +115,8 @@ export default function PlayerControlsBar({
               alt={currentVideo.title}
               className="w-12 h-12 object-cover rounded"
             />
-            <div className="min-w-0 flex-1">
-              <h3 className="text-white font-medium text-sm truncate">
+            <div className="min-w-0 flex-1 pr-2">
+              <h3 className="text-white font-medium text-sm line-clamp-1 whitespace-normal">
                 {currentVideo.title}
               </h3>
               <p className="text-gray-400 text-xs truncate">
