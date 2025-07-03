@@ -11,6 +11,7 @@ const initialState: PlayerState = {
   volume: 1,
   panelExpanded: false,
   currentPlaylistId: null,
+  loopEnabled: false,
 };
 
 const playerSlice = createSlice({
@@ -66,6 +67,26 @@ const playerSlice = createSlice({
         // 대기열 맨 앞의 비디오를 현재 비디오로 설정
         state.currentVideo = state.queue.shift() || null;
         state.currentTime = 0;
+      } else if (state.loopEnabled && (state.history.length > 0 || state.currentVideo)) {
+        // Loop: 재생목록이 끝났으면 역사 + 현재 비디오를 대기열로 재구성
+        const rebuilt: typeof state.queue = [];
+
+        // 현재 비디오를 history 로 이동하고 큐를 재생성한다
+        if (state.currentVideo) {
+          state.history.unshift(state.currentVideo);
+        }
+
+        // history 에는 가장 최근 항목이 앞에 있으므로, 반복 시 원래 순서대로 재생하려면 역순으로 큐를 구축한다
+        rebuilt.push(...state.history.reverse());
+
+        // 비워둔 history
+        state.history = [];
+
+        // 새로운 큐 설정 및 첫 번째 비디오 재생
+        state.queue = rebuilt;
+        state.currentVideo = state.queue.shift() || null;
+        state.currentTime = 0;
+        state.isPlaying = true;
       } else {
         // Keep the last played video so that the player bar remains visible
         // when all items in the queue have finished playing. Simply stop
@@ -125,6 +146,22 @@ const playerSlice = createSlice({
         state.currentPlaylistId = playlistId;
       }
     },
+    toggleLoop: (state) => {
+      state.loopEnabled = !state.loopEnabled;
+    },
+    shuffleQueue: (state, action: PayloadAction<import('./types').VideoItem[] | undefined>) => {
+      if (action.payload) {
+        // 외부에서 섞은 queue를 그대로 반영
+        state.queue = action.payload;
+        return;
+      }
+      if (state.queue.length > 1) {
+        for (let i = state.queue.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [state.queue[i], state.queue[j]] = [state.queue[j], state.queue[i]];
+        }
+      }
+    },
   },
 });
 
@@ -144,6 +181,8 @@ export const {
   setPanelExpanded,
   togglePanel,
   setCurrentPlaylistId,
+  toggleLoop,
+  shuffleQueue,
 } = playerSlice.actions;
 
 export default playerSlice.reducer; 

@@ -10,6 +10,8 @@ import {
   updateCurrentTime,
   updateVolume,
   togglePanel,
+  shuffleQueue,
+  toggleLoop,
 } from "@/features/player/playerSlice";
 import {
   PlayIcon,
@@ -20,8 +22,11 @@ import {
   SpeakerXMarkIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  ArrowPathIcon,
+  ArrowsRightLeftIcon,
 } from "@heroicons/react/24/solid";
 import { formatDuration } from "@/lib/utils";
+import { useSaveSessionMutation } from "@/features/player/api/playSessionApi";
 
 interface PlayerControlsBarProps {
   playerRef: React.RefObject<ReactPlayer>;
@@ -31,8 +36,17 @@ export default function PlayerControlsBar({
   playerRef,
 }: PlayerControlsBarProps) {
   const dispatch = useDispatch();
-  const { currentVideo, isPlaying, currentTime, duration, volume } =
-    useSelector((state: RootState) => state.player);
+  const {
+    currentVideo,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    loopEnabled,
+    queue,
+    history,
+    currentPlaylistId,
+  } = useSelector((state: RootState) => state.player);
 
   // Remember the last non-zero volume to restore after unmuting
   const lastVolumeRef = useRef(volume);
@@ -60,6 +74,37 @@ export default function PlayerControlsBar({
 
   const handleNext = () => dispatch(nextVideo());
   const handlePrevious = () => dispatch(previousVideo());
+  const [saveSession] = useSaveSessionMutation();
+
+  const handleShuffle = () => {
+    // Create shuffled copy
+    const shuffled = [...queue];
+    if (shuffled.length > 1) {
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+    }
+
+    // Dispatch to store
+    dispatch(shuffleQueue(shuffled));
+
+    // Notify server of new order if playlist context exists
+    if (currentVideo && typeof currentPlaylistId === "number") {
+      const prevIds = [...history].reverse().map((v) => v.id);
+      const nextIds = shuffled.map((v) => v.id);
+
+      saveSession({
+        playlistId: currentPlaylistId,
+        nowPlayingItemId: currentVideo.id,
+        startSeconds: 0, // keep current progress as 0 for reorder
+        prevItems: prevIds,
+        nextItems: nextIds,
+      });
+    }
+  };
+
+  const handleLoop = () => dispatch(toggleLoop());
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = parseFloat(e.target.value);
     // Seek the actual player
@@ -128,6 +173,15 @@ export default function PlayerControlsBar({
 
         {/* Center: playback controls */}
         <div className="flex items-center gap-4">
+          {/* Shuffle (one-time) */}
+          <button
+            onClick={handleShuffle}
+            className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+            title="Shuffle upcoming videos"
+          >
+            <ArrowsRightLeftIcon className="h-5 w-5" />
+          </button>
+
           <button
             onClick={handlePrevious}
             className="text-gray-400 hover:text-white transition-colors cursor-pointer"
@@ -151,6 +205,17 @@ export default function PlayerControlsBar({
             className="text-gray-400 hover:text-white transition-colors cursor-pointer"
           >
             <ForwardIcon className="h-5 w-5" />
+          </button>
+
+          {/* Loop */}
+          <button
+            onClick={handleLoop}
+            className={`transition-colors cursor-pointer ${
+              loopEnabled ? "text-blue-500" : "text-gray-400 hover:text-white"
+            }`}
+            title="Repeat playlist"
+          >
+            <ArrowPathIcon className="h-5 w-5" />
           </button>
         </div>
 

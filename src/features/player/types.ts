@@ -9,6 +9,8 @@ export interface PlayerState {
   panelExpanded: boolean;
   /** Currently playing playlist id, if a play session is active */
   currentPlaylistId?: number | null;
+  /** Whether loop (repeat playlist) mode is enabled */
+  loopEnabled?: boolean;
 }
 
 export interface VideoItem {
