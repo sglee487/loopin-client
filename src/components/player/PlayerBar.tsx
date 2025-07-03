@@ -182,7 +182,7 @@ export default function PlayerBar() {
         leaveTo="translate-y-full"
       >
         <div className="fixed bottom-[92px] h-8/10 left-0 right-0 z-50 bg-gray-900 border-t border-gray-700 rounded-t-lg p-6">
-          <div className="flex h-full gap-6 max-w-7xl mx-auto">
+          <div className="flex h-full gap-6 px-4 sm:px-6 lg:px-8">
             <div className="flex-shrink-0 w-[440px]">
               <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${currentVideo.resourceId}`}
