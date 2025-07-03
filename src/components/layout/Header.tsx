@@ -44,7 +44,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
           {/* Banner / Logo that routes to home */}
           <Link to="/" className="flex items-center px-2">
-            <img src="/Logo.svg" alt="LoopIn logo" className="h-12 w-auto" />
+            <img
+              src="/logo_light.svg"
+              alt="LoopIn logo"
+              className="h-12 w-auto"
+            />
           </Link>
         </div>
 
