@@ -85,6 +85,19 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
               </div>
             )}
           </div>
+
+          {/* Logged-in user info */}
+          {user && (
+            <div className="flex items-center gap-2 pr-2">
+              {/* Simple avatar using first letter */}
+              <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold text-gray-700 select-none">
+                {(user.fullName ?? user.username).charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm text-gray-700 hidden sm:inline">
+                {user.fullName ?? user.username}
+              </span>
+            </div>
+          )}
           {user ? (
             <button
               onClick={handleLogout}
