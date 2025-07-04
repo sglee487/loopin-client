@@ -17,6 +17,16 @@ export const playlistsApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:59000/api/v1/playlists',
     credentials: 'include',
+        prepareHeaders: (headers) => {
+      const cookie = document.cookie
+        .split('; ')
+        .find((c) => c.startsWith('XSRF-TOKEN='));
+      if (cookie) {
+        const csrf = decodeURIComponent(cookie.split('=')[1]);
+        headers.set('X-XSRF-TOKEN', csrf);
+      }
+      return headers;
+    },
   }),
   tagTypes: ['Playlist'],
   endpoints: (builder) => ({
