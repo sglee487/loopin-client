@@ -5,7 +5,7 @@ import {
 } from "@/features/auth/api/authApi";
 import { Bars3Icon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
 
 const GATEWAY_URL = "http://localhost:59000";
@@ -34,8 +34,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     }
   };
 
-  const openAddModal = () => setAddModalOpen(true);
-  const closeAddModal = () => setAddModalOpen(false);
+  const openAddModal = useCallback(() => setAddModalOpen(true), []);
+  const closeAddModal = useCallback(() => setAddModalOpen(false), []);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">

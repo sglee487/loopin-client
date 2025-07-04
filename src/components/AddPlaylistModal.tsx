@@ -17,7 +17,7 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [resourceId, setResourceId] = useState<string | null>(null);
 
-  const [createPlaylist, { isLoading, isError, data: created }] =
+  const [createPlaylist, { isLoading, isError, data: created, reset }] =
     useCreatePlaylistFromYoutubeMutation();
 
   // parse input whenever it changes
@@ -45,7 +45,14 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
     if (created?.id) {
       navigate(`/playlists/${created.id}`);
       onClose();
+
+      // Reset mutation state so that future navigations
+      // do not keep redirecting back to this playlist page
+      reset();
     }
+    // We intentionally omit `reset` from dependencies to avoid
+    // re-creating the effect when it changes between renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [created, navigate, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
