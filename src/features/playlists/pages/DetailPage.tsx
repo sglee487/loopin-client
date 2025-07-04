@@ -151,7 +151,7 @@ export default function DetailPage() {
     <div className="container mx-auto px-4 py-6">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-brand mb-6"
+        className="flex items-center gap-2 text-gray-500 hover:text-brand mb-6 cursor-pointer"
       >
         <ArrowLeftIcon className="h-5 w-5" /> 뒤로가기
       </button>
