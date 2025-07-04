@@ -3,6 +3,7 @@ import Header from "./Header";
 import PlayerBar from "../player/PlayerBar";
 import { NavLink } from "react-router-dom";
 import { HomeIcon } from "@heroicons/react/24/outline";
+import { ToastContainer } from "react-toastify";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -63,6 +64,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       <PlayerBar />
+      {/* Global toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useCreatePlaylistFromYoutubeMutation } from "@/features/playlists/api/p
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
+import { toast } from "react-toastify";
 
 interface AddPlaylistModalProps {
   isOpen: boolean;
@@ -61,8 +62,17 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
 
     try {
       await createPlaylist({ type: "youtube", resourceId }).unwrap();
-    } catch (err) {
-      // Error handled via isError state
+    } catch (err: any) {
+      if (err && typeof err === "object" && "status" in err) {
+        const status = (err as { status?: number }).status;
+        if (status === 409) {
+          toast.info("이미 등록된 플레이리스트입니다.");
+        } else {
+          toast.error("플레이리스트를 추가하는 중 오류가 발생했습니다.");
+        }
+      } else {
+        toast.error("플레이리스트를 추가하는 중 오류가 발생했습니다.");
+      }
     }
   };
 
