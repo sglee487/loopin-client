@@ -8,7 +8,16 @@ const initialState: PlayerState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
-  volume: 1,
+  // Load saved volume from localStorage (0-1 range); default to 1
+  volume: (() => {
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+      const saved = parseFloat(localStorage.getItem("playerVolume") || "");
+      if (!isNaN(saved) && saved >= 0 && saved <= 1) {
+        return saved;
+      }
+    }
+    return 1;
+  })(),
   panelExpanded: false,
   currentPlaylistId: null,
   loopEnabled: false,

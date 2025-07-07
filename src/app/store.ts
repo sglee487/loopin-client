@@ -21,5 +21,21 @@ export const store = configureStore({
     ),
 });
 
+// Persist player volume to localStorage whenever it changes
+if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+  let prevVolume: number | undefined;
+  store.subscribe(() => {
+    const currentVolume = store.getState().player.volume;
+    if (currentVolume !== prevVolume) {
+      prevVolume = currentVolume;
+      try {
+        localStorage.setItem("playerVolume", currentVolume.toString());
+      } catch {
+        /* ignore quota / unavailable errors */
+      }
+    }
+  });
+}
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
