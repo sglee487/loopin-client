@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "./Header";
+import LastSessionLoader from "../player/LastSessionLoader";
 import PlayerBar from "../player/PlayerBar";
 import { NavLink } from "react-router-dom";
 import { HomeIcon } from "@heroicons/react/24/outline";
@@ -23,6 +24,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
+      {/* Auto-load latest session (invisible helper) */}
+      <LastSessionLoader />
       <Header onToggleSidebar={handleToggleSidebar} />
 
       {/* Body area: sidebar + main content */}
