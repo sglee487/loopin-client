@@ -132,7 +132,14 @@ export default function PlayerControlsBar({
     }
   };
 
-  if (!currentVideo) return null;
+  // If no video is currently selected, render an empty (placeholder) player bar so that the
+  // layout always reserves space for the controls area. This keeps the UI stable on first
+  // load regardless of whether a video starts playing later.
+  if (!currentVideo) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-50 h-16" />
+    );
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-50">
