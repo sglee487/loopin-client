@@ -1,5 +1,6 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import { useGetSessionQuery } from "@/features/player/api/playSessionApi";
 import type { PlaySession } from "@/features/player/api/playSessionApi";
 import {
@@ -8,6 +9,7 @@ import {
   playVideo,
   clearQueue,
   setCurrentPlaylistId,
+  resumeVideo,
 } from "@/features/player/playerSlice";
 import type { VideoItem } from "@/features/player/types";
 import { PlayIcon } from "@heroicons/react/24/outline";
@@ -21,13 +23,16 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  // Fetch detailed session (includes prev/next items)
-  const { data: sessionDetail } = useGetSessionQuery(
-    session.playlist?.id ?? 0,
-    {
-      skip: !session.playlist?.id,
-    }
+  // Currently playing playlist id from global state
+  const currentPlaylistId = useSelector(
+    (state: RootState) => state.player.currentPlaylistId
   );
+
+  // Fetch detailed session (includes prev/next items)
+  const { data: sessionDetail, refetch: refetchSessionDetail } =
+    useGetSessionQuery(session.playlist?.id ?? 0, {
+      skip: !session.playlist?.id,
+    });
 
   const playlist = session.playlist;
 
@@ -45,7 +50,25 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
     ? Math.min(100, (startSeconds / durationSeconds) * 100)
     : 0;
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    // 1) 이미 같은 세션을 듣고 있다면 패널만 열고(필요 시 재생 재개) 종료
+    if (currentPlaylistId === playlist?.id) {
+      dispatch(setPanelExpanded(true));
+      dispatch(resumeVideo());
+      return;
+    }
+
+    // 2) 클릭 순간마다 세션 정보를 최신으로 갱신
+    let detail = sessionDetail;
+    try {
+      const res = await refetchSessionDetail();
+      if ("data" in res && res.data) {
+        detail = res.data;
+      }
+    } catch {
+      /* 네트워크 오류 시 기존 캐시 사용 */
+    }
+
     // helper convert
     const toVideoItem = (
       mi: import("@/features/playlists/types").MediaItem
@@ -59,19 +82,17 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
       resourceId: mi.resourceId,
     });
 
-    if (sessionDetail && sessionDetail.nowPlaying) {
-      const currentVid = toVideoItem(sessionDetail.nowPlaying);
-      const prevArr: VideoItem[] =
-        sessionDetail.prevItems?.map(toVideoItem) ?? [];
-      const nextArr: VideoItem[] =
-        sessionDetail.nextItems?.map(toVideoItem) ?? [];
+    if (detail && detail.nowPlaying) {
+      const currentVid = toVideoItem(detail.nowPlaying);
+      const prevArr: VideoItem[] = detail.prevItems?.map(toVideoItem) ?? [];
+      const nextArr: VideoItem[] = detail.nextItems?.map(toVideoItem) ?? [];
 
       dispatch(
         loadSession({
           current: currentVid,
           prevItems: prevArr,
           nextItems: nextArr,
-          startSeconds: sessionDetail.startSeconds,
+          startSeconds: detail.startSeconds,
           playlistId: playlist?.id,
         })
       );
