@@ -72,7 +72,7 @@ jobs:
   manifest:
     if: ${{ github.event_name == 'push' && (
       github.ref_name == 'main' ||
-      github.ref_name == 'argocd' ||
+      github.ref_name == 'ci' ||
       github.ref_name == 'deploy') }}
     needs: ci
     runs-on: ubuntu-latest
