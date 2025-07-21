@@ -21,7 +21,7 @@ env:
   # Release only on pushes to specific branches
   SHOULD_RELEASE: ${{ github.event_name == 'push' && (
     github.ref_name == 'main' ||
-    github.ref_name == 'argocd' ||
+    github.ref_name == 'ci' ||
     github.ref_name == 'deploy') }}
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
       - name: Build & push image
         uses: docker/build-push-action@v4
@@ -86,7 +86,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
       - name: Create & push multi-arch manifest
         run: |
