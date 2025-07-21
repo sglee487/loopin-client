@@ -7,7 +7,7 @@ interface AuthGateProps {
 }
 
 const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
-  const { data: user, isLoading, isError } = useGetCurrentUserQuery();
+  const { isLoading } = useGetCurrentUserQuery();
 
   if (isLoading) {
     return <LoadingSpinner message="로그인 상태 확인 중…" />;
