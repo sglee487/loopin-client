@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-client
+  labels:
+    app: web-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-client
+  template:
+    metadata:
+      labels:
+        app: web-client
+    spec:
+      serviceAccountName: web-client-sa
+      imagePullSecrets:
+        - name: ghcr-creds
+      containers:
+      - name: web-client
+        image: ghcr.io/sglee487/loopin-client:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: NEXT_PUBLIC_API_URL
+          value: "https://api.loopin.bid"
+      volumes:
+      - name: web-client-config-volume
+        configMap:
+          name: web-client-config
