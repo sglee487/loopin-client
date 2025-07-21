@@ -25,6 +25,20 @@ spec:
         env:
         - name: NEXT_PUBLIC_API_URL
           value: "https://api.loopin.bid"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
       volumes:
       - name: web-client-config-volume
         configMap:
