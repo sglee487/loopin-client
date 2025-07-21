@@ -1,6 +1,15 @@
-import { createRoot } from 'react-dom/client';
-import App from '@/App';
-import '@presentation/styles/index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "@/app/store";
+import AppRouter from "@/router";
+import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 
-const root = createRoot(document.getElementById('root')!);
-root.render(<App />);
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+  </React.StrictMode>
+);

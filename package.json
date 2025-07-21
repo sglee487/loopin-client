@@ -1,5 +1,5 @@
 {
-  "name": "snclient",
+  "name": "loopin",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,44 +10,29 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
-    "@picocss/pico": "^2.0.6",
-    "@react-keycloak/web": "^3.4.0",
-    "@reduxjs/toolkit": "^2.3.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-shell": "^2",
-    "@types/react-timeago": "^4.1.7",
-    "axios": "^1.7.7",
-    "caniuse-lite": "^1.0.30001712",
-    "dotenv": "^16.4.5",
-    "keycloak-js": "^26.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@tauri-apps/plugin-opener": "^2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-player": "^2.16.0",
-    "react-router-dom": "^6.27.0",
-    "react-timeago": "^7.2.0"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.2",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
+    "@tailwindcss/postcss": "^4.1.10",
     "@tauri-apps/cli": "^2",
-    "@types/node": "^22.7.7",
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@types/redux-persist": "^4.3.1",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.13.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "globals": "^15.11.0",
-    "postcss-cli": "^11.0.0",
-    "sass-embedded": "^1.80.4",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.2.2",
-    "typescript-eslint": "^8.11.0",
-    "vite": "^5.3.1"
-  },
-  "eslintConfig": {
-    "extends": []
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3"
   }
 }

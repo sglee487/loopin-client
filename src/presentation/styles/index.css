@@ -1,7 +1,0 @@
-/* Import Pico CSS */
-@import '@picocss/pico';
-
-/* Tailwind CSS imports */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;

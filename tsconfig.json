@@ -20,15 +20,18 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* Path Aliases */
-    "baseUrl": ".",
+    /* Path mapping */
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/*"],
-      "@presentation/*": ["src/presentation/*"],
-      "@application/*": ["src/application/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
-      "@domain/*": ["src/domain/*"],
-      "@common/*": ["src/common/*"]
+      "@/*": ["*"],
+      "@/features/*": ["features/*"],
+      "@/components/*": ["components/*"],
+      "@/types/*": ["types/*"],
+      "@/app/*": ["app/*"],
+      "@/router/*": ["router/*"],
+      "@/store/*": ["store/*"],
+      "@/utils/*": ["utils/*"],
+      "@/hooks/*": ["hooks/*"]
     }
   },
   "include": ["src"],
