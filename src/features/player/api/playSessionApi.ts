@@ -21,7 +21,8 @@ export interface PlaySession {
   updatedAt?: string;
 }
 
-const BASE_URL = 'http://localhost:59000/api/v1/user-play-session';
+// const BASE_URL = 'http://localhost:59000/api/v1/user-play-session';
+const BASE_URL = 'https://api.loopin.bid/api/v1/user-play-session';
 
 export const playSessionApi = createApi({
   reducerPath: 'playSessionApi',

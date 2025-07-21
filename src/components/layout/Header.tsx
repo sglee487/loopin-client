@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 import { useState, useCallback } from "react";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
 
-const GATEWAY_URL = "http://localhost:59000";
+// const GATEWAY_URL = "http://localhost:59000";
+const GATEWAY_URL = "https://api.loopin.bid";
 
 interface HeaderProps {
   onToggleSidebar: () => void;

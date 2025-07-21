@@ -15,7 +15,8 @@ export type ListPlaylistsParams = {
 export const playlistsApi = createApi({
   reducerPath: 'playlistsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:59000/api/v1/playlists',
+    // baseUrl: 'http://localhost:59000/api/v1/playlists',
+    baseUrl: 'https://api.loopin.bid/api/v1/playlists',
     credentials: 'include',
         prepareHeaders: (headers) => {
       const cookie = document.cookie

@@ -12,7 +12,8 @@ export interface User {
  *  - POST /logout : 로그아웃 (CSRF 필요)
  *  - login은 단순 redirect 로 처리
  */
-const GATEWAY_URL = 'http://localhost:59000';
+// const GATEWAY_URL = "http://localhost:59000";
+const GATEWAY_URL = "https://api.loopin.bid";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: GATEWAY_URL,
