@@ -7,9 +7,7 @@ import { Bars3Icon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useState, useCallback } from "react";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
-
-// const GATEWAY_URL = "http://localhost:59000";
-const GATEWAY_URL = "https://api.loopin.bid";
+import { API_BASE_URL } from "@/lib/config";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -24,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
   const handleLogin = () => {
     // 게이트웨이에서 OIDC 로그인 플로우를 시작합니다.
-    window.location.href = `${GATEWAY_URL}/oauth2/authorization/keycloak`;
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`;
   };
 
   const handleLogout = async () => {

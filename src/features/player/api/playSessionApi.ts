@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { MediaPlaylist, MediaItem } from '@/features/playlists/types';
+import { API_BASE_URL } from '@/lib/config';
 
 export interface SavePlaySessionPayload {
   playlistId: number;
@@ -21,8 +22,7 @@ export interface PlaySession {
   updatedAt?: string;
 }
 
-// const BASE_URL = 'http://localhost:59000/api/v1/user-play-session';
-const BASE_URL = 'https://api.loopin.bid/api/v1/user-play-session';
+const BASE_URL = `${API_BASE_URL}/api/v1/user-play-session`;
 
 export const playSessionApi = createApi({
   reducerPath: 'playSessionApi',

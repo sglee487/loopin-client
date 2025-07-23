@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API_BASE_URL } from '@/lib/config';
 
 export interface User {
   username: string;
@@ -12,11 +13,9 @@ export interface User {
  *  - POST /logout : 로그아웃 (CSRF 필요)
  *  - login은 단순 redirect 로 처리
  */
-// const GATEWAY_URL = "http://localhost:59000";
-const GATEWAY_URL = "https://api.loopin.bid";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: GATEWAY_URL,
+  baseUrl: API_BASE_URL,
   credentials: 'include',
   prepareHeaders: (headers) => {
     // CookieServerCsrfTokenRepository는 XSRF-TOKEN 쿠키를 내려줍니다.
