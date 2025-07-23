@@ -19,6 +19,7 @@ env:
   OWNER: sglee487
   IMAGE_NAME: loopin-client
   VERSION: ${{ github.sha }}
+  VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
 
   # Release only on pushes to specific branches
   SHOULD_RELEASE: ${{ github.event_name == 'push' && (
@@ -67,6 +68,8 @@ jobs:
           push: ${{ env.SHOULD_RELEASE }}
           platforms: ${{ matrix.platform }}
           tags: ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-${{ matrix.suffix }}
+          build-args: |
+            VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}
 
   # ─────────────────────────────────────────────
   # 2) Merge images into a multi-arch manifest
