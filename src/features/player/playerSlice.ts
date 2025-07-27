@@ -133,6 +133,9 @@ const playerSlice = createSlice({
     clearQueue: (state) => {
       state.queue = [];
       state.history = [];
+      state.currentVideo = null; // Reset current video to prevent cross-playlist interference
+      state.currentTime = 0;
+      state.isPlaying = false;
     },
     
     removeFromQueue: (state, action: PayloadAction<number>) => {
