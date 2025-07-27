@@ -11,3 +11,9 @@
 
     --color-brand: #5C3C9F;
 }
+
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
