@@ -38,7 +38,9 @@ export default function ListPage() {
         !sessionsError &&
         sessions.length > 0 && (
           <section className="mb-12">
-            <h2 className="mb-4 text-xl font-bold">이어 듣기</h2>
+            <h2 className="mb-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">
+              이어 듣기
+            </h2>
             <div className="grid grid-cols-3 8xl:grid-cols-4 9xl:grid-cols-5 10xl:grid-cols-6 gap-4">
               {sessions.map((s) => (
                 <SessionPlaylistCard key={s.id} session={s} />
@@ -49,14 +51,16 @@ export default function ListPage() {
 
       {/* All playlists section */}
       <section>
-        <h2 className="mb-4 text-xl font-bold">Playlists</h2>
+        <h2 className="mb-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">
+          Playlists
+        </h2>
         <div className="grid grid-cols-3 8xl:grid-cols-4 9xl:grid-cols-5 10xl:grid-cols-6 gap-4">
           {playlists.map((pl) => (
             <PlaylistCard key={pl.resourceId} playlist={pl} />
           ))}
         </div>
         {playlists.length === 0 && (
-          <p className="mt-6 text-center text-gray-500">
+          <p className="mt-6 text-center text-neutral-500 dark:text-neutral-400">
             등록된 플레이리스트가 없습니다.
           </p>
         )}

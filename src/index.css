@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --breakpoint-8xl: 74.6875rem; /* 1195px */
     --breakpoint-9xl: 93.125rem; /* 1490px */
@@ -13,6 +15,9 @@
 }
 
 @layer base {
+  html {
+    @apply text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-900;
+  }
   button {
     @apply cursor-pointer;
   }

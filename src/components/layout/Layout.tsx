@@ -18,12 +18,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const sidebarClasses = [
-    "bg-white border-r border-gray-200 h-full transition-all duration-200 ease-in-out flex-shrink-0",
+    "bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 h-full transition-[width] duration-200 ease-in-out flex-shrink-0",
     isSidebarCollapsed ? "w-20" : "w-48",
   ].join(" ");
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Auto-load latest session (invisible helper) */}
       <LastSessionLoader />
       <Header onToggleSidebar={handleToggleSidebar} />
@@ -37,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               end
               className={({ isActive }) =>
                 [
-                  "flex mx-2 p-2 rounded text-gray-700 hover:bg-gray-100",
+                  "flex mx-2 p-2 rounded text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800",
                   isSidebarCollapsed
                     ? "flex-col items-center gap-1"
                     : "items-center gap-3",

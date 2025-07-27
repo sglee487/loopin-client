@@ -151,7 +151,7 @@ export default function DetailPage() {
     <div className="container mx-auto py-6">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-brand mb-6 cursor-pointer"
+        className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 hover:text-brand mb-6 cursor-pointer"
       >
         <ArrowLeftIcon className="h-5 w-5" /> 뒤로가기
       </button>
@@ -159,7 +159,7 @@ export default function DetailPage() {
       {/* Two-column layout */}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: Playlist info */}
-        <div className="lg:w-4/12 w-full bg-white rounded-lg shadow p-6 flex flex-col items-center text-center">
+        <div className="lg:w-4/12 w-full bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow p-6 flex flex-col items-center text-center border border-neutral-200 dark:border-neutral-700">
           <img
             src={playlist.thumbnail}
             alt={playlist.title}
@@ -168,7 +168,7 @@ export default function DetailPage() {
           <h1 className="text-2xl font-bold text-brand mb-4">
             {playlist.title}
           </h1>
-          <div className="flex items-center justify-center flex-wrap gap-2 text-gray-600 mb-4 text-sm">
+          <div className="flex items-center justify-center flex-wrap gap-2 text-neutral-600 dark:text-neutral-300 mb-4 text-sm">
             <span>{playlist.channelTitle}</span>
             <span>•</span>
             <span>{playlist.itemCount}개 동영상</span>
@@ -176,7 +176,7 @@ export default function DetailPage() {
             <span>{formatDate(playlist.publishedAt)}</span>
           </div>
           {playlist.description && (
-            <p className="text-gray-600 text-sm mb-6 line-clamp-6">
+            <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-6 line-clamp-6">
               {playlist.description}
             </p>
           )}
@@ -190,14 +190,16 @@ export default function DetailPage() {
 
         {/* Right: Video list */}
         <div className="flex-1">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">동영상 목록</h2>
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+            동영상 목록
+          </h2>
           {playlist.items && playlist.items.length > 0 ? (
             <div className="space-y-3">
               {playlist.items.map((item: MediaItem) => (
                 <div
                   key={item.id}
                   onClick={() => handleVideoClick(item)}
-                  className="flex gap-4 p-4 bg-white rounded-lg shadow hover:bg-gray-100 cursor-pointer transition-colors"
+                  className="flex gap-4 p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-colors border border-neutral-200 dark:border-neutral-700"
                 >
                   <div className="relative flex-shrink-0">
                     <img
@@ -212,13 +214,13 @@ export default function DetailPage() {
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-gray-900 font-semibold mb-2 line-clamp-2">
+                    <h3 className="text-neutral-900 dark:text-neutral-100 font-semibold mb-2 line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-1">
+                    <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-1">
                       {item.videoOwnerChannelTitle}
                     </p>
-                    <div className="flex items-center gap-4 text-gray-600 text-sm">
+                    <div className="flex items-center gap-4 text-neutral-600 dark:text-neutral-300 text-sm">
                       <span>{formatDate(item.publishedAt)}</span>
                       <span>•</span>
                       <div className="flex items-center gap-1">
@@ -231,7 +233,7 @@ export default function DetailPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-600">
+            <div className="text-center py-12 text-neutral-600 dark:text-neutral-300">
               동영상이 없습니다.
             </div>
           )}

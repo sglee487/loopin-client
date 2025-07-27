@@ -45,10 +45,12 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
         <h3 className="text-base font-bold text-brand truncate">
           {playlist.title}
         </h3>
-        <p className="text-sm text-gray-600 truncate">
+        <p className="text-sm text-neutral-600 dark:text-neutral-300 truncate">
           {playlist.description || "No description"}
         </p>
-        <p className="text-sm text-gray-500">{playlist.channelTitle}</p>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+          {playlist.channelTitle}
+        </p>
       </div>
     </div>
   );

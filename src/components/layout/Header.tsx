@@ -4,6 +4,7 @@ import {
   useLogoutMutation,
 } from "@/features/auth/api/authApi";
 import { Bars3Icon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { Link } from "react-router-dom";
 import { useState, useCallback } from "react";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
@@ -37,13 +38,13 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const closeAddModal = useCallback(() => setAddModalOpen(false), []);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-neutral-50 dark:bg-neutral-900 shadow-sm border-b border-neutral-200 dark:border-neutral-700">
       <div className="px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16 w-full">
         <div className="flex items-center gap-2">
           {/* Drawer toggle button */}
           <button
             onClick={onToggleSidebar}
-            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand cursor-pointer"
+            className="p-2 rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand cursor-pointer"
             aria-label="Toggle sidebar"
           >
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -61,16 +62,18 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
         {/* 우측 영역 – 로그인 / 로그아웃 및 플레이리스트 추가 버튼 */}
         <div className="flex items-center gap-4">
+          {/* Theme toggle */}
+          <ThemeToggle />
           {/* Add Playlist button with tooltip when disabled */}
           <div className="relative group">
             <button
               onClick={user ? openAddModal : undefined}
               disabled={!user}
               className={[
-                "text-gray-700 px-2 py-2 rounded-md text-sm font-medium border flex items-center gap-1",
+                "text-neutral-700 dark:text-neutral-200 px-2 py-2 rounded-md text-sm font-medium border flex items-center gap-1",
                 user
-                  ? "hover:text-gray-900 border-gray-300 hover:border-gray-400 cursor-pointer"
-                  : "border-gray-200 opacity-50 cursor-not-allowed",
+                  ? "hover:text-neutral-900 dark:hover:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 cursor-pointer"
+                  : "border-neutral-200 dark:border-neutral-700 opacity-50 cursor-not-allowed",
               ].join(" ")}
             >
               <PlusCircleIcon className="h-5 w-5" />
@@ -89,10 +92,10 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           {user && (
             <div className="flex items-center gap-2 pr-2">
               {/* Simple avatar using first letter */}
-              <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold text-gray-700 select-none">
+              <div className="h-8 w-8 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-sm font-semibold text-neutral-700 dark:text-neutral-200 select-none">
                 {(user.fullName ?? user.username).charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm text-gray-700 hidden sm:inline">
+              <span className="text-sm text-neutral-700 dark:text-neutral-200 hidden sm:inline">
                 {user.fullName ?? user.username}
               </span>
             </div>
@@ -100,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           {user ? (
             <button
               onClick={handleLogout}
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium border border-gray-300 hover:border-gray-400"
+              className="text-neutral-700 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-100 px-3 py-2 rounded-md text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500"
             >
               로그아웃
             </button>

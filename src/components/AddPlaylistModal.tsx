@@ -85,7 +85,7 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
     >
       {/* Stop click propagation inside modal content */}
       <div
-        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md"
+        className="bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow-lg p-6 w-full max-w-md border border-neutral-200 dark:border-neutral-700"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl font-bold mb-4 text-brand">플레이리스트 추가</h2>
@@ -95,7 +95,7 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
             placeholder="YouTube 플레이리스트 URL 또는 ID 입력"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand"
+            className="border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
             required
           />
           {isError && (
@@ -108,7 +108,7 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-md text-sm font-medium border border-gray-300 hover:bg-gray-100"
+              className="px-4 py-2 rounded-md text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
             >
               취소
             </button>

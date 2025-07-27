@@ -163,7 +163,7 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
 
         {/* Progress bar indicating how much of the current video has been watched */}
         {durationSeconds > 0 && (
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-700/70">
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-neutral-700/70 dark:bg-neutral-600/70">
             <div
               className="h-full bg-red-600"
               style={{ width: `${progressPercent}%` }}
@@ -176,7 +176,7 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
         <h3 className="text-base font-bold text-brand truncate">
           {playlist.title}
         </h3>
-        <p className="text-sm text-gray-600 truncate">
+        <p className="text-sm text-neutral-600 dark:text-neutral-300 truncate">
           이어 듣기 • {playlist.channelTitle}
         </p>
       </div>
