@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const sidebarClasses = [
     "bg-white border-r border-gray-200 h-full transition-all duration-200 ease-in-out flex-shrink-0",
-    isSidebarCollapsed ? "w-20" : "w-64",
+    isSidebarCollapsed ? "w-20" : "w-48",
   ].join(" ");
 
   return (
