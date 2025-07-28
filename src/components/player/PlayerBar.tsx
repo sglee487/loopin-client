@@ -44,8 +44,13 @@ export default function PlayerBar() {
 
   const playerRef = useRef<ReactPlayer>(null);
 
+  // Flag to ignore stray onProgress events that fire after a video ends but before the next video is ready
+  const ignoreProgressRef = useRef(false);
+
   const handleProgress = useCallback(
     ({ playedSeconds }: { playedSeconds: number }) => {
+      // Skip progress updates if we are in the transition period between videos
+      if (ignoreProgressRef.current) return;
       const secs = Math.floor(playedSeconds);
       dispatch(updateCurrentTime(secs));
 
@@ -78,6 +83,12 @@ export default function PlayerBar() {
     [currentPlaylistId, dispatch, updateStartSeconds, volume]
   );
 
+  // When the current video finishes, temporarily ignore further progress events
+  const handleEnded = useCallback(() => {
+    ignoreProgressRef.current = true;
+    dispatch(nextVideo());
+  }, [dispatch]);
+
   // Save session whenever a new video starts playing
   const handleStart = useCallback(() => {
     if (!currentVideo || currentPlaylistId == null) return;
@@ -98,6 +109,8 @@ export default function PlayerBar() {
     if (playerRef.current && currentTime > 0) {
       playerRef.current.seekTo(currentTime, "seconds");
     }
+    // The new video is ready; resume accepting progress events
+    ignoreProgressRef.current = false;
   }, [currentTime]);
 
   const handleSeek = useCallback(
@@ -184,6 +197,8 @@ export default function PlayerBar() {
               <div className="flex h-full gap-6 px-4 sm:px-6 lg:px-8">
                 <div className="flex-shrink-0 w-[440px]">
                   <ReactPlayer
+                    // Remount the player when the video changes to avoid leftover state (e.g., progress events)
+                    // key={currentVideo.id}
                     url={`https://www.youtube.com/watch?v=${currentVideo.resourceId}`}
                     playing={isPlaying}
                     controls
@@ -193,7 +208,7 @@ export default function PlayerBar() {
                     style={{ borderRadius: "8px" }}
                     className="z-50"
                     ref={playerRef}
-                    onEnded={() => dispatch(nextVideo())}
+                    onEnded={handleEnded}
                     onReady={handleReady}
                     onStart={handleStart}
                     onPlay={handlePlay}
