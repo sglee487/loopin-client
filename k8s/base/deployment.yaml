@@ -19,7 +19,7 @@ spec:
         - name: ghcr-creds
       containers:
       - name: web-client
-        image: ghcr.io/sglee487/loopin-client:83961c0a805d068ab8938a8dea98353b8f4f5660
+        image: ghcr.io/sglee487/loopin-client:6cfe34d0e31f0883cf32290370283cb52fc0f43a
         ports:
         - containerPort: 80
         env:
