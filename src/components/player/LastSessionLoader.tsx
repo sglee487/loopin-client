@@ -40,7 +40,7 @@ export default function LastSessionLoader() {
   /* ------------------------------------------------------------------ */
   /* 3. Determine session with latest updatedAt                         */
   /* ------------------------------------------------------------------ */
-  const latestSession = sessions.reduce<
+  const latestSession = (sessions ?? []).reduce<
     import("@/features/player/api/playSessionApi").PlaySession | undefined
   >((latest, cur) => {
     if (!latest) return cur;
