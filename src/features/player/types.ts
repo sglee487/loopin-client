@@ -20,6 +20,8 @@ export interface VideoItem {
   channelTitle: string;
   publishedAt: string;
   durationSeconds: number;
+  /** Sorting key within playlist */
+  rankKey?: string;
   resourceId: string;
   videoUrl?: string;
 }

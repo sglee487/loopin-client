@@ -10,6 +10,9 @@ export interface MediaItem {
   videoOwnerChannelTitle: string;
   platformType: string;
   durationSeconds: number;
+  /** Sorting key within playlist */
+  rankKey: string;
+  /** @deprecated Use rankKey instead */
   position?: number;
   createdAt?: string;
   updatedAt?: string;
