@@ -4,7 +4,11 @@ import SessionPlaylistCard from "@/components/SessionPlaylistCard";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useGetSessionsQuery } from "@/features/player/api/playSessionApi";
-import { useGetCurrentUserQuery } from "@/features/auth/api/authApi";
+import {
+  useGetCurrentUserQuery,
+  useLogoutMutation,
+} from "@/features/auth/api/authApi";
+import { useEffect } from "react";
 
 export default function ListPage() {
   const {
@@ -19,10 +23,26 @@ export default function ListPage() {
 
   // 로그인된 경우에만 세션 정보를 불러온다
   const {
-    data: sessions = [],
+    data: sessions,
     isLoading: sessionsLoading,
     isError: sessionsError,
   } = useGetSessionsQuery(undefined, { skip: userLoading || !currentUser });
+
+  const [logout] = useLogoutMutation();
+
+  // sessions가 null이면 유효하지 않은 사용자 세션으로 간주하고 로그아웃
+  useEffect(() => {
+    if (!sessionsLoading && currentUser && sessions === null) {
+      alert("로그인 세션이 유효하지 않습니다. 다시 로그인해주세요.");
+      (async () => {
+        try {
+          await logout().unwrap();
+        } finally {
+          window.location.reload();
+        }
+      })();
+    }
+  }, [sessionsLoading, sessions, currentUser, logout]);
 
   if (isLoading) return <LoadingSpinner />;
   if (isError)
@@ -34,6 +54,7 @@ export default function ListPage() {
     <div className="container mx-auto py-6">
       {/* Continue Listening Section */}
       {currentUser &&
+        sessions &&
         !sessionsLoading &&
         !sessionsError &&
         sessions.length > 0 && (
