@@ -89,6 +89,20 @@ const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl font-bold mb-4 text-brand">플레이리스트 추가</h2>
+
+        {/* 공개 설정 안내 */}
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="flex items-start gap-2">
+            <span className="text-lg flex-shrink-0 mt-0.5">⚠️</span>
+            <div className="text-sm">
+              <p className="text-blue-700 dark:text-blue-300">
+                YouTube 플레이리스트가 <strong>공개 설정</strong>으로 되어
+                있어야 합니다. 비공개 플레이리스트는 추가할 수 없습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="text"
