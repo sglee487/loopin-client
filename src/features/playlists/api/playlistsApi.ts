@@ -76,6 +76,17 @@ export const playlistsApi = createApi({
         { type: 'Playlist', id: 'PARTIAL-LIST' },
       ],
     }),
+
+    deletePlaylistByResourceId: builder.mutation<void, string>({
+      query: (resourceId) => ({
+        url: `/youtube/${resourceId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (_res, _err, resourceId) => [
+        { type: 'Playlist', id: resourceId },
+        { type: 'Playlist', id: 'PARTIAL-LIST' },
+      ],
+    }),
   }),
 });
 
@@ -84,4 +95,5 @@ export const {
   useGetPlaylistByIdQuery,
   useGetPlaylistByResourceIdQuery,
   useCreatePlaylistFromYoutubeMutation,
+  useDeletePlaylistByResourceIdMutation,
 } = playlistsApi; 

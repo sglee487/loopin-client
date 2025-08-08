@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useGetPlaylistByIdQuery } from "../api/playlistsApi";
+import {
+  useGetPlaylistByIdQuery,
+  useDeletePlaylistByResourceIdMutation,
+} from "../api/playlistsApi";
 import {
   playVideo,
   clearQueue,
@@ -8,6 +11,7 @@ import {
   setCurrentPlaylistId,
 } from "@/features/player/playerSlice";
 import { useSaveSessionMutation } from "@/features/player/api/playSessionApi";
+import { useGetCurrentUserQuery } from "@/features/auth/api/authApi";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { formatDuration, formatDate } from "@/lib/utils";
@@ -15,6 +19,7 @@ import {
   ArrowLeftIcon,
   PlayIcon,
   ClockIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import type { MediaItem } from "../types";
 import type { VideoItem } from "@/features/player/types";
@@ -24,6 +29,9 @@ export default function DetailPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [saveSession] = useSaveSessionMutation();
+  const { data: currentUser } = useGetCurrentUserQuery();
+  const [deletePlaylist, { isLoading: isDeleting }] =
+    useDeletePlaylistByResourceIdMutation();
   const playlistId = id ? parseInt(id, 10) : 0;
 
   const {
@@ -33,6 +41,29 @@ export default function DetailPage() {
   } = useGetPlaylistByIdQuery(playlistId, {
     skip: !playlistId,
   });
+
+  // 삭제 권한 확인
+  const canDelete =
+    currentUser &&
+    playlist &&
+    (currentUser.roles?.includes("admin") ||
+      playlist.createdBy === currentUser.username);
+
+  const handleDelete = async () => {
+    if (!playlist) return;
+
+    if (!confirm("정말로 이 플레이리스트를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await deletePlaylist(playlist.resourceId).unwrap();
+      navigate("/playlists"); // 삭제 후 목록 페이지로 이동
+    } catch (error) {
+      console.error("플레이리스트 삭제 실패:", error);
+      alert("플레이리스트 삭제에 실패했습니다.");
+    }
+  };
 
   const handleVideoClick = (item: MediaItem) => {
     console.log("Video clicked:", item);
@@ -149,12 +180,27 @@ export default function DetailPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 hover:text-brand mb-6 cursor-pointer"
-      >
-        <ArrowLeftIcon className="h-5 w-5" /> 뒤로가기
-      </button>
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400 hover:text-brand cursor-pointer"
+        >
+          <ArrowLeftIcon className="h-5 w-5" /> 뒤로가기
+        </button>
+
+        {/* Delete button - only show if user has permission */}
+        {canDelete && (
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
+            title="플레이리스트 삭제"
+          >
+            <TrashIcon className="h-4 w-4" />
+            {isDeleting ? "삭제 중..." : "삭제"}
+          </button>
+        )}
+      </div>
 
       {/* Two-column layout */}
       <div className="flex flex-col lg:flex-row gap-8">
