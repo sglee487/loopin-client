@@ -15,14 +15,16 @@ const QueueList: React.FC<QueueListProps> = ({
   onSelect,
 }) => {
   return (
-    <div className="flex-1 min-w-0">
-      <h3 className="text-gray-400 text-sm font-semibold mb-4">{title}</h3>
+    <div className="flex-1 min-w-0 flex flex-col">
+      <h3 className="text-gray-400 text-sm font-semibold mb-4 flex-shrink-0">
+        {title}
+      </h3>
       {videos.length === 0 ? (
         <p className="text-gray-500 text-xs">
           {emptyMessage || "대기열이 비어 있습니다."}
         </p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 overflow-y-auto flex-1">
           {videos.map((video: VideoItem, idx: number) => (
             <li
               key={video.id}
