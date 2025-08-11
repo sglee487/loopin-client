@@ -5,7 +5,6 @@ import { useGetSessionQuery } from "@/features/player/api/playSessionApi";
 import type { PlaySession } from "@/features/player/api/playSessionApi";
 import {
   loadSession,
-  setPanelExpanded,
   playVideo,
   clearQueue,
   setCurrentPlaylistId,
@@ -53,7 +52,6 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
   const handleClick = async () => {
     // 1) 이미 같은 세션을 듣고 있다면 패널만 열고(필요 시 재생 재개) 종료
     if (currentPlaylistId === playlist?.id) {
-      dispatch(setPanelExpanded(true));
       dispatch(resumeVideo());
       return;
     }
@@ -110,8 +108,6 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
     } else {
       return;
     }
-
-    dispatch(setPanelExpanded(true));
   };
 
   if (!playlist) return null;

@@ -7,7 +7,6 @@ import {
 import {
   playVideo,
   clearQueue,
-  setPanelExpanded,
   setCurrentPlaylistId,
 } from "@/features/player/playerSlice";
 import { useSaveSessionMutation } from "@/features/player/api/playSessionApi";
@@ -123,8 +122,6 @@ export default function DetailPage() {
         dispatch(playVideo({ video: q, addToQueue: true }));
       });
     }
-
-    dispatch(setPanelExpanded(true));
   };
 
   const handlePlayAll = () => {

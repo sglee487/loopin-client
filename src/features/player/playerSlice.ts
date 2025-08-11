@@ -56,6 +56,9 @@ const playerSlice = createSlice({
       state.isPlaying = true;
       state.currentTime = 0;
       
+      // 새로 듣기 시작할 때 플레이어 패널을 자동으로 확장
+      state.panelExpanded = true;
+      
       console.log('New player state:', { currentVideo: state.currentVideo, queue: state.queue });
     },
     
