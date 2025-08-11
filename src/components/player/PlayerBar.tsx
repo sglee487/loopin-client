@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useRef } from "react";
+import { Fragment, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import PlayerControlsBar from "./PlayerControlsBar";
@@ -46,9 +46,6 @@ export default function PlayerBar() {
 
   // Flag to ignore stray onProgress events that fire after a video ends but before the next video is ready
   const ignoreProgressRef = useRef(false);
-  // Temporarily ignore syncing volume from the internal player to global state
-  // to prevent initial startup from overwriting saved volume.
-  const ignoreVolumeSyncRef = useRef(true);
 
   const handleProgress = useCallback(
     ({ playedSeconds }: { playedSeconds: number }) => {
@@ -67,8 +64,8 @@ export default function PlayerBar() {
         });
       }
 
-      // Sync volume from the underlying YouTube player only after initial volume has been applied
-      if (!ignoreVolumeSyncRef.current && playerRef.current) {
+      // Sync volume from the underlying YouTube player when user changes it via native controls
+      if (playerRef.current) {
         // For YouTube, getInternalPlayer returns the YT player instance that has getVolume (0-100)
         const internal: any = (playerRef.current as any).getInternalPlayer?.();
         if (internal && typeof internal.getVolume === "function") {
@@ -106,58 +103,15 @@ export default function PlayerBar() {
       prevItems: prevIds,
       nextItems: nextIds,
     });
-    // Ensure internal player starts at our saved volume
-    if (playerRef.current) {
-      const internal: any = (playerRef.current as any).getInternalPlayer?.();
-      if (internal && typeof internal.setVolume === "function") {
-        try {
-          const targetVol = Math.round((volume ?? 1) * 100);
-          internal.setVolume(targetVol);
-        } catch {}
-      }
-    }
-  }, [
-    currentVideo?.id,
-    currentPlaylistId,
-    history,
-    queue,
-    saveSession,
-    volume,
-  ]);
+  }, [currentVideo?.id, currentPlaylistId, history, queue, saveSession]);
 
   const handleReady = useCallback(() => {
-    if (playerRef.current) {
-      if (currentTime > 0) {
-        playerRef.current.seekTo(currentTime, "seconds");
-      }
-      // Explicitly apply saved volume to the internal player to avoid it
-      // overriding our state on the first progress tick.
-      const internal: any = (playerRef.current as any).getInternalPlayer?.();
-      if (internal && typeof internal.setVolume === "function") {
-        try {
-          const targetVol = Math.round((volume ?? 1) * 100);
-          internal.setVolume(targetVol);
-        } catch {
-          // best-effort; ignore if unavailable
-        }
-      }
+    if (playerRef.current && currentTime > 0) {
+      playerRef.current.seekTo(currentTime, "seconds");
     }
-    // Allow progress events; keep ignoring internal->state volume sync to prevent drift
+    // The new video is ready; resume accepting progress events
     ignoreProgressRef.current = false;
-    ignoreVolumeSyncRef.current = true;
-  }, [currentTime, volume]);
-
-  // Keep the underlying player volume in sync whenever Redux volume changes
-  useEffect(() => {
-    if (!playerRef.current) return;
-    const internal: any = (playerRef.current as any).getInternalPlayer?.();
-    if (internal && typeof internal.setVolume === "function") {
-      try {
-        const targetVol = Math.round((volume ?? 1) * 100);
-        internal.setVolume(targetVol);
-      } catch {}
-    }
-  }, [volume]);
+  }, [currentTime]);
 
   const handleSeek = useCallback(
     (seconds: number) => {
