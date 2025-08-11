@@ -8,7 +8,7 @@ const initialState: PlayerState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
-  // Load saved volume from localStorage (0-1 range); default to 1
+  // Load saved volume from localStorage (0-1 range); default to 0.4 (40%)
   volume: (() => {
     if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
       const saved = parseFloat(localStorage.getItem("playerVolume") || "");
@@ -16,7 +16,7 @@ const initialState: PlayerState = {
         return saved;
       }
     }
-    return 1;
+    return 0.4;
   })(),
   panelExpanded: false,
   currentPlaylistId: null,
