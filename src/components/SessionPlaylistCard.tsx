@@ -92,6 +92,7 @@ const SessionPlaylistCard: React.FC<SessionPlaylistCardProps> = ({
           nextItems: nextArr,
           startSeconds: detail.startSeconds,
           playlistId: playlist?.id,
+          expandPanel: true,
         })
       );
       if (playlist?.id) {

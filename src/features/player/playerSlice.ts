@@ -150,12 +150,17 @@ const playerSlice = createSlice({
     },
     
     loadSession: (state, action: PayloadAction<import('./types').LoadSessionPayload>) => {
-      const { current, prevItems, nextItems, startSeconds = 0, playlistId } = action.payload;
+      const { current, prevItems, nextItems, startSeconds = 0, playlistId, expandPanel } = action.payload;
       state.currentVideo = current;
       state.history = [...prevItems].reverse();
       state.queue = [...nextItems];
       state.currentTime = startSeconds;
       state.isPlaying = true;
+
+      // 요청한 경우에만 플레이어 패널 자동 확장
+      if (expandPanel) {
+        state.panelExpanded = true;
+      }
 
       if (typeof playlistId === 'number') {
         state.currentPlaylistId = playlistId;

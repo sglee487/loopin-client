@@ -37,4 +37,6 @@ export interface LoadSessionPayload {
   nextItems: VideoItem[];
   startSeconds?: number;
   playlistId?: number;
+  /** Whether the player panel should auto-expand when this session is loaded */
+  expandPanel?: boolean;
 } 
