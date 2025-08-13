@@ -23,6 +23,7 @@ import {
   useSaveSessionMutation,
   useUpdateStartSecondsMutation,
 } from "@/features/player/api/playSessionApi";
+import { toast } from "react-toastify";
 
 export default function PlayerBar() {
   const { currentVideo, isPlaying, currentTime, volume, queue, history } =
@@ -86,6 +87,14 @@ export default function PlayerBar() {
   // When the current video finishes, temporarily ignore further progress events
   const handleEnded = useCallback(() => {
     ignoreProgressRef.current = true;
+    dispatch(nextVideo());
+  }, [dispatch]);
+
+  const handleError = useCallback(() => {
+    // notify user as toast. show 5 seconds
+    toast.error("재생 중 오류가 발생했습니다. 다음 비디오로 이동합니다.", {
+      autoClose: 5000,
+    });
     dispatch(nextVideo());
   }, [dispatch]);
 
@@ -209,6 +218,7 @@ export default function PlayerBar() {
                     className="z-50"
                     ref={playerRef}
                     onEnded={handleEnded}
+                    onError={handleError}
                     onReady={handleReady}
                     onStart={handleStart}
                     onPlay={handlePlay}
