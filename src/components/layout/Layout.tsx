@@ -3,7 +3,7 @@ import Header from "./Header";
 import LastSessionLoader from "../player/LastSessionLoader";
 import PlayerBar from "../player/PlayerBar";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, VideoCameraIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { ToastContainer } from "react-toastify";
 
 interface LayoutProps {
@@ -56,6 +56,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 }
               >
                 홈
+              </span>
+            </NavLink>
+
+            <NavLink
+              to="/playlists"
+              className={({ isActive }) =>
+                [
+                  "flex mx-2 p-2 rounded text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800",
+                  isSidebarCollapsed
+                    ? "flex-col items-center gap-1"
+                    : "items-center gap-3",
+                  isActive && "bg-brand/10 text-brand font-semibold",
+                ]
+                  .filter(Boolean)
+                  .join(" ")
+              }
+            >
+              <PlayIcon className="h-6 w-6 flex-shrink-0" />
+              <span
+                className={
+                  isSidebarCollapsed
+                    ? "text-[10px] leading-tight text-center w-full"
+                    : "text-sm"
+                }
+              >
+                재생목록
               </span>
             </NavLink>
 
