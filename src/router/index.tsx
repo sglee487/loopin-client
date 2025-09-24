@@ -3,6 +3,8 @@ import AuthGate from "@/components/auth/AuthGate";
 import Layout from "@/components/layout/Layout";
 import ListPage from "@/features/playlists/pages/ListPage";
 import DetailPage from "@/features/playlists/pages/DetailPage";
+import StreamsListPage from "@/features/streams/pages/StreamsListPage";
+import StreamPlayerPage from "@/features/streams/pages/StreamPlayerPage";
 
 export default function AppRouter() {
   return (
@@ -17,6 +19,10 @@ export default function AppRouter() {
 
             {/* 플레이리스트 상세 페이지 */}
             <Route path="/playlists/:id" element={<DetailPage />} />
+
+            {/* 스트림 페이지들 */}
+            <Route path="/streams" element={<StreamsListPage />} />
+            <Route path="/streams/:id" element={<StreamPlayerPage />} />
 
             {/* 잘못된 주소는 홈으로 리다이렉트 */}
             <Route path="*" element={<Navigate to="/" replace />} />
