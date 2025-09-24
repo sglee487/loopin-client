@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//h/personal2/my-hls-player/**)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
