@@ -8,7 +8,6 @@ import {
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { toast } from "react-toastify";
-import { API_BASE_URL } from "@/lib/config";
 import {
   ClipboardDocumentIcon,
   ArrowPathIcon,
