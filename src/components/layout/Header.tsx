@@ -3,9 +3,9 @@ import {
   useGetCurrentUserQuery,
   useLogoutMutation,
 } from "@/features/auth/api/authApi";
-import { Bars3Icon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, PlusCircleIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
 import ThemeToggle from "@/components/common/ThemeToggle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
 import { API_BASE_URL } from "@/lib/config";
@@ -17,6 +17,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const { data: user } = useGetCurrentUserQuery();
   const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
 
   // modal state
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -36,6 +37,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
   const openAddModal = useCallback(() => setAddModalOpen(true), []);
   const closeAddModal = useCallback(() => setAddModalOpen(false), []);
+  const goToStreamManagement = useCallback(() => navigate('/stream-management'), [navigate]);
 
   return (
     <header className="bg-neutral-50 dark:bg-neutral-900 shadow-sm border-b border-neutral-200 dark:border-neutral-700">
@@ -78,6 +80,30 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
             >
               <PlusCircleIcon className="h-5 w-5" />
               <span className="hidden sm:inline">플레이리스트 추가</span>
+            </button>
+
+            {/* Tooltip visible on hover when disabled */}
+            {!user && (
+              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap rounded-md bg-gray-900 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                로그인 후 이용 가능합니다
+              </div>
+            )}
+          </div>
+
+          {/* Stream Management button with tooltip when disabled */}
+          <div className="relative group">
+            <button
+              onClick={user ? goToStreamManagement : undefined}
+              disabled={!user}
+              className={[
+                "text-neutral-700 dark:text-neutral-200 px-2 py-2 rounded-md text-sm font-medium border flex items-center gap-1",
+                user
+                  ? "hover:text-neutral-900 dark:hover:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 cursor-pointer"
+                  : "border-neutral-200 dark:border-neutral-700 opacity-50 cursor-not-allowed",
+              ].join(" ")}
+            >
+              <VideoCameraIcon className="h-5 w-5" />
+              <span className="hidden sm:inline">스트리밍 관리</span>
             </button>
 
             {/* Tooltip visible on hover when disabled */}

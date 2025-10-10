@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Stream } from '../types';
-
-const API_BASE_URL = 'http://localhost:59000';
+import { API_BASE_URL } from '@/lib/config';
 
 export const streamsApi = createApi({
   reducerPath: 'streamsApi',
@@ -27,5 +26,5 @@ export const {
 } = streamsApi;
 
 export const getHLSMasterUrl = (publicId: string): string => {
-  return `http://localhost:59000/api/v1/streams/hls/${publicId}/master.m3u8`;
+  return `${API_BASE_URL}/api/v1/streams/hls/${publicId}/master.m3u8`;
 };

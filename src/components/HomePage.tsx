@@ -38,23 +38,38 @@ export default function HomePage() {
     data: sessions,
     isLoading: sessionsLoading,
     isError: sessionsLoadError,
+    error: sessionsError,
   } = useGetSessionsQuery(undefined, { skip: userLoading || !currentUser });
 
   const [logout] = useLogoutMutation();
 
-  // sessions가 null이면 유효하지 않은 사용자 세션으로 간주하고 로그아웃
+  // 세션 API 에러 처리 (401/403은 인증 문제, 그 외는 서버 문제)
   useEffect(() => {
-    if (!sessionsLoading && currentUser && sessions === null) {
-      alert("로그인 세션이 유효하지 않습니다. 다시 로그인해주세요.");
-      (async () => {
-        try {
-          await logout().unwrap();
-        } finally {
-          window.location.reload();
+    if (!sessionsLoading && currentUser && sessionsLoadError && sessionsError) {
+      // 에러 타입 확인
+      if ('status' in sessionsError) {
+        const status = sessionsError.status;
+        if (status === 401 || status === 403) {
+          // 인증 에러 - 로그아웃 필요
+          console.error('인증 에러 발생:', status);
+          alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+          (async () => {
+            try {
+              await logout().unwrap();
+            } finally {
+              window.location.reload();
+            }
+          })();
+        } else if (status === 500 || status === 503) {
+          // 서버 에러 - 일시적인 문제일 수 있으므로 로그아웃하지 않음
+          console.error('서버 에러 발생:', status);
+        } else {
+          // 기타 에러
+          console.error('알 수 없는 에러 발생:', status);
         }
-      })();
+      }
     }
-  }, [sessionsLoading, sessions, currentUser, logout]);
+  }, [sessionsLoading, sessionsLoadError, sessionsError, currentUser, logout]);
 
   const handleStreamClick = (stream: Stream) => {
     navigate(`/streams/${stream.publicId}`);

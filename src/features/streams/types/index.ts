@@ -27,3 +27,36 @@ export interface HLSQuality {
   resolution?: string;
   frameRate?: number;
 }
+
+// Streamer management types
+export type StreamStatus = 'CREATED' | 'LIVE' | 'ENDED' | 'ERROR';
+
+export interface StreamerInfo {
+  id: number;
+  publicId: string;
+  streamKey: string;
+  title: string;
+  description: string | null;
+  status: StreamStatus;
+  streamerId: string;
+  resolution: string;
+  bitrate: number;
+  viewersCount: number;
+  createdAt: string;
+  updatedAt: string | null;
+  hlsUrl: string;
+}
+
+export interface CreateStreamRequest {
+  title: string;
+  description?: string;
+  resolution?: string;
+  bitrate?: number;
+}
+
+export interface UpdateStreamRequest {
+  title?: string;
+  description?: string;
+  resolution?: string;
+  bitrate?: number;
+}

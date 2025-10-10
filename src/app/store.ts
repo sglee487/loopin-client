@@ -6,6 +6,7 @@ import { playlistsApi } from '@/features/playlists/api/playlistsApi';
 import { authApi } from '@/features/auth/api/authApi';
 import { playSessionApi } from '@/features/player/api/playSessionApi';
 import { streamsApi } from '@/features/streams/api/streamsApi';
+import { streamerApi } from '@/features/streams/api/streamerApi';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [playSessionApi.reducerPath]: playSessionApi.reducer,
     [streamsApi.reducerPath]: streamsApi.reducer,
+    [streamerApi.reducerPath]: streamerApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(
@@ -23,6 +25,7 @@ export const store = configureStore({
       authApi.middleware,
       playSessionApi.middleware,
       streamsApi.middleware,
+      streamerApi.middleware,
     ),
 });
 
