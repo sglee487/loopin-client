@@ -3,7 +3,9 @@
     "allow": [
       "Read(//h/personal2/my-hls-player/**)",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Read(//Users/isang-geon/workspace/loopin-server/**)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []
