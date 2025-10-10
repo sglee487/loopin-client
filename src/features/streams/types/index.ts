@@ -34,7 +34,8 @@ export type StreamStatus = 'CREATED' | 'LIVE' | 'ENDED' | 'ERROR';
 export interface StreamerInfo {
   id: number;
   publicId: string;
-  streamKey: string;
+  streamKey: string;  // OBS Stream Key 필드에 입력
+  rtmpUrl: string;    // OBS Server 필드에 입력 (예: rtmp://host:1935/live)
   title: string;
   description: string | null;
   status: StreamStatus;

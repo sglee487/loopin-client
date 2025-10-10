@@ -186,8 +186,6 @@ const StreamManagementPage: React.FC = () => {
     return null;
   }
 
-  const rtmpUrl = `rtmp://localhost:1935/live`;
-
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
@@ -351,17 +349,17 @@ const StreamManagementPage: React.FC = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                RTMP URL
+                RTMP URL (OBS Server 필드에 입력)
               </label>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  value={rtmpUrl}
+                  value={streamInfo.rtmpUrl}
                   readOnly
                   className="flex-1 border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-mono text-sm"
                 />
                 <button
-                  onClick={() => copyToClipboard(rtmpUrl, "url")}
+                  onClick={() => copyToClipboard(streamInfo.rtmpUrl, "url")}
                   className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
                 >
                   {copiedUrl ? (
@@ -374,7 +372,7 @@ const StreamManagementPage: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                스트림 키
+                스트림 키 (OBS Stream Key 필드에 입력)
               </label>
               <div className="flex gap-2">
                 <input
@@ -437,8 +435,8 @@ const StreamManagementPage: React.FC = () => {
             <li>OBS Studio를 실행합니다.</li>
             <li>설정 → 방송 메뉴로 이동합니다.</li>
             <li>서비스를 "사용자 지정"으로 선택합니다.</li>
-            <li>서버에 위의 RTMP URL을 입력합니다.</li>
-            <li>스트림 키에 위의 스트림 키를 입력합니다.</li>
+            <li><strong>서버(Server)</strong> 필드에 위의 <strong>RTMP URL</strong>을 입력합니다.</li>
+            <li><strong>스트림 키(Stream Key)</strong> 필드에 위의 <strong>스트림 키</strong>를 입력합니다.</li>
             <li>"방송 시작" 버튼을 클릭하여 라이브를 시작합니다.</li>
           </ol>
         </div>
