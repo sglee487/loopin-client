@@ -18,9 +18,7 @@ export default function HLSPlayer({ src, onError, onReady, className = '' }: HLS
 
   const qualityOptions: HLSQuality[] = [
     { value: 'auto', label: 'Auto', description: 'Automatic quality selection' },
-    { value: '1080p', label: '1080p', description: '1920x1080, High quality' },
-    { value: '720p', label: '720p', description: '1280x720, Medium quality' },
-    { value: '480p', label: '480p', description: '854x480, Standard quality' },
+    { value: '720p', label: '720p', description: '1280x720, High quality' },
     { value: '360p', label: '360p', description: '640x360, Low quality' },
   ];
 
